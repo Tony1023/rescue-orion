@@ -1,26 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux';
+import { updateGame } from './store/actions';
+import { GameState, UpdateGameRequest, UPDATE_REQUEST } from './store/types';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface GameStateRedux extends GameState {
+  dispatch: (request: UpdateGameRequest) => void,
 }
 
-export default App;
+const connector = connect(
+  (state: GameState) => ({...state}),
+  null,
+  null,
+  { pure: false }
+);
+
+class App extends React.Component<GameStateRedux> {
+
+  shouldComponentUpdate(): boolean {
+    return true;
+  }
+
+  onClick(): void {
+    this.props.dispatch(updateGame(this.props.data));
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <button onClick={this.onClick.bind(this)}></button>
+      </div>
+    );
+  }
+}
+
+export default connector(App);
