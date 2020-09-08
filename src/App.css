@@ -1,5 +1,15 @@
 .App {
   text-align: center;
+  height: 100%;
+  width: 100%;
+  background-image: url('/game_map.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  position: fixed; 
 }
 
 .App-logo {
