@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { updateGame } from './store/actions';
+import ButtonGroup from './ButtonGroup';
 import { GameState, UpdateGameRequest, UPDATE_REQUEST } from './store/types';
 import styled from 'styled-components';
 import metadata from './metadata/data';
@@ -12,16 +13,6 @@ const GameBoard = styled.div`
   background-size: contain;
   position: relative;
   margin: 0 auto;
-`;
-
-const Gemini1 = styled.div`
-  position: absolute;
-  left: 535px;
-  top: 180px;
-  width: 60px;
-  height: 60px;
-  background-color: blue;
-  border-radius: 30px;
 `;
 
 interface GameStateRedux extends GameState {
@@ -49,7 +40,11 @@ class App extends React.Component<GameStateRedux> {
     console.log(metadata);
     return (
       <GameBoard>
-        <Gemini1/>
+        {
+          Object.entries(metadata).map((data, i) => {
+            return <ButtonGroup id={data[0]} key={i} location={data[1].location} neighbors={data[1].neighbors} position={data[1].pixelPosition}/>;
+          })
+        }
       </GameBoard>
     );
   }
