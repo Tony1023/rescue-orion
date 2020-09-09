@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { updateGame } from './store/actions';
 import { GameState, UpdateGameRequest, UPDATE_REQUEST } from './store/types';
 import styled from 'styled-components';
+import metadata from './metadata/data';
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
@@ -45,6 +46,7 @@ class App extends React.Component<GameStateRedux> {
   }
 
   render() {
+    console.log(metadata);
     return (
       <GameBoard>
         <Gemini1/>

@@ -1,3 +1,3 @@
-export interface TimeVaryingAgent {
+export default interface TimeVaryingAgent {
   onDayUpdate: (day: number) => void
 }
