@@ -18,12 +18,12 @@ const GameBoard = styled.div`
 
 
 
-export default function App() {
+export default function() {
 
   const [gemini1NextMove, setGemini1NextMove] = useState(null);
   const [gemini2NextMove, setGemini2NextMove] = useState(null);
   
-  const gameState = useSelector((state: GameState) => state, (left, right) => false)
+  const gameState = useSelector((state: GameState) => state, () => false)
   const dispatch = useDispatch();
   
   const nextMoves = computeNextMoves({
