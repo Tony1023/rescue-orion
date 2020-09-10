@@ -6,37 +6,40 @@ import styled from 'styled-components';
 import Location from './classes/Location';
 import {PixelPosition} from './classes/Location';
 
-const Wrapper = styled.div`
+const ButtonGroupBackground = styled.div`
   position: absolute;
   background-color: rgba(18, 92, 112, 0.8);
   width: 60px;
   height: 20px;
+  line-height: 20px;
   border-radius: 25%;
+  top: ${(props: { position: PixelPosition }) => `${props.position.top + 25}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - 28}px`};
+  text-align: center;
 `;
-const Gemini1 = styled.div`
-  position: absolute;
+
+const NextMoveButton = styled.div`
   width: 12px;
   height: 12px;
+  display: inline-block;
+  margin: 0 3px;
+`;
+
+const Gemini1Button = styled(NextMoveButton)`
   background-color: #fcc409;
   border-radius: 50%;
   &:hover {
     cursor: pointer;
   }
 `;
-const Gemini2 = styled.div`
-  position: absolute;
-  width: 12px;
-  height: 12px;
+const Gemini2Button = styled(NextMoveButton)`
   background-color: #46b3e8;
   border-radius: 50%;
   &:hover {
     cursor: pointer;
   }
 `;
-const Gemini12 = styled.div`
-  position: absolute;
-  width: 12px;
-  height: 12px;
+const Gemini12Button = styled(NextMoveButton)`
   background-image: linear-gradient(135deg, #fcc409 50%, #46b3e8 50%);
   border-radius: 50%;
   &:hover {
@@ -58,44 +61,28 @@ const connector = connect(
 interface Props {
   id: string,
   location: Location,
-  neighbors: string[],
   position: PixelPosition,
+  shipReachability: { gemini1: boolean, gemini2: boolean },
 }
 
 class ButtonGroup extends React.Component<GameStateRedux & Props> {
 
-  shouldComponentUpdate(): boolean {
-    return true;
-  }
-
-  onClick(): void {
-    this.props.dispatch(updateGame(this.props.data));
-  }
-
   render() {
-    const Gemini1Button = styled(Gemini1)`
-      top: ${this.props.position.top+25}px;
-      left: ${this.props.position.left-22}px;
-    `
-    const Gemini2Button = styled(Gemini2)`
-      top: ${this.props.position.top+25}px;
-      left: ${this.props.position.left-5}px;
-    `
-    const Gemini12Button = styled(Gemini12)`
-      top: ${this.props.position.top+25}px;
-      left: ${this.props.position.left+12}px;
-    `
-    const ButtonWrapper = styled(Wrapper)`
-      top: ${this.props.position.top+20}px;
-      left: ${this.props.position.left-28}px;
-    `
     return (
-      <div>
-        <ButtonWrapper />
-        <Gemini1Button />
-        <Gemini2Button />
-        <Gemini12Button />
-      </div>
+      <ButtonGroupBackground position={this.props.position}>
+        {
+          this.props.shipReachability.gemini1 ? 
+          <Gemini1Button /> : <></>
+        }
+        {
+          this.props.shipReachability.gemini2 ? 
+          <Gemini2Button /> : <></>
+        }
+        {
+          this.props.shipReachability.gemini1 && this.props.shipReachability.gemini2 ? 
+          <Gemini12Button /> : <></>
+        }
+      </ButtonGroupBackground>
     );
   }
 }
