@@ -1,17 +1,19 @@
+import GameState from './GameState';
 import {
-  GameState,
-  UPDATE_REQUEST,
-  UpdateGameRequest,
-} from './types';
+  GameAction,
+  MOVE_SPACESHIP,
+} from './actions';
 
 const initialGameState: GameState = {
   data: new Set<number>()
 };
 
-export default (state = initialGameState, action: UpdateGameRequest): GameState => {
-  console.log('Received action: ', state);
-  if (action.type === UPDATE_REQUEST) {
-    state.data = action.payload.set;
+export default function(state = initialGameState, action: GameAction): GameState {
+  switch (action.type) {
+    case MOVE_SPACESHIP:
+      state.data.add(1);
+    default:
+      break;
   }
   return state;
 };

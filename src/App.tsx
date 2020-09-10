@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateGame } from './store/actions';
 import ButtonGroup from './ButtonGroup';
-import { GameState, UpdateGameRequest, UPDATE_REQUEST } from './store/types';
+import GameState from './store/GameState';
 import styled from 'styled-components';
 import metadata from './metadata/data';
 import { computeNextMoves } from './utils';

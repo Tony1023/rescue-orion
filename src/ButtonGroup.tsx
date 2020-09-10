@@ -1,7 +1,5 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { updateGame } from './store/actions';
-import { GameState, UpdateGameRequest } from './store/types';
 import styled from 'styled-components';
 import Location from './classes/Location';
 import {PixelPosition} from './classes/Location';
