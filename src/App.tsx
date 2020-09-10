@@ -1,10 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { updateGame } from './store/actions';
 import ButtonGroup from './ButtonGroup';
 import { GameState, UpdateGameRequest, UPDATE_REQUEST } from './store/types';
 import styled from 'styled-components';
 import metadata from './metadata/data';
+import { computeNextMoves } from './utils';
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
@@ -15,39 +16,37 @@ const GameBoard = styled.div`
   margin: 0 auto;
 `;
 
-interface GameStateRedux extends GameState {
-  dispatch: (request: UpdateGameRequest) => void,
+
+
+export default function App() {
+
+  const [gemini1NextMove, setGemini1NextMove] = useState(null);
+  const [gemini2NextMove, setGemini2NextMove] = useState(null);
+  
+  const gameState = useSelector((state: GameState) => state, (left, right) => false)
+  const dispatch = useDispatch();
+  
+  const nextMoves = computeNextMoves({
+    gemini1: ['sagittarius', 'b3', 'b2'],
+    gemini2: ['sagittarius', 'b3', 'h1'] 
+  });
+  return (
+    <GameBoard>
+      {
+        Object.entries(nextMoves).map((location, index) => {
+          const locationId = location[0];
+          const locationData = metadata[locationId];
+          return (
+            <ButtonGroup 
+              key={index}
+              id={locationId}
+              location={locationData.location}
+              position={locationData.pixelPosition}
+              shipReachability={location[1]}
+            />
+          );
+        })
+      }
+    </GameBoard>
+  );
 }
-
-const connector = connect(
-  (state: GameState) => ({...state}),
-  null,
-  null,
-  { pure: false }
-);
-
-class App extends React.Component<GameStateRedux> {
-
-  shouldComponentUpdate(): boolean {
-    return true;
-  }
-
-  onClick(): void {
-    this.props.dispatch(updateGame(this.props.data));
-  }
-
-  render() {
-    console.log(metadata);
-    return (
-      <GameBoard>
-        {
-          Object.entries(metadata).map((data, i) => {
-            return <ButtonGroup id={data[0]} key={i} location={data[1].location} neighbors={data[1].neighbors} position={data[1].pixelPosition}/>;
-          })
-        }
-      </GameBoard>
-    );
-  }
-}
-
-export default connector(App);
