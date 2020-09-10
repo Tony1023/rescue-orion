@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateGame } from './store/actions';
 import { GameState, UpdateGameRequest } from './store/types';
 import styled from 'styled-components';
@@ -47,17 +47,6 @@ const Gemini12Button = styled(NextMoveButton)`
   }
 `;
 
-interface GameStateRedux extends GameState {
-  dispatch: (request: UpdateGameRequest) => void,
-}
-
-const connector = connect(
-  (state: GameState) => ({...state}),
-  null,
-  null,
-  { pure: false }
-);
-
 interface Props {
   id: string,
   location: Location,
@@ -65,26 +54,24 @@ interface Props {
   shipReachability: { gemini1: boolean, gemini2: boolean },
 }
 
-class ButtonGroup extends React.Component<GameStateRedux & Props> {
+export default function(props: Props) {
 
-  render() {
-    return (
-      <ButtonGroupBackground position={this.props.position}>
-        {
-          this.props.shipReachability.gemini1 ? 
-          <Gemini1Button /> : <></>
-        }
-        {
-          this.props.shipReachability.gemini2 ? 
-          <Gemini2Button /> : <></>
-        }
-        {
-          this.props.shipReachability.gemini1 && this.props.shipReachability.gemini2 ? 
-          <Gemini12Button /> : <></>
-        }
-      </ButtonGroupBackground>
-    );
-  }
+  const dispatch = useDispatch();
+
+  return (
+    <ButtonGroupBackground position={props.position}>
+      {
+        props.shipReachability.gemini1 ? 
+        <Gemini1Button /> : <></>
+      }
+      {
+        props.shipReachability.gemini2 ? 
+        <Gemini2Button /> : <></>
+      }
+      {
+        props.shipReachability.gemini1 && props.shipReachability.gemini2 ? 
+        <Gemini12Button /> : <></>
+      }
+    </ButtonGroupBackground>
+  );
 }
-
-export default connector(ButtonGroup);
