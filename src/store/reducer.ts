@@ -1,19 +1,19 @@
-import GameState from './GameState';
 import {
+  GameState,
   GameAction,
   MOVE_SPACESHIP,
-} from './actions';
+} from './types';
 
-const initialGameState: GameState = {
-  data: new Set<number>()
-};
+import Game from '../classes/Game';
 
-export default function(state = initialGameState, action: GameAction): GameState {
+const game = new Game();
+
+export default function(_: GameState | undefined, action: GameAction): GameState {
   switch (action.type) {
     case MOVE_SPACESHIP:
-      state.data.add(1);
+      // game.moveSpaceship;
     default:
       break;
   }
-  return state;
+  return game.toGameState();
 };

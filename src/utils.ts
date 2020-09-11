@@ -14,24 +14,23 @@ function generateReachableNeighbors(path: string[]): string[] {
 
 // location-id to dictionary { ship_id: can_visit_this location }
 export type SpaceshipNextMoves = {
-  [location: string]: { gemini1: boolean, gemini2: boolean }
+  [location: string]: { [id: string]: boolean }
 };
 
-export function computeNextMoves(spaceshipPaths: { gemini1: string[], gemini2: string[] }): SpaceshipNextMoves {
+export function computeNextMoves(data: {
+  spaceships: {
+    [id: string]: string[]
+  },
+}): SpaceshipNextMoves {
   let nextMoves: SpaceshipNextMoves = {};
-  const reachableNeighbors1 = generateReachableNeighbors(spaceshipPaths.gemini1);
-  const reachableNeighbors2 = generateReachableNeighbors(spaceshipPaths.gemini2);
-  reachableNeighbors1.forEach((location: string) => {
-    if (!nextMoves[location]) {
-      nextMoves[location] = { gemini1: false, gemini2: false };
-    }
-    nextMoves[location].gemini1 = true;
-  });
-  reachableNeighbors2.forEach((location: string) => {
-    if (!nextMoves[location]) {
-      nextMoves[location] = { gemini1: false, gemini2: false };
-    }
-    nextMoves[location].gemini2 = true;
-  });
+  for (const spaceship in data.spaceships) {
+    const reachableNeighbors = generateReachableNeighbors(data.spaceships[spaceship]);
+    reachableNeighbors.forEach((location: string) => {
+      if (!nextMoves[location]) {
+        nextMoves[location] = { gemini1: false, gemini2: false };
+      }
+      nextMoves[location][spaceship] = true;
+    });
+  }
   return nextMoves;
 }

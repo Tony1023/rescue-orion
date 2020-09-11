@@ -2,7 +2,8 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Location from './classes/Location';
-import {PixelPosition} from './classes/Location';
+import { PixelPosition } from './classes/Location';
+import * as IDS from './metadata/agent-ids';
 
 const ButtonGroupBackground = styled.div`
   position: absolute;
@@ -49,7 +50,7 @@ interface Props {
   id: string,
   location: Location,
   position: PixelPosition,
-  shipReachability: { gemini1: boolean, gemini2: boolean },
+  shipReachability: { [id: string]: boolean },
 }
 
 export default function(props: Props) {
@@ -59,15 +60,15 @@ export default function(props: Props) {
   return (
     <ButtonGroupBackground position={props.position}>
       {
-        props.shipReachability.gemini1 ? 
+        props.shipReachability[IDS.GEMINI1] ? 
         <Gemini1Button /> : <></>
       }
       {
-        props.shipReachability.gemini2 ? 
+        props.shipReachability[IDS.GEMINI2] ? 
         <Gemini2Button /> : <></>
       }
       {
-        props.shipReachability.gemini1 && props.shipReachability.gemini2 ? 
+        props.shipReachability[IDS.GEMINI1] && props.shipReachability[IDS.GEMINI2] ? 
         <Gemini12Button /> : <></>
       }
     </ButtonGroupBackground>
