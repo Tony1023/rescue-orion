@@ -4,6 +4,7 @@ import ButtonGroup from './ButtonGroup';
 import { GameState } from './store/types';
 import styled from 'styled-components';
 import metadata from './metadata/data';
+import * as Actions from './store/actions';
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
@@ -23,6 +24,10 @@ export default function() {
   
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
+
+  gameState.messages.forEach((message: string) => {
+    console.log(message);
+  });
   
   return (
     <GameBoard>

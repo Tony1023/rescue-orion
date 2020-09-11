@@ -70,13 +70,10 @@ export function transferRescueResource(from: string, to: string): Types.Transfer
   };
 }
 
-export function enqueueMessages(from: string, to: string): Types.EnqueueMessagesAction {
+export function enqueueMessages(messages: string[]): Types.EnqueueMessagesAction {
   return {
     type: Types.ENQUEUE_MESSAGES,
-    payload: {
-      from: from, 
-      to: to,
-    },
+    payload: messages,
   };
 }
 

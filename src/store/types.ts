@@ -1,4 +1,4 @@
-import { SpaceshipNextMoves } from "../utils";
+import { SpaceshipNextMoves } from "../classes/Game";
 
 interface Spaceship {
   location: string,
@@ -95,10 +95,7 @@ export interface TransferRescueResourceAction {
 export const ENQUEUE_MESSAGES = '@GameAction/enqueueMessages';
 export interface EnqueueMessagesAction {
   type: string,
-  payload: {
-    from: string,
-    to: string, // rescue resource type
-  },
+  payload: string[],
 };
 
 export const EMPTY_MESSAGES = '@GameAction/emptyMessages';
