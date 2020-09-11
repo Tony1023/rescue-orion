@@ -21,7 +21,7 @@ export default function() {
   const [gemini1NextMove, setGemini1NextMove] = useState(null);
   const [gemini2NextMove, setGemini2NextMove] = useState(null);
   
-  const gameState = useSelector((state: GameState) => state, () => false)
+  const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
   
   return (
