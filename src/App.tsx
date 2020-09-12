@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
 import { GameState } from './store/types';
 import styled from 'styled-components';
-import metadata from './metadata/data';
+import { locationData } from './metadata';
 import * as Actions from './store/actions';
 
 const GameBoard = styled.div`
@@ -34,13 +34,13 @@ export default function() {
       {
         Object.entries(gameState.nextMoves).map((location, index) => {
           const locationId = location[0];
-          const locationData = metadata[locationId];
+          const locationPayload = locationData[locationId];
           return (
             <ButtonGroup 
               key={index}
               id={locationId}
-              location={locationData.location}
-              position={locationData.pixelPosition}
+              location={locationPayload.location}
+              position={locationPayload.pixelPosition}
               shipReachability={location[1]}
             />
           );

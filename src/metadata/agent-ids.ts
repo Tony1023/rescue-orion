@@ -1,5 +1,5 @@
-export const GEMINI1 = 'gemini1';
-export const GEMINI2 = 'gemini2';
+export const GEMINI1 = 'gemini_1';
+export const GEMINI2 = 'gemini_2';
 export const SAGITTARIUS = 'sagittarius';
 export const CASSIOPEIA = 'cassiopeia';
 export const ANDROMEDA = 'andromeda';

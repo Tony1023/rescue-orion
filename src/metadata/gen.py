@@ -1,10 +1,10 @@
 import csv
 
-f = open('data.ts', 'w')
-f.writelines('''import GameMetadata from './GameMetadata';
+f = open('location-data.ts', 'w')
+f.writelines('''import { LocationMetadata } from './types';
 import { LocationType } from '../classes/Location';
 
-const metadata: GameMetadata = {
+const metadata: LocationMetadata = {
 ''')
 
 with open('map-info.csv') as csv_file:
@@ -27,7 +27,7 @@ with open('map-info.csv') as csv_file:
       id: '%s',
       type: LocationType.%s,\n''' % (id_str, id_str, type_str))
     if not spaceStationName == '':
-      f.writelines('''      spaceStation: '%s',\n''' % spaceStationName)
+      f.writelines('''      spaceStationName: '%s',\n''' % spaceStationName)
     
     f.writelines('''    },
     neighbors: [\n''')

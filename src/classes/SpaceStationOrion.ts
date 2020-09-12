@@ -3,8 +3,6 @@ import { RescueResource } from "./RescueResource";
 
 export default class SpaceStationOrion extends SpaceStation {
   readonly visited: boolean =false;
-  INFORMATION: string = "";
-  location: string = "";
   energyCells: number = 0;
   lifeSupportPacks: number = 0;
   readonly rescueResources: RescueResource[] = [];

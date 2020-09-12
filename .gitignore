@@ -24,4 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # gen file
-src/metadata/data.ts
+src/metadata/location-data.ts
