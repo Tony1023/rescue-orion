@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import metadata from './metadata/data';
 import * as Actions from './store/actions';
 import HintModal from './modal/HintModal';
+import Timer from './Timer';
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
@@ -16,9 +17,7 @@ const GameBoard = styled.div`
   margin: 0 auto;
 `;
 
-
-
-export default function() {
+export default () => {
 
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
@@ -30,9 +29,9 @@ export default function() {
 
   useEffect(() => {
     setShowHintModal(gameState.messages.length > 0);
-  }, [gameState]);
+  }, [gameState.messages]);
 
-  return (
+  return <>
     <GameBoard>
       {
         Object.entries(gameState.nextMoves).map((location, index) => {
@@ -58,5 +57,6 @@ export default function() {
         /> : <></>
       }
     </GameBoard>
-  );
+    <Timer />
+  </>;
 }
