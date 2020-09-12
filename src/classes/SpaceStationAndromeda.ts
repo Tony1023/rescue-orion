@@ -1,9 +1,8 @@
-import TimeVaryingAgent from "./TimeVaryingAgent";
-import ResourceCarrier from "./ResourceCarrier";
+import SpaceStation from "./SpaceStation"
 import { RescueResource } from "./RescueResource";
 
-export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
-  visited: boolean = false;
+export default class SpaceStationAndromeda extends SpaceStation {
+  visited: boolean =false;
   energyCells: number = 0;
   lifeSupportPacks: number = 0;
   readonly rescueResources: RescueResource[] = [];
@@ -15,7 +14,7 @@ export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
   canPickUp(r: RescueResource): boolean {
     return true;
   }
-  
+
   dropOffTo(r: RescueResource): void {
 
   }

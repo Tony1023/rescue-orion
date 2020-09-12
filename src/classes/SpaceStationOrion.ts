@@ -1,8 +1,7 @@
-import TimeVaryingAgent from "./TimeVaryingAgent";
-import ResourceCarrier from "./ResourceCarrier";
+import SpaceStation from "./SpaceStation"
 import { RescueResource } from "./RescueResource";
 
-export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
+export default class SpaceStationOrion extends SpaceStation {
   visited: boolean = false;
   energyCells: number = 0;
   lifeSupportPacks: number = 0;

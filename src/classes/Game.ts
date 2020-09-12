@@ -1,5 +1,5 @@
 import { GameState } from '../store/types';
-import metadata from '../metadata/data';
+import { locationData } from '../metadata';
 import { LocationType } from './Location';
 
 export interface SpaceshipNextMoves {
@@ -37,15 +37,15 @@ export default class Game {
   private generateReachableNeighbors(path: string[]): string[] {
 
     function normalNextMovesFrom(location: string) {
-      let nextMoves = metadata[location].neighbors;
+      let nextMoves = locationData[location].neighbors;
       nextMoves.push(location);
       return nextMoves;
     }
 
     function timePortalNextMovesFrom(timePortal: string) {
       let nextMoves: string[] = [];
-      metadata[timePortal].neighbors.forEach((neighbor: string) => {
-        if (metadata[neighbor].location.type === LocationType.TimePortal) {
+      locationData[timePortal].neighbors.forEach((neighbor: string) => {
+        if (locationData[neighbor].location.type === LocationType.TimePortal) {
           nextMoves.push(neighbor);
         }
       });
@@ -55,7 +55,7 @@ export default class Game {
     const current = path[path.length - 1];
 
     // On a beacon star or hyper gate, can go anywhere
-    if (metadata[current].location.type !== LocationType.TimePortal) {
+    if (locationData[current].location.type !== LocationType.TimePortal) {
       return normalNextMovesFrom(current);
     }
 
@@ -63,7 +63,7 @@ export default class Game {
     // To be at a time portal, there must be at least two in the location history
     for (let i = path.length - 2; i >= 0; --i) {
       const prev = path[i];
-      if (metadata[prev].location.type === LocationType.TimePortal) {
+      if (locationData[prev].location.type === LocationType.TimePortal) {
         entryIndex = i;
       } else {
         break;
@@ -126,8 +126,8 @@ export default class Game {
       },
       nextMoves: this.computeNextMoves({
         spaceships: {
-          gemini1: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't4', 't3'],
-          gemini2: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't5', 't3'],
+          gemini_1: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't4', 't3'],
+          gemini_2: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't5', 't3'],
         }
       }),
       spaceStations: {
