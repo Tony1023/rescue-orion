@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
 import { GameState } from './store/types';
 import styled from 'styled-components';
 import metadata from './metadata/data';
 import * as Actions from './store/actions';
+import HintModal from './modal/HintModal';
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
@@ -19,16 +20,18 @@ const GameBoard = styled.div`
 
 export default function() {
 
-  const [gemini1NextMove, setGemini1NextMove] = useState(null);
-  const [gemini2NextMove, setGemini2NextMove] = useState(null);
-  
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
 
-  gameState.messages.forEach((message: string) => {
-    console.log(message);
-  });
   
+  const [gemini1NextMove, setGemini1NextMove] = useState(null);
+  const [gemini2NextMove, setGemini2NextMove] = useState(null);
+  const [showHintModal, setShowHintModal] = useState(false);
+
+  useEffect(() => {
+    setShowHintModal(gameState.messages.length > 0);
+  }, [gameState]);
+
   return (
     <GameBoard>
       {
@@ -45,6 +48,14 @@ export default function() {
             />
           );
         })
+      }
+
+      {
+        showHintModal ?
+        <HintModal
+          message={gameState.messages[0]}
+          onClose={() => setShowHintModal(false)}
+        /> : <></>
       }
     </GameBoard>
   );
