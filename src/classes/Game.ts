@@ -1,6 +1,4 @@
 import { GameState } from '../store/types';
-import { locationData } from '../metadata';
-import { LocationType } from './Location';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -25,7 +23,7 @@ export default class Game {
   private spaceships: { [id: string]: Spaceship } = {};
   private spaceStations: { [id: string]: SpaceStation } = {};
 
-  constructor() {
+  load(): void {
     const gemini_1 = new Gemini_1();
     this.spaceships[IDs.GEMINI_1] = gemini_1;
     this.agents[IDs.GEMINI_1] = gemini_1;
@@ -72,6 +70,13 @@ export default class Game {
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
   }
 
+  advanceTime(): void {
+    ++this.time;
+    for (const id in this.agents) {
+      this.agents[id].onDayUpdate(this.time);
+    }
+  }
+
   dumpMessages(): string[] {
     const messages = this.messages;
     this.messages = [];
@@ -79,7 +84,9 @@ export default class Game {
   }
 
   moveSpaceships(moves: { [id: string]: string }): void {
-
+    for (const id in moves) {
+      this.spaceships[id].addToPath(moves[id]);
+    }
   }
 
   transferEnergyCells(from: string, to: string, count?: number): void {
@@ -94,79 +101,18 @@ export default class Game {
 
   }
 
-  // Move them to Spaceship class
-  private generateReachableNeighbors(path: string[]): string[] {
-
-    function normalNextMovesFrom(location: string) {
-      let nextMoves = locationData[location].neighbors;
-      nextMoves.push(location);
-      return nextMoves;
-    }
-
-    function timePortalNextMovesFrom(timePortal: string) {
-      let nextMoves: string[] = [];
-      locationData[timePortal].neighbors.forEach((neighbor: string) => {
-        if (locationData[neighbor].location.type === LocationType.TimePortal) {
-          nextMoves.push(neighbor);
-        }
-      });
-      return nextMoves;
-    }
-
-    const current = path[path.length - 1];
-
-    // On a beacon star or hyper gate, can go anywhere
-    if (locationData[current].location.type !== LocationType.TimePortal) {
-      return normalNextMovesFrom(current);
-    }
-
-    let entryIndex = null;
-    // To be at a time portal, there must be at least two in the location history
-    for (let i = path.length - 2; i >= 0; --i) {
-      const prev = path[i];
-      if (locationData[prev].location.type === LocationType.TimePortal) {
-        entryIndex = i;
-      } else {
-        break;
-      }
-    }
-
-    // Is not travelling thru a time portal or
-    // Is exsiting from t1
-    if (!entryIndex || current === 't1') {
-      return normalNextMovesFrom(current);
-    }
-
-    // Not at the entry point, then can only go to other time portals
-    if (path[entryIndex] !== current) {
-      return timePortalNextMovesFrom(current);
-    }
-
-    // At the entry point, see if it is a boomarange (palindrome) path
-    for (let endIndex = path.length - 1; endIndex >= entryIndex; --endIndex) {
-      if (path[entryIndex] !== path[endIndex]) {
-        return timePortalNextMovesFrom(current);
-      }
-      ++entryIndex;
-    }
-    return normalNextMovesFrom(current);
-  }
-
-  private computeNextMoves(data: {
-    spaceships: {
-      [id: string]: string[]
-    },
-  }): SpaceshipNextMoves {
+  private computeNextMoves(): SpaceshipNextMoves {
     let nextMoves: SpaceshipNextMoves = {};
-    for (const spaceship in data.spaceships) {
-      const reachableNeighbors = this.generateReachableNeighbors(data.spaceships[spaceship]);
+    for (const id in this.spaceships) {
+      const reachableNeighbors = this.spaceships[id].generateReachableNeighbors();
       reachableNeighbors.forEach((location: string) => {
         if (!nextMoves[location]) {
-          nextMoves[location] = { gemini1: false, gemini2: false };
+          nextMoves[location] = {};
         }
-        nextMoves[location][spaceship] = true;
+        nextMoves[location][id] = true;
       });
     }
+    console.log(nextMoves);
     return nextMoves;
   }
 
@@ -185,12 +131,7 @@ export default class Game {
           lifeSupportPacks: 38,
         }
       },
-      nextMoves: this.computeNextMoves({
-        spaceships: {
-          gemini_1: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't4', 't3'],
-          gemini_2: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't5', 't3'],
-        }
-      }),
+      nextMoves: this.computeNextMoves(),
       spaceStations: {
         
       },

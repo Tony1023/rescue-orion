@@ -1,8 +1,7 @@
 import * as Types from './types';
 
 export function moveSpaceship(nextMoves: {
-  gemini1: string,
-  gemini2: string,
+  [id: string]: string
 }): Types.MoveSpaceshipAction {
   return {
     type: Types.MOVE_SPACESHIP,

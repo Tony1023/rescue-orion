@@ -15,7 +15,11 @@ const GameBoard = styled.div`
   margin: 0 auto;
 `;
 
-
+let nextMoves = [
+  { gemini_1: 'b3', gemini_2: 'b3' },
+  { gemini_1: 'h1', gemini_2: 'b4' },
+  { gemini_1: 'h4', gemini_2: 'b35' },
+]
 
 export default function() {
 
@@ -31,6 +35,14 @@ export default function() {
   
   return (
     <GameBoard>
+      <button
+        onClick={() => {
+          if (nextMoves.length > 0) {
+            dispatch(Actions.moveSpaceship(nextMoves[0]))
+            nextMoves.splice(0, 1);
+          }
+        }}
+      >Move!</button>
       {
         Object.entries(gameState.nextMoves).map((location, index) => {
           const locationId = location[0];

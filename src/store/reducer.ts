@@ -3,12 +3,14 @@ import * as Types from './types';
 import Game from '../classes/Game';
 
 let game = new Game();
+game.load();
 
 export default function reduce(state = game.toGameState(), action: Types.GameAction): Types.GameState {
-  console.log(state);
   switch (action.type) {
     case Types.MOVE_SPACESHIP:
-      // game.moveSpaceship;
+      console.log(action.payload);
+      game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
+      game.advanceTime();
       break;
     case Types.ENQUEUE_MESSAGES:
       let messages = (action as Types.EnqueueMessagesAction).payload;
