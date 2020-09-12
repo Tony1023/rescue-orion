@@ -24,10 +24,8 @@ export const StyledButton = styled.button`
 
 `;
 
-export const DismissButton: FunctionComponent<{
+export function DismissButton({ onClose }: {
   onClose?: () => void,
-}> = ({ onClose }) => {
-  return (
-    <StyledButton onClick={onClose}>Dismiss</StyledButton>
-  )
+}) {
+  return <StyledButton onClick={onClose}>Dismiss</StyledButton>;
 }

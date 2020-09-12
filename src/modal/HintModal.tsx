@@ -21,16 +21,14 @@ export default (props: {
   message?: string,
   onClose?: () => void,
 }) => {
-  return (
-    <ModalBackground>
-      <Modal>
-        <Header>
-          <DismissButton onClose={props.onClose} />
-        </Header>
-        <Body>
-          {props.message}
-        </Body>
-      </Modal>
-    </ModalBackground>
-  )
+  return <ModalBackground>
+    <Modal>
+      <Header>
+        <DismissButton onClose={props.onClose} />
+      </Header>
+      <Body>
+        {props.message}
+      </Body>
+    </Modal>
+  </ModalBackground>;
 }

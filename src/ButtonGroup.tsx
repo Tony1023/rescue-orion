@@ -57,20 +57,18 @@ export default function(props: Props) {
 
   const dispatch = useDispatch();
 
-  return (
-    <ButtonGroupBackground position={props.position}>
-      {
-        props.shipReachability[IDS.GEMINI1] ? 
-        <Gemini1Button /> : <></>
-      }
-      {
-        props.shipReachability[IDS.GEMINI2] ? 
-        <Gemini2Button /> : <></>
-      }
-      {
-        props.shipReachability[IDS.GEMINI1] && props.shipReachability[IDS.GEMINI2] ? 
-        <Gemini12Button /> : <></>
-      }
-    </ButtonGroupBackground>
-  );
+  return <ButtonGroupBackground position={props.position}>
+    {
+      props.shipReachability[IDS.GEMINI1] ? 
+      <Gemini1Button /> : <></>
+    }
+    {
+      props.shipReachability[IDS.GEMINI2] ? 
+      <Gemini2Button /> : <></>
+    }
+    {
+      props.shipReachability[IDS.GEMINI1] && props.shipReachability[IDS.GEMINI2] ? 
+      <Gemini12Button /> : <></>
+    }
+  </ButtonGroupBackground>;
 }
