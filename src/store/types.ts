@@ -1,28 +1,28 @@
 import { SpaceshipNextMoves } from "../classes/Game";
 
-interface Spaceship {
+export interface PlainSpaceship {
   location: string,
   energyCells: number,
   lifeSupportPacks: number,
   // rescueResources: [],
-}
+};
 
-interface SpaceStation {
+export interface PlainSpaceStation {
   location: string,
   visited: boolean,
   information: string,
   energyCells: number,
   lifeSupportPacks: number,
   // rescueResources { [resource: type]: boolean }
-}
+};
 
 export interface GameState {
   spaceships: {
-    [id: string]: Spaceship,
+    [id: string]: PlainSpaceship,
   },
   nextMoves: SpaceshipNextMoves,
   spaceStations: {
-    [id: string]: SpaceStation,
+    [id: string]: PlainSpaceStation,
   },
   messages: string[],
   time: number,

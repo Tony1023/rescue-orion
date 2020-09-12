@@ -8,8 +8,16 @@ import * as IDs from '../metadata/agent-ids';
 export default abstract class Spaceship implements ResourceCarrier, TimeVaryingAgent{
   energyCells: number = 0;
   lifeSupportPacks: number = 0;
-  readonly rescueResources: RescueResource[] = [];
-  readonly path: string[] = [IDs.SAGITTARIUS];
+  protected rescueResources: RescueResource[] = [];
+  protected path: string[] = [IDs.SAGITTARIUS];
+  
+  getRescueResources(): RescueResource[] {
+    return this.rescueResources.slice(0);
+  }
+
+  getPath(): string[] {
+    return this.path.slice(0);
+  }
 
   pickUpFrom(r: RescueResource): void {
   
@@ -27,7 +35,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
 
   }
   
-  addToPath(location: string): void{
+  addToPath(location: string): void {
     this.path.push(location);
   }
 

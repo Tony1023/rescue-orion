@@ -1,9 +1,9 @@
-import {RescueResource} from "./RescueResource"
+import { RescueResource } from "./RescueResource"
 
 export default interface ResourceCarrier {
   energyCells: number,
   lifeSupportPacks: number,
-  readonly rescueResources: number[],
+  getRescueResources(): RescueResource[],
   pickUpFrom(r: RescueResource): void,
   canPickUp(r: RescueResource): boolean,
   dropOffTo(r: RescueResource): void,

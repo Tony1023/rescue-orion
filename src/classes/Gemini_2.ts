@@ -8,21 +8,8 @@ export default class Gemini_2 extends Spaceship {
   constructor(gemini_1: Gemini_1) {
     super();
     this.gemini_1 = gemini_1;
+    this.energyCells = 40;
+    this.lifeSupportPacks = 100;
   }
 
-  pickUpFrom(r: RescueResource): void {
-    
-  }
-
-  canPickUp(r: RescueResource): boolean {
-    return true;
-  }
-
-  dropOffTo(r: RescueResource): void {
-
-  }
-
-  onDayUpdate(day: number): void {
-
-  }
 }

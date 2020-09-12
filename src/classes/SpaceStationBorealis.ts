@@ -2,10 +2,6 @@ import SpaceStation from "./SpaceStation"
 import { RescueResource } from "./RescueResource";
 
 export default class SpaceStationBorealis extends SpaceStation {
-  visited: boolean = false;
-  energyCells: number = 0;
-  lifeSupportPacks: number = 0;
-  readonly rescueResources: RescueResource[] = [];
 
   pickUpFrom(r: RescueResource): void {
     
@@ -14,7 +10,7 @@ export default class SpaceStationBorealis extends SpaceStation {
   canPickUp(r: RescueResource): boolean {
     return true;
   }
-
+  
   dropOffTo(r: RescueResource): void {
 
   }

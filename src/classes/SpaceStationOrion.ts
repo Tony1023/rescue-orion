@@ -2,10 +2,6 @@ import SpaceStation from "./SpaceStation"
 import { RescueResource } from "./RescueResource";
 
 export default class SpaceStationOrion extends SpaceStation {
-  visited: boolean = false;
-  energyCells: number = 0;
-  lifeSupportPacks: number = 0;
-  readonly rescueResources: RescueResource[] = [];
 
   pickUpFrom(r: RescueResource): void {
     
@@ -22,5 +18,4 @@ export default class SpaceStationOrion extends SpaceStation {
   onDayUpdate(day: number): void {
 
   }
-
 }

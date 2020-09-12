@@ -3,10 +3,14 @@ import ResourceCarrier from "./ResourceCarrier";
 import { RescueResource } from "./RescueResource";
 
 export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
-  visited: boolean = false;
+  protected visited: boolean = false;
   energyCells: number = 0;
   lifeSupportPacks: number = 0;
-  readonly rescueResources: RescueResource[] = [];
+  protected rescueResources: RescueResource[] = [];
+
+  getRescueResources(): RescueResource[] {
+    return this.rescueResources.slice(0);
+  }
 
   pickUpFrom(r: RescueResource): void {
     

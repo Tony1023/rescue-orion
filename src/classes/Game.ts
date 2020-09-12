@@ -1,4 +1,4 @@
-import { GameState } from '../store/types';
+import { GameState, PlainSpaceship } from '../store/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -101,37 +101,32 @@ export default class Game {
 
   }
 
-  private computeNextMoves(): SpaceshipNextMoves {
-    let nextMoves: SpaceshipNextMoves = {};
-    for (const id in this.spaceships) {
-      const reachableNeighbors = this.spaceships[id].generateReachableNeighbors();
-      reachableNeighbors.forEach((location: string) => {
-        if (!nextMoves[location]) {
-          nextMoves[location] = {};
-        }
-        nextMoves[location][id] = true;
-      });
-    }
-    console.log(nextMoves);
-    return nextMoves;
-  }
-
-
   toGameState(): GameState {
     return {
-      spaceships: {
-        gemini1: {
-          location: 'b2',
-          energyCells: 38,
-          lifeSupportPacks: 38,
+      spaceships: Object.keys(this.spaceships).reduce((accumulator: {
+          [id: string]: PlainSpaceship 
+        }, id: string) => {
+          console.log(this.spaceships[id]);
+          const spaceship = this.spaceships[id];
+          const path = spaceship.getPath();
+          accumulator[id] = {
+            energyCells: spaceship.energyCells,
+            lifeSupportPacks: spaceship.lifeSupportPacks,
+            location: path[path.length - 1],
+          };
+          return accumulator;
         },
-        gemini2: {
-          location: 'h1',
-          energyCells: 38,
-          lifeSupportPacks: 38,
-        }
-      },
-      nextMoves: this.computeNextMoves(),
+      {}),
+      nextMoves: Object.keys(this.spaceships).reduce((accumulator: SpaceshipNextMoves, id: string) => {
+        const reachableNeighbors = this.spaceships[id].generateReachableNeighbors();
+        reachableNeighbors.forEach((location: string) => {
+          if (!accumulator[location]) {
+            accumulator[location] = {};
+          }
+          accumulator[location][id] = true;
+        });
+        return accumulator;
+      }, {}),
       spaceStations: {
         
       },
