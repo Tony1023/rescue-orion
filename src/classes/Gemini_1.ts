@@ -22,7 +22,7 @@ export default class Gemini_1 extends Spaceship {
     onDayUpdate(day: number): void {
   
     }
-    addToPath(location: number): void{
+    addToPath(location: string): void{
 
     }
   }

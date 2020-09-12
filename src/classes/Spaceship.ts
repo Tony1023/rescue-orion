@@ -24,7 +24,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
 
   }
   
-  addToPath(location: number): void{
+  addToPath(location: string): void{
       
   }
 }
