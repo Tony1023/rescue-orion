@@ -1,4 +1,4 @@
-export enum RescueResource{
+export enum RescueResource {
   O2ReplaceMentCells,
   FoodRepairTeam,
   WaterRepairTeam,
