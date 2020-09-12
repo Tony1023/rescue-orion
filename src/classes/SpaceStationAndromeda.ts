@@ -1,11 +1,10 @@
-import TimeVaryingAgent from "./TimeVaryingAgent";
-import ResourceCarrier from "./ResourceCarrier";
+import SpaceStation from "./SpaceStation"
 import { RescueResource } from "./RescueResource";
 
-export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
+export default class SpaceStationAndromeda extends SpaceStation {
   readonly visited: boolean =false;
   INFORMATION: string = "";
-  location: string="";
+  location: string = "";
   energyCells: number = 0;
   lifeSupportPacks: number = 0;
   readonly rescueResources: RescueResource[] = [];

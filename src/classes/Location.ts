@@ -12,5 +12,5 @@ export type PixelPosition = {
 export default interface Location {
   id: string,
   type: LocationType,
-  spaceStation?: string,
+  spaceStationName?: string,
 };
