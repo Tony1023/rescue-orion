@@ -35,13 +35,60 @@ export default class Game {
 
   // Move them to Spaceship class
   private generateReachableNeighbors(path: string[]): string[] {
-    const current = path[path.length - 1];
-    if (metadata[current].location.type !== LocationType.TimePortal) {
-      let neighbors = metadata[current].neighbors;
-      neighbors.push(current);
-      return neighbors;
+
+    function normalNextMovesFrom(location: string) {
+      let nextMoves = metadata[location].neighbors;
+      nextMoves.push(location);
+      return nextMoves;
     }
-    return metadata[current].neighbors;
+
+    function timePortalNextMovesFrom(timePortal: string) {
+      let nextMoves: string[] = [];
+      metadata[timePortal].neighbors.forEach((neighbor: string) => {
+        if (metadata[neighbor].location.type === LocationType.TimePortal) {
+          nextMoves.push(neighbor);
+        }
+      });
+      return nextMoves;
+    }
+
+    const current = path[path.length - 1];
+
+    // On a beacon star or hyper gate, can go anywhere
+    if (metadata[current].location.type !== LocationType.TimePortal) {
+      return normalNextMovesFrom(current);
+    }
+
+    let entryIndex = null;
+    // To be at a time portal, there must be at least two in the location history
+    for (let i = path.length - 2; i >= 0; --i) {
+      const prev = path[i];
+      if (metadata[prev].location.type === LocationType.TimePortal) {
+        entryIndex = i;
+      } else {
+        break;
+      }
+    }
+
+    // Is not travelling thru a time portal or
+    // Is exsiting from t1
+    if (!entryIndex || current === 't1') {
+      return normalNextMovesFrom(current);
+    }
+
+    // Not at the entry point, then can only go to other time portals
+    if (path[entryIndex] !== current) {
+      return timePortalNextMovesFrom(current);
+    }
+
+    // At the entry point, see if it is a boomarange (palindrome) path
+    for (let endIndex = path.length - 1; endIndex >= entryIndex; --endIndex) {
+      if (path[entryIndex] !== path[endIndex]) {
+        return timePortalNextMovesFrom(current);
+      }
+      ++entryIndex;
+    }
+    return normalNextMovesFrom(current);
   }
 
   private computeNextMoves(data: {
@@ -79,8 +126,8 @@ export default class Game {
       },
       nextMoves: this.computeNextMoves({
         spaceships: {
-          gemini1: ['sagittarius', 'b3', 'b2'],
-          gemini2: ['sagittarius', 'b3', 'h1'] 
+          gemini1: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't4', 't3'],
+          gemini2: ['sagittarius', 'b3', 'h1', 't3', 't5', 't2', 't5', 't3'],
         }
       }),
       spaceStations: {
