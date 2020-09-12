@@ -31,10 +31,7 @@ export interface GameState {
 export const MOVE_SPACESHIP = '@GameAction/moveSpaceship';
 export interface MoveSpaceshipAction {
   type: string,
-  payload: {
-    gemini1: string,
-    gemini2: string,
-  },
+  payload: { [id: string]: string },
 };
 
 

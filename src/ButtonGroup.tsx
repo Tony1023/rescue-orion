@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Location from './classes/Location';
 import { PixelPosition } from './classes/Location';
-import * as IDS from './metadata/agent-ids';
+import * as IDs from './metadata/agent-ids';
 
 const ButtonGroupBackground = styled.div`
   position: absolute;
@@ -57,18 +57,20 @@ export default function(props: Props) {
 
   const dispatch = useDispatch();
 
-  return <ButtonGroupBackground position={props.position}>
-    {
-      props.shipReachability[IDS.GEMINI1] ? 
-      <Gemini1Button /> : <></>
-    }
-    {
-      props.shipReachability[IDS.GEMINI2] ? 
-      <Gemini2Button /> : <></>
-    }
-    {
-      props.shipReachability[IDS.GEMINI1] && props.shipReachability[IDS.GEMINI2] ? 
-      <Gemini12Button /> : <></>
-    }
-  </ButtonGroupBackground>;
+  return (
+    <ButtonGroupBackground position={props.position}>
+      {
+        props.shipReachability[IDs.GEMINI_1] ? 
+        <Gemini1Button /> : <></>
+      }
+      {
+        props.shipReachability[IDs.GEMINI_2] ? 
+        <Gemini2Button /> : <></>
+      }
+      {
+        props.shipReachability[IDs.GEMINI_1] && props.shipReachability[IDs.GEMINI_2] ? 
+        <Gemini12Button /> : <></>
+      }
+    </ButtonGroupBackground>
+  );
 }
