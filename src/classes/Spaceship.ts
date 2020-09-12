@@ -20,19 +20,50 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
   }
 
   pickUpFrom(r: RescueResource): void {
-  
+    const index = this.rescueResources.indexOf(r);
+    if (index > 0) {
+      this.rescueResources.splice(index, 1);
+    } else {
+      throw new Error('Rescue resource not found onboard.');
+    }
   }
 
-  canPickUp(r: RescueResource): boolean{
+  canPickUp(r: RescueResource): boolean {
     return true;
   }
 
   dropOffTo(r: RescueResource): void {
-
+    this.rescueResources.push(r);
   }
 
-  onDayUpdate(day: number): void {
+  onDayUpdate(_: number): void {
+    const current = this.path[this.path.length - 1];
+    const prev = this.path[this.path.length - 2];
 
+    // If different type of locations, then it must be a starway.
+    if (locationData[current].location.type !== locationData[prev].location.type) {
+      this.energyCells -= 1;
+      this.lifeSupportPacks -= 1;
+      return;
+    }
+
+    switch (locationData[current].location.type) {
+      case LocationType.BeaconStar:
+        this.energyCells -= 1;
+        this.lifeSupportPacks -= 1;
+        break;
+      case LocationType.HyperGate:
+        this.energyCells -= 20;
+        this.lifeSupportPacks -= 5;
+        break;
+      case LocationType.TimePortal:
+        this.energyCells -= 10;
+        this.lifeSupportPacks -= 30;
+    }
+
+    if (this.energyCells < 0 || this.lifeSupportPacks < 0) {
+      throw Error('Supplies run out.');
+    }
   }
   
   addToPath(location: string): void {
