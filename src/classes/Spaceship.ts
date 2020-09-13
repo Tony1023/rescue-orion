@@ -6,11 +6,17 @@ import { LocationType } from './Location';
 import * as IDs from '../metadata/agent-ids';
 
 export default abstract class Spaceship implements ResourceCarrier, TimeVaryingAgent{
-  energyCells: number = 0;
-  lifeSupportPacks: number = 0;
+  energyCells: number;
+  lifeSupportPacks: number;
   protected rescueResources: RescueResource[] = [];
   protected path: string[] = [IDs.SAGITTARIUS];
   private isTravelingThruTimePortals = false;
+
+  constructor(energyCells: number, lifeSupportPacks: number, resources?: RescueResource[]) {
+    this.energyCells = energyCells;
+    this.lifeSupportPacks = lifeSupportPacks;
+    this.rescueResources = resources ?? [];
+  }
   
   getRescueResources(): RescueResource[] {
     return this.rescueResources.slice(0);

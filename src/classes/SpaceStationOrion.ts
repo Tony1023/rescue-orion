@@ -5,8 +5,9 @@ export default class SpaceStationOrion extends SpaceStation {
 
   private scientistCount: number = 20;
 
-  pickUpFrom(r: RescueResource): void {
-    
+  constructor(scientistCount: number, energyCells: number, lifeSupportPacks: number, resources?: RescueResource[]) {
+    super(energyCells, lifeSupportPacks, resources);
+    this.scientistCount = scientistCount;
   }
 
   canPickUp(r: RescueResource): boolean {
