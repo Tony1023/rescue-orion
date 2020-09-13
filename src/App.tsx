@@ -30,11 +30,17 @@ export default function() {
 
   const [gemini1NextMove, setGemini1NextMove] = useState(null);
   const [gemini2NextMove, setGemini2NextMove] = useState(null);
-  const [showHintModal, setShowHintModal] = useState(false);
+  const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    setShowHintModal(gameState.messages.length > 0);
+    setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
+
+  function popMessageModal() {
+    const remainingMessages = messages.slice(0);
+    remainingMessages.pop();
+    setMessages(remainingMessages);
+  }
 
   return <>
     <GameBoard>
@@ -63,11 +69,13 @@ export default function() {
       }
 
       {
-        showHintModal ?
-        <HintModal
-          message={gameState.messages[0]}
-          onClose={() => setShowHintModal(false)}
-        /> : <></>
+        messages.map((message: string, index: number) => {
+          return <HintModal
+            key={index}
+            message={message}
+            onClose={popMessageModal}
+          />;
+        })
       }
     </GameBoard>
     <Timer />
