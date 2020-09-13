@@ -10,13 +10,5 @@ export default class SpaceStationBorealis extends SpaceStation {
   canPickUp(r: RescueResource): boolean {
     return true;
   }
-  
-  dropOffTo(r: RescueResource): void {
-
-  }
-
-  onDayUpdate(day: number): void {
-
-  }
 
 }

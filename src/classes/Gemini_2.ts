@@ -2,13 +2,14 @@ import Spaceship from "./Spaceship";
 import Gemini_1 from "./Gemini_1";
 
 export default class Gemini_2 extends Spaceship {
-  gemini_1: Gemini_1;
+  
+  private gemini_1: Gemini_1;
+  energyCells = 40;
+  lifeSupportPacks = 100;
 
   constructor(gemini_1: Gemini_1) {
     super();
-    this.gemini_1 = gemini_1;
-    this.energyCells = 40;
-    this.lifeSupportPacks = 100;
+    this.gemini_1 = gemini_1
   }
 
   onDayUpdate(day: number): void {
