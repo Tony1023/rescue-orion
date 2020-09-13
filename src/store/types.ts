@@ -1,19 +1,19 @@
 import { SpaceshipNextMoves } from "../classes/Game";
+import { RescueResource } from "../classes/RescueResource";
 
 export interface PlainSpaceship {
   location: string,
   energyCells: number,
   lifeSupportPacks: number,
-  // rescueResources: [],
+  rescueResources: RescueResource[],
 };
 
 export interface PlainSpaceStation {
   location: string,
   visited: boolean,
-  information: string,
   energyCells: number,
   lifeSupportPacks: number,
-  // rescueResources { [resource: type]: boolean }
+  rescueResources: { [resource in RescueResource]: boolean },
 };
 
 export interface GameState {

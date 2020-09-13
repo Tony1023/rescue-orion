@@ -113,6 +113,7 @@ export default class Game {
             energyCells: spaceship.energyCells,
             lifeSupportPacks: spaceship.lifeSupportPacks,
             location: path[path.length - 1],
+            rescueResources: spaceship.getRescueResources(),
           };
           return accumulator;
         },

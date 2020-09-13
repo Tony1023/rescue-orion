@@ -24,7 +24,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     if (index > 0) {
       this.rescueResources.splice(index, 1);
     } else {
-      throw new Error('Rescue resource not found onboard.');
+      throw new Error(`${r} not found onboard.`);
     }
   }
 
