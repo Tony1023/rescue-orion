@@ -10,6 +10,7 @@ import SpaceStationAndromeda from './SpaceStationAndromeda';
 import SpaceStationBorealis from './SpaceStationBorealis';
 import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
+import { locationData } from '../metadata';
 
 export interface SpaceshipNextMoves {
   [location: string]: { [id: string]: boolean }
@@ -69,6 +70,7 @@ export default class Game {
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.agents[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
+    sagittarius.visited = true;
   }
 
   advanceTime(): void {
@@ -87,6 +89,10 @@ export default class Game {
   moveSpaceships(moves: { [id: string]: string }): void {
     for (const id in moves) {
       this.spaceships[id].addToPath(moves[id]);
+      const spaceStation = locationData[moves[id]].location.spaceStationName;
+      if (spaceStation) {
+        this.spaceStations[spaceStation].visited = true;
+      }
     }
   }
 
