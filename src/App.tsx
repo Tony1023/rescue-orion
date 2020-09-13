@@ -5,7 +5,7 @@ import { GameState } from './store/types';
 import styled from 'styled-components';
 import { locationData } from './metadata';
 import * as Actions from './store/actions';
-import HintModal from './modal/HintModal';
+import MessageModal from './modal/MessageModal';
 import Timer from './Timer';
 
 const GameBoard = styled.div`
@@ -70,7 +70,7 @@ export default function() {
 
       {
         messages.map((message: string, index: number) => {
-          return <HintModal
+          return <MessageModal
             key={index}
             message={message}
             onClose={popMessageModal}
