@@ -34,6 +34,8 @@ export default function() {
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
 
+  console.log(gameState);
+
   const [gemini1NextMove, setGemini1NextMove] = useState(null);
   const [gemini2NextMove, setGemini2NextMove] = useState(null);
   const [messages, setMessages] = useState<string[]>([]);

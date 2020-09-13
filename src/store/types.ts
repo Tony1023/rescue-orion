@@ -10,11 +10,11 @@ export interface PlainSpaceship {
 };
 
 export interface PlainSpaceStation {
-  location: string,
   visited: boolean,
   energyCells: number,
   lifeSupportPacks: number,
-  rescueResources: { [resource in RescueResource]: boolean },
+  rescueResources: RescueResource[],
+  canPickUp: { [resource: string]: boolean },
 };
 
 export interface GameState {

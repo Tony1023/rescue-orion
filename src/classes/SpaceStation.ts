@@ -3,7 +3,7 @@ import ResourceCarrier from "./ResourceCarrier";
 import { RescueResource } from "./RescueResource";
 
 export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
-  protected visited: boolean = false;
+  visited: boolean = false;
   energyCells: number;
   lifeSupportPacks: number;
   protected rescueResources: RescueResource[];

@@ -1,4 +1,4 @@
-import { GameState, PlainSpaceship } from '../store/types';
+import { GameState, PlainSpaceship, PlainSpaceStation } from '../store/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -107,7 +107,6 @@ export default class Game {
       spaceships: Object.keys(this.spaceships).reduce((accumulator: {
           [id: string]: PlainSpaceship 
         }, id: string) => {
-          console.log(this.spaceships[id]);
           const spaceship = this.spaceships[id];
           const path = spaceship.getPath();
           accumulator[id] = {
@@ -130,9 +129,26 @@ export default class Game {
         });
         return accumulator;
       }, {}),
-      spaceStations: {
-        
-      },
+      spaceStations: Object.keys(this.spaceStations).reduce((accumulator: {
+          [id: string]: PlainSpaceStation
+        }, id: string) => {
+          const spaceStation = this.spaceStations[id];
+          accumulator[id] = {
+            visited: spaceStation.visited,
+            energyCells: spaceStation.energyCells,
+            lifeSupportPacks: spaceStation.lifeSupportPacks,
+            rescueResources: spaceStation.getRescueResources(),
+            canPickUp: spaceStation.getRescueResources().reduce((accumulator: {
+                [resource: string]: boolean
+              }, r: RescueResource) => {
+                accumulator[r] = spaceStation.canPickUp(r);
+                return accumulator;
+              },
+            {})
+          }
+          return accumulator;
+        },
+      {}),
       messages: this.dumpMessages(),
       time: this.time,
     };
