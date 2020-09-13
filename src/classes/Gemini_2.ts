@@ -13,8 +13,13 @@ export default class Gemini_2 extends Spaceship {
 
   onDayUpdate(day: number): void {
     const current = this.path[this.path.length - 1];
+    const prev = this.path[this.path.length - 2];
     const gemini_1Path = this.gemini_1.getPath();
-    if (current === gemini_1Path[gemini_1Path.length - 1]) {
+
+    // Traveling together thru the last segment instead of just landing at
+    // the same location
+    if (current === gemini_1Path[gemini_1Path.length - 1] &&
+      prev === gemini_1Path[gemini_1Path.length - 2]) {
       return;
     }
     super.onDayUpdate(day);

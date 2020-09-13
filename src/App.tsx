@@ -18,9 +18,15 @@ const GameBoard = styled.div`
 `;
 
 let nextMoves = [
-  { gemini_1: 'b3', gemini_2: 't1' },
-  { gemini_1: 'h1', gemini_2: 't3' },
-  { gemini_1: 'h4', gemini_2: 't4' },
+  { gemini_1: 'b3', gemini_2: 'b3' },
+  { gemini_1: 'h1', gemini_2: 'b4' },
+  { gemini_1: 'h4', gemini_2: 'b35' },
+  { gemini_1: 'h4', gemini_2: 'cassiopeia' },
+  { gemini_1: 'h4', gemini_2: 'h2' },
+  { gemini_1: 'h4', gemini_2: 'h4' },
+  { gemini_1: 't2', gemini_2: 't2' },
+  { gemini_1: 't1', gemini_2: 't1' },
+  { gemini_1: 't1', gemini_2: 't1' },
 ]
 
 export default function() {

@@ -52,7 +52,9 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     const prev = this.path[this.path.length - 2];
 
     // If different type of locations, then it must be a starway.
-    if (locationData[current].location.type !== locationData[prev].location.type) {
+    // If staying at the same location, then it's equivalent to staying staionary
+    if (locationData[current].location.type !== locationData[prev].location.type ||
+      current === prev) {
       this.energyCells -= 1;
       this.lifeSupportPacks -= 1;
       return;
@@ -80,6 +82,11 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
   addToPath(location: string): void {
     this.path.push(location);
     this.updateIfTravelingThruTimePortals();
+    if (this.isTravelingThruTimePortals) {
+      if (this.path[this.path.length - 1] === this.path[this.path.length - 2]) {
+        throw new Error('Not allowed to stay stationary when traveling thru time portals');
+      }
+    }
   }
 
   private updateIfTravelingThruTimePortals(): void {
