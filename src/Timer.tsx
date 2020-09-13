@@ -1,11 +1,69 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { enqueueMessages } from './store/actions';
+import { GameState } from './store/types';
 
 export default () => {
 
   const dispatch = useDispatch();
+  const spaceshipPositions = useSelector((state: GameState): 
+    { [id: string]: string } => {
+      return Object.keys(state.spaceships).reduce((accumulator: { [id: string]: string }, id: string) => {
+        accumulator[id] = state.spaceships[id].location;
+        return accumulator;
+      }, {});
+  });
   const [minutes, setMinutes] = useState(0);
+  const [positions, setPositions] = useState(spaceshipPositions);
+  const [movedSinceStart, setMovedSinceStart] = useState(false);
+  const [lastMove, setLastMove] = useState(0);
+
+  if (JSON.stringify(spaceshipPositions) !== JSON.stringify(positions)) {
+    setPositions(spaceshipPositions);
+    setLastMove(minutes);
+    setMovedSinceStart(true);
+  }
+
+  useEffect(actionDependentHints, [minutes]);
+
+  useEffect(constantHints, [minutes]);
+ 
+  useEffect(() => {
+    const interval = setInterval(tickMinute, 60 * 1000);
+    return () => {
+      clearInterval(interval);
+    }
+  });
+
+  function actionDependentHints() {
+    if (minutes === 10 && !movedSinceStart) {
+      dispatch(enqueueMessages([
+        `Incoming relay from Ground Control
+
+        Analysis paralysis: s situation where a group is unable to move forward with a decision as a result of overanalyzing data or overthinking a problem
+        
+        The clock is ticking! You may want to consider making your first move so that you don’t run out of time!
+        
+        -Ground Control
+        `
+      ]));
+      return;
+    }
+    if (minutes - lastMove === 5) { // every 5 minutes?
+      dispatch(enqueueMessages([
+        `Incoming relay from Ground Control
+
+        Greetings crew, we’re getting readings that your ships have stayed in one spot for quite some time.
+        
+        If you are stuck on what to do next, you may request help from your Space Commander. Alternatively, you may wish to visit a space station to see if they have any intel for you that could help you decide what to do next.
+        
+        Remember to watch the clock to see your remaining time!
+        
+        -Ground Control
+        `
+      ]));
+    }
+  }
 
   function constantHints() {
     if (minutes === 2) {
@@ -65,15 +123,6 @@ export default () => {
   function tickMinute() {
     setMinutes(minutes + 1);
   }
-
-  useEffect(constantHints, [minutes]);
- 
-  useEffect(() => {
-    const interval = setInterval(tickMinute, 60 * 1000);
-    return () => {
-      clearInterval(interval);
-    }
-  });
  
   return <></>;
 }
