@@ -54,14 +54,10 @@ export default function() {
       >Move!</button>
       {
         Object.entries(gameState.nextMoves).map((location, index) => {
-          const locationId = location[0];
-          const locationPayload = locationData[locationId];
           return (
             <ButtonGroup 
               key={index}
-              id={locationId}
-              location={locationPayload.location}
-              position={locationPayload.pixelPosition}
+              id={location[0]}
               shipReachability={location[1]}
             />
           );
