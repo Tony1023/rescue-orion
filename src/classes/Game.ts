@@ -9,6 +9,7 @@ import Gemini_2 from './Gemini_2';
 import SpaceStationAndromeda from './SpaceStationAndromeda';
 import SpaceStationBorealis from './SpaceStationBorealis';
 import SpaceStationOrion from './SpaceStationOrion';
+import { RescueResource } from './RescueResource';
 
 export interface SpaceshipNextMoves {
   [location: string]: { [id: string]: boolean }
@@ -24,47 +25,47 @@ export default class Game {
   private spaceStations: { [id: string]: SpaceStation } = {};
 
   load(): void {
-    const gemini_1 = new Gemini_1();
+    const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplaceMentCells]);
     this.spaceships[IDs.GEMINI_1] = gemini_1;
     this.agents[IDs.GEMINI_1] = gemini_1;
     this.carriers[IDs.GEMINI_1] = gemini_1;
 
-    const gemini_2 = new Gemini_2(gemini_1);
+    const gemini_2 = new Gemini_2(gemini_1, 40, 100);
     this.spaceships[IDs.GEMINI_2] = gemini_2;
     this.agents[IDs.GEMINI_2] = gemini_2;
     this.carriers[IDs.GEMINI_2] = gemini_2;
     
-    const andromeda = new SpaceStationAndromeda();
+    const andromeda = new SpaceStationAndromeda(0, 0);
     this.spaceStations[IDs.ANDROMEDA] = andromeda;
     this.agents[IDs.ANDROMEDA] = andromeda;
     this.carriers[IDs.ANDROMEDA] = andromeda;
 
-    const aquarius = new SpaceStation();
+    const aquarius = new SpaceStation(20, 50, [RescueResource.WaterRepairTeam]);
     this.spaceStations[IDs.AQUARIUS] = aquarius;
     this.agents[IDs.AQUARIUS] = aquarius;
     this.carriers[IDs.AQUARIUS] = aquarius;
 
-    const borealis = new SpaceStationBorealis();
+    const borealis = new SpaceStationBorealis(50, 30, [RescueResource.OxygenRepairTeam]);
     this.spaceStations[IDs.BOREALIS] = borealis;
     this.agents[IDs.BOREALIS] = borealis;
     this.carriers[IDs.BOREALIS] = borealis;
 
-    const capricorn = new SpaceStation();
+    const capricorn = new SpaceStation(40, 70, [RescueResource.AITechnology]);
     this.spaceStations[IDs.CAPRICORN] = capricorn;
     this.agents[IDs.CAPRICORN] = capricorn;
     this.carriers[IDs.CAPRICORN] = capricorn;
 
-    const cassiopeia = new SpaceStation();
+    const cassiopeia = new SpaceStation(30, 20, [RescueResource.MedicalRepairTeam]);
     this.spaceStations[IDs.CASSIOPEIA] = cassiopeia;
     this.agents[IDs.CASSIOPEIA] = cassiopeia;
     this.carriers[IDs.CASSIOPEIA] = cassiopeia;
 
-    const orion = new SpaceStationOrion();
+    const orion = new SpaceStationOrion(20, 0, 0);
     this.spaceStations[IDs.ORION] = orion;
     this.agents[IDs.ORION] = orion;
     this.carriers[IDs.ORION] = orion;
 
-    const sagittarius = new SpaceStation();
+    const sagittarius = new SpaceStation(0, 0);
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.agents[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
