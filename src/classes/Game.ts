@@ -114,6 +114,7 @@ export default class Game {
             lifeSupportPacks: spaceship.lifeSupportPacks,
             location: path[path.length - 1],
             rescueResources: spaceship.getRescueResources(),
+            isInTimePortal: spaceship.getIsTravelingThruTimePortals(),
           };
           return accumulator;
         },

@@ -18,9 +18,9 @@ const GameBoard = styled.div`
 `;
 
 let nextMoves = [
-  { gemini_1: 'b3', gemini_2: 'b3' },
-  { gemini_1: 'h1', gemini_2: 'b4' },
-  { gemini_1: 'h4', gemini_2: 'b35' },
+  { gemini_1: 'b3', gemini_2: 't1' },
+  { gemini_1: 'h1', gemini_2: 't3' },
+  { gemini_1: 'h4', gemini_2: 't4' },
 ]
 
 export default function() {
