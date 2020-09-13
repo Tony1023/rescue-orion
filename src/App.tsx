@@ -25,6 +25,8 @@ let nextMoves = [
   { gemini_1: 'h4', gemini_2: 'h2' },
   { gemini_1: 'h4', gemini_2: 'h4' },
   { gemini_1: 't2', gemini_2: 't2' },
+  { gemini_1: 't1', gemini_2: 't1' },
+  { gemini_1: 't1', gemini_2: 't1' },
 ]
 
 export default function() {
