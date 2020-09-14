@@ -17,13 +17,17 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     this.lifeSupportPacks = lifeSupportPacks;
     this.rescueResources = resources ?? [];
   }
-  
+
   getLocation(): string {
     return this.path[this.path.length - 1];
   }
-  
+
   getRescueResources(): RescueResource[] {
     return this.rescueResources.slice(0);
+  }
+
+  getPath(): string[] {
+    return this.path.slice(0);
   }
 
   getIsTravelingThruTimePortals(): boolean {
