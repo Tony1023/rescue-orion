@@ -1,8 +1,7 @@
-import TimeVaryingAgent from "./TimeVaryingAgent";
 import ResourceCarrier from "./ResourceCarrier";
 import { RescueResource } from "./RescueResource";
 
-export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
+export default class SpaceStation implements ResourceCarrier {
   visited: boolean = false;
   energyCells: number;
   lifeSupportPacks: number;
@@ -36,7 +35,5 @@ export default class SpaceStation implements TimeVaryingAgent, ResourceCarrier {
   dropOffTo(r: RescueResource): void {
     this.rescueResources.push(r);
   }
-
-  onDayUpdate(day: number): void {}
 
 }

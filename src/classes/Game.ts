@@ -43,22 +43,18 @@ export default class Game {
 
     const aquarius = new SpaceStation(20, 50, [RescueResource.WaterRepairTeam]);
     this.spaceStations[IDs.AQUARIUS] = aquarius;
-    this.agents[IDs.AQUARIUS] = aquarius;
     this.carriers[IDs.AQUARIUS] = aquarius;
 
     const borealis = new SpaceStationBorealis(50, 30, [RescueResource.OxygenRepairTeam]);
     this.spaceStations[IDs.BOREALIS] = borealis;
-    this.agents[IDs.BOREALIS] = borealis;
     this.carriers[IDs.BOREALIS] = borealis;
 
     const capricorn = new SpaceStation(40, 70, [RescueResource.AITechnology]);
     this.spaceStations[IDs.CAPRICORN] = capricorn;
-    this.agents[IDs.CAPRICORN] = capricorn;
     this.carriers[IDs.CAPRICORN] = capricorn;
 
     const cassiopeia = new SpaceStation(30, 20, [RescueResource.MedicalRepairTeam]);
     this.spaceStations[IDs.CASSIOPEIA] = cassiopeia;
-    this.agents[IDs.CASSIOPEIA] = cassiopeia;
     this.carriers[IDs.CASSIOPEIA] = cassiopeia;
 
     const orion = new SpaceStationOrion(20, 0, 0);
@@ -68,7 +64,6 @@ export default class Game {
 
     const sagittarius = new SpaceStation(0, 0);
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
-    this.agents[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
   }
