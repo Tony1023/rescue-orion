@@ -92,15 +92,26 @@ export default class Game {
   }
 
   transferEnergyCells(from: string, to: string, count?: number): void {
-
+    const sendingCarrier = this.carriers[from];
+    const receivingCarrier = this.carriers[to];
+    const transferCount = count ?? sendingCarrier.energyCells;
+    sendingCarrier.energyCells -= transferCount;
+    receivingCarrier.energyCells += transferCount;
   }
 
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
-
+    const sendingCarrier = this.carriers[from];
+    const receivingCarrier = this.carriers[to];
+    const transferCount = count ?? sendingCarrier.lifeSupportPacks;
+    sendingCarrier.lifeSupportPacks -= transferCount;
+    receivingCarrier.lifeSupportPacks += transferCount;
   }
 
-  transferRescueResource(from: string, to: string, type: number): void {
-
+  transferRescueResource(from: string, to: string, type: RescueResource): void {
+    const sendingCarrier = this.carriers[from];
+    const receivingCarrier = this.carriers[to];
+    sendingCarrier.pickUpFrom(type);
+    receivingCarrier.dropOffTo(type);
   }
 
   toGameState(): GameState {
