@@ -18,18 +18,6 @@ const GameBoard = styled.div`
   margin: 0 auto;
 `;
 
-let nextMoves = [
-  { gemini_1: 'b3', gemini_2: 'b3' },
-  { gemini_1: 'h1', gemini_2: 'b4' },
-  { gemini_1: 'h4', gemini_2: 'b35' },
-  { gemini_1: 'h4', gemini_2: 'cassiopeia' },
-  { gemini_1: 'h4', gemini_2: 'h2' },
-  { gemini_1: 'h4', gemini_2: 'h4' },
-  { gemini_1: 't2', gemini_2: 't2' },
-  { gemini_1: 't1', gemini_2: 't1' },
-  { gemini_1: 't1', gemini_2: 't1' },
-]
-
 export default function() {
 
   const gameState = useSelector((state: GameState) => state);
@@ -53,14 +41,6 @@ export default function() {
 
   return <>
     <GameBoard>
-      <button
-        onClick={() => {
-          if (nextMoves.length > 0) {
-            dispatch(Actions.moveSpaceship(nextMoves[0]))
-            nextMoves.splice(0, 1);
-          }
-        }}
-      >Move!</button>
       <button 
         onClick={() => {
           dispatch(Actions.moveSpaceship({
