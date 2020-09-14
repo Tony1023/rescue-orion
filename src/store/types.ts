@@ -49,7 +49,7 @@ export interface MoveSpaceshipAction {
 };
 
 
-export const PICKUP_SUPPLY_RESOURCE = '@GameAction/pickUpSupplyResource';
+export const PICK_UP_SUPPLY_RESOURCE = '@GameAction/pickUpSupplyResource';
 export interface PickUpSupplyResourceAction {
   type: string,
   payload: Transfer,

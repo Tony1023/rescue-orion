@@ -11,7 +11,7 @@ export function moveSpaceship(nextMoves: {
 
 export function pickUpSupplyResource(data: Types.Transfer): Types.PickUpSupplyResourceAction {
   return {
-    type: Types.PICKUP_SUPPLY_RESOURCE,
+    type: Types.PICK_UP_SUPPLY_RESOURCE,
     payload: data,
   };
 }
