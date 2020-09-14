@@ -36,11 +36,10 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
 
   pickUpFrom(r: RescueResource): void {
     const index = this.rescueResources.indexOf(r);
-    if (index > 0) {
-      this.rescueResources.splice(index, 1);
-    } else {
+    if (index === -1) {
       throw new Error(`${r} not found onboard.`);
     }
+    this.rescueResources.splice(index, 1);
   }
 
   canPickUp(r: RescueResource): boolean {

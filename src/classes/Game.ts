@@ -32,7 +32,7 @@ export default class Game {
   private spaceStations: { [id: string]: SpaceStation } = {};
 
   load(): void {
-    const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplaceMentCells]);
+    const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplacementCells]);
     this.spaceships[IDs.GEMINI_1] = gemini_1;
     this.agents[IDs.GEMINI_1] = gemini_1;
     this.carriers[IDs.GEMINI_1] = gemini_1;

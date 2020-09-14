@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
 import { GameState } from './store/types';
+import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
 import { locationData } from './metadata';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
+import * as ID from './metadata/agent-ids';
 import Timer from './Timer';
 
 const GameBoard = styled.div`
@@ -34,7 +36,7 @@ export default function() {
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
 
-  console.log(gameState);
+  console.log(gameState.spaceships);
 
   const [gemini1NextMove, setGemini1NextMove] = useState(null);
   const [gemini2NextMove, setGemini2NextMove] = useState(null);
@@ -54,10 +56,11 @@ export default function() {
     <GameBoard>
       <button
         onClick={() => {
-          if (nextMoves.length > 0) {
-            dispatch(Actions.moveSpaceship(nextMoves[0]))
-            nextMoves.splice(0, 1);
-          }
+          dispatch(Actions.transferRescueResource({
+            from: ID.GEMINI_1,
+            to: ID.GEMINI_2,
+            type: RescueResource.O2ReplacementCells,
+          }));
         }}
       >Move!</button>
       {
