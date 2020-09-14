@@ -45,22 +45,6 @@ const Gemini12Button = styled(NextMoveButton)`
     cursor: pointer;
   }
 `;
-// const GeminiShip = styled.div`
-//   top: ${(props: { position: PixelPosition }) => `${props.position.top}px`};
-//   left: ${(props: { position: PixelPosition }) => `${props.position.left}px`};
-//   width: 50px;
-//   height: 50px;
-// `;
-// const Gemini1 = styled(GeminiShip)`
-//   background-image: url(${`${process.env.PUBLIC_URL}/Gemini1.png`});
-// `;
-// const Gemini2 = styled(GeminiShip)`
-//   background-image: url(${`${process.env.PUBLIC_URL}/Gemini2.png`});
-// `;
-// const Gemini12 = styled(GeminiShip)`
-//   background-image: url(${`${process.env.PUBLIC_URL}/Gemini12.png`});
-// `;
-
 
 interface Props {
   id: string,
