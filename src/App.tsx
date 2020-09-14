@@ -7,6 +7,7 @@ import { locationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
+import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
 
 const GameBoard = styled.div`
@@ -16,6 +17,25 @@ const GameBoard = styled.div`
   background-size: contain;
   position: relative;
   margin: 0 auto;
+`;
+
+const GeminiShip = styled.div`
+  width: 80px;
+  height: 80px;
+  display: block;
+  position: absolute;
+  background-size: contain;
+`;
+const Gemini1 = styled(GeminiShip)`
+  background-image: url(${`${process.env.PUBLIC_URL}/Gemini1.png`});
+`;
+const Gemini2 = styled(GeminiShip)`
+  background-image: url(${`${process.env.PUBLIC_URL}/Gemini2.png`});
+`;
+const Gemini12 = styled(GeminiShip)`
+  background-image: url(${`${process.env.PUBLIC_URL}/Gemini12.png`});
+  left: 450px;
+   top: 550px;
 `;
 
 export default function() {
@@ -32,6 +52,28 @@ export default function() {
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
+
+  useEffect(() => {
+    const position1 = locationData[gemini1NextMove].pixelPosition;
+    const position2 = locationData[gemini2NextMove].pixelPosition;
+    if(position1 === position2) {
+      const item = document.getElementById('Gemini12');
+      if(item !== null) {
+        item.style.left = `${position1.left-40}px`;
+        item.style.top = `${position1.top-50}px`;
+      }
+    }
+    else {
+      const item1 = document.getElementById('Gemini1');
+      const item2 = document.getElementById('Gemini2');
+      if(item1 !== null && item2 !== null) {
+        item1.style.left = `${position1.left-40}px`;
+        item1.style.top = `${position1.top-50}px`;
+        item2.style.left = `${position2.left-40}px`;
+        item2.style.top = `${position2.top-50}px`;
+      }
+    }
+  }, [gemini1NextMove, gemini2NextMove])
 
   function popMessageModal() {
     const remainingMessages = messages.slice(0);
@@ -50,6 +92,14 @@ export default function() {
         }}>
         Confirm Move
       </button>
+      {
+        gemini1NextMove === gemini2NextMove ? 
+        <Gemini12 id="Gemini12"/> :
+        <>
+          <Gemini1 id="Gemini1"/>
+          <Gemini2 id="Gemini2"/>
+        </>
+      }
       {
         Object.entries(gameState.nextMoves).map((location, index) => {
           return (
