@@ -4,6 +4,7 @@ import ButtonGroup from './ButtonGroup';
 import { GameState } from './store/types';
 import styled from 'styled-components';
 import { locationData } from './metadata';
+import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
 import Timer from './Timer';
@@ -36,8 +37,8 @@ export default function() {
 
   console.log(gameState);
 
-  const [gemini1NextMove, setGemini1NextMove] = useState(null);
-  const [gemini2NextMove, setGemini2NextMove] = useState(null);
+  const [gemini1NextMove, setGemini1NextMove] = useState(IDs.SAGITTARIUS);
+  const [gemini2NextMove, setGemini2NextMove] = useState(IDs.SAGITTARIUS);
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -60,12 +61,23 @@ export default function() {
           }
         }}
       >Move!</button>
+      <button 
+        onClick={() => {
+          dispatch(Actions.moveSpaceship({
+            gemini_1: `${gemini1NextMove}`,
+            gemini_2: `${gemini2NextMove}`
+          }))
+        }}>
+        Confirm Move
+      </button>
       {
         Object.entries(gameState.nextMoves).map((location, index) => {
           return (
             <ButtonGroup 
               key={index}
               id={location[0]}
+              setGemini1NextMove={setGemini1NextMove}
+              setGemini2NextMove={setGemini2NextMove}
               shipReachability={location[1]}
             />
           );
