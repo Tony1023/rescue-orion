@@ -29,6 +29,19 @@ export interface GameState {
   time: number,
 };
 
+export interface Transfer {
+  from: string,
+  to: string,
+}
+
+export interface TransferWithCount extends Transfer {
+  count: number,
+}
+
+export interface TransferWithResourceType extends Transfer {
+  type: RescueResource,
+}
+
 export const MOVE_SPACESHIP = '@GameAction/moveSpaceship';
 export interface MoveSpaceshipAction {
   type: string,
@@ -39,70 +52,43 @@ export interface MoveSpaceshipAction {
 export const PICKUP_SUPPLY_RESOURCE = '@GameAction/pickUpSupplyResource';
 export interface PickUpSupplyResourceAction {
   type: string,
-  payload: {
-    from: string,
-    to: string,
-  },
+  payload: Transfer,
 };
 
 export const PICK_UP_RESCUE_RESOURCE = '@GameAction/pickUpRescueResource';
 export interface PickUpRescueResourceAction {
   type: string,
-  payload: {
-    from: string,
-    to: string, // rescue resource type
-  },
+  payload: TransferWithResourceType,
 };
 
 export const DROP_OFF_RESCUE_RESOURCE = '@GameAction/dropOffRescueResource';
 export interface DropOffRescueResourceAction {
   type: string,
-  payload: {
-    from: string,
-    to: string, // rescue resource type
-  },
+  payload: TransferWithResourceType,
 };
 
 export const TRANSFER_ENERGY_CELLS = '@GameAction/transferEnergyCells';
 export interface TransferEnergyCellsAction {
   type: string,
-  payload: {
-    from: string,
-    to: string, // rescue resource type
-  },
+  payload: TransferWithCount,
 };
 
 export const TRANSFER_LIFE_SUPPORT_PACKS = '@GameAction/transferLifeSupportPacks';
 export interface TransferLifeSupportPacksAction {
   type: string,
-  payload: {
-    from: string,
-    to: string, // rescue resource type
-  },
+  payload: TransferWithCount,
 };
 
 export const TRANSFER_RESCUE_RESOURCE = '@GameAction/transferRescueResource';
 export interface TransferRescueResourceAction {
   type: string,
-  payload: {
-    from: string,
-    to: string, // rescue resource type
-  },
+  payload: TransferWithResourceType,
 };
 
 export const ENQUEUE_MESSAGES = '@GameAction/enqueueMessages';
 export interface EnqueueMessagesAction {
   type: string,
   payload: string[],
-};
-
-export const EMPTY_MESSAGES = '@GameAction/emptyMessages';
-export interface EmptyMessagesAction {
-  type: string,
-  payload: {
-    from: string,
-    to: string, // rescue resource type
-  },
 };
 
 export type GameAction = MoveSpaceshipAction
@@ -113,5 +99,4 @@ export type GameAction = MoveSpaceshipAction
   | TransferLifeSupportPacksAction
   | TransferRescueResourceAction
   | EnqueueMessagesAction
-  | EmptyMessagesAction
 ;
