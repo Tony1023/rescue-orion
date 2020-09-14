@@ -11,6 +11,7 @@ export interface PlainSpaceship {
 
 export interface PlainSpaceStation {
   visited: boolean,
+  location: string,
   energyCells: number,
   lifeSupportPacks: number,
   rescueResources: RescueResource[],

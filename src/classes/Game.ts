@@ -10,11 +10,17 @@ import SpaceStationAndromeda from './SpaceStationAndromeda';
 import SpaceStationBorealis from './SpaceStationBorealis';
 import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
-import { locationData } from '../metadata';
+import { locationData, spaceStationData } from '../metadata';
 
 export interface SpaceshipNextMoves {
   [location: string]: { [id: string]: boolean }
 };
+
+function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
+  if (left.getLocation() !== right.getLocation()) {
+    throw Error('The resource carriers must be at the same location to transfer resources between them.');
+  }
+}
 
 export default class Game {
 
@@ -26,7 +32,7 @@ export default class Game {
   private spaceStations: { [id: string]: SpaceStation } = {};
 
   load(): void {
-    const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplaceMentCells]);
+    const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplacementCells]);
     this.spaceships[IDs.GEMINI_1] = gemini_1;
     this.agents[IDs.GEMINI_1] = gemini_1;
     this.carriers[IDs.GEMINI_1] = gemini_1;
@@ -36,33 +42,33 @@ export default class Game {
     this.agents[IDs.GEMINI_2] = gemini_2;
     this.carriers[IDs.GEMINI_2] = gemini_2;
     
-    const andromeda = new SpaceStationAndromeda(0, 0);
+    const andromeda = new SpaceStationAndromeda(spaceStationData[IDs.ANDROMEDA].location, 0, 0);
     this.spaceStations[IDs.ANDROMEDA] = andromeda;
     this.agents[IDs.ANDROMEDA] = andromeda;
     this.carriers[IDs.ANDROMEDA] = andromeda;
 
-    const aquarius = new SpaceStation(20, 50, [RescueResource.WaterRepairTeam]);
+    const aquarius = new SpaceStation(spaceStationData[IDs.AQUARIUS].location, 20, 50, [RescueResource.WaterRepairTeam]);
     this.spaceStations[IDs.AQUARIUS] = aquarius;
     this.carriers[IDs.AQUARIUS] = aquarius;
 
-    const borealis = new SpaceStationBorealis(50, 30, [RescueResource.OxygenRepairTeam]);
+    const borealis = new SpaceStationBorealis(spaceStationData[IDs.BOREALIS].location, 50, 30, [RescueResource.OxygenRepairTeam]);
     this.spaceStations[IDs.BOREALIS] = borealis;
     this.carriers[IDs.BOREALIS] = borealis;
 
-    const capricorn = new SpaceStation(40, 70, [RescueResource.AITechnology]);
+    const capricorn = new SpaceStation(spaceStationData[IDs.CAPRICORN].location, 40, 70, [RescueResource.AITechnology]);
     this.spaceStations[IDs.CAPRICORN] = capricorn;
     this.carriers[IDs.CAPRICORN] = capricorn;
 
-    const cassiopeia = new SpaceStation(30, 20, [RescueResource.MedicalRepairTeam]);
+    const cassiopeia = new SpaceStation(spaceStationData[IDs.CASSIOPEIA].location, 30, 20, [RescueResource.MedicalRepairTeam]);
     this.spaceStations[IDs.CASSIOPEIA] = cassiopeia;
     this.carriers[IDs.CASSIOPEIA] = cassiopeia;
 
-    const orion = new SpaceStationOrion(20, 0, 0);
+    const orion = new SpaceStationOrion(20, spaceStationData[IDs.ORION].location, 0, 0);
     this.spaceStations[IDs.ORION] = orion;
     this.agents[IDs.ORION] = orion;
     this.carriers[IDs.ORION] = orion;
 
-    const sagittarius = new SpaceStation(0, 0);
+    const sagittarius = new SpaceStation(spaceStationData[IDs.SAGITTARIUS].location, 0, 0);
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
@@ -92,15 +98,29 @@ export default class Game {
   }
 
   transferEnergyCells(from: string, to: string, count?: number): void {
-
+    const sendingCarrier = this.carriers[from];
+    const receivingCarrier = this.carriers[to];
+    asserTogether(sendingCarrier, receivingCarrier);
+    const transferCount = count ?? sendingCarrier.energyCells;
+    sendingCarrier.energyCells -= transferCount;
+    receivingCarrier.energyCells += transferCount;
   }
 
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
-
+    const sendingCarrier = this.carriers[from];
+    const receivingCarrier = this.carriers[to];
+    asserTogether(sendingCarrier, receivingCarrier);
+    const transferCount = count ?? sendingCarrier.lifeSupportPacks;
+    sendingCarrier.lifeSupportPacks -= transferCount;
+    receivingCarrier.lifeSupportPacks += transferCount;
   }
 
-  transferRescueResource(from: string, to: string, type: number): void {
-
+  transferRescueResource(from: string, to: string, type: RescueResource): void {
+    const sendingCarrier = this.carriers[from];
+    const receivingCarrier = this.carriers[to];
+    asserTogether(sendingCarrier, receivingCarrier);
+    sendingCarrier.pickUpFrom(type);
+    receivingCarrier.dropOffTo(type);
   }
 
   toGameState(): GameState {
@@ -109,11 +129,10 @@ export default class Game {
           [id: string]: PlainSpaceship 
         }, id: string) => {
           const spaceship = this.spaceships[id];
-          const path = spaceship.getPath();
           accumulator[id] = {
             energyCells: spaceship.energyCells,
             lifeSupportPacks: spaceship.lifeSupportPacks,
-            location: path[path.length - 1],
+            location: spaceship.getLocation(),
             rescueResources: spaceship.getRescueResources(),
             isInTimePortal: spaceship.getIsTravelingThruTimePortals(),
           };
@@ -135,6 +154,7 @@ export default class Game {
         }, id: string) => {
           const spaceStation = this.spaceStations[id];
           accumulator[id] = {
+            location: spaceStation.getLocation(),
             visited: spaceStation.visited,
             energyCells: spaceStation.energyCells,
             lifeSupportPacks: spaceStation.lifeSupportPacks,
