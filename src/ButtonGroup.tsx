@@ -1,5 +1,4 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { PixelPosition } from './classes/Location';
 import * as IDs from './metadata/agent-ids';
@@ -49,11 +48,11 @@ const Gemini12Button = styled(NextMoveButton)`
 interface Props {
   id: string,
   shipReachability: { [id: string]: boolean },
+  setGemini1NextMove: (Gemini1NextMove: string) => void,
+  setGemini2NextMove: (Gemini2NextMove: string) => void,
 }
 
 export default function(props: Props) {
-
-  const dispatch = useDispatch();
 
   const position = locationData[props.id].pixelPosition;
 
@@ -61,15 +60,22 @@ export default function(props: Props) {
     <ButtonGroupBackground position={position}>
       {
         props.shipReachability[IDs.GEMINI_1] ? 
-        <Gemini1Button /> : <></>
+        <Gemini1Button onClick={()=>{
+          props.setGemini1NextMove(props.id)
+        }}/> : <></>
       }
       {
         props.shipReachability[IDs.GEMINI_2] ? 
-        <Gemini2Button /> : <></>
+        <Gemini2Button onClick={() => {
+          props.setGemini2NextMove(props.id)
+        }}/> : <></>
       }
       {
         props.shipReachability[IDs.GEMINI_1] && props.shipReachability[IDs.GEMINI_2] ? 
-        <Gemini12Button /> : <></>
+        <Gemini12Button onClick={() => {
+          props.setGemini1NextMove(props.id)
+          props.setGemini2NextMove(props.id)
+        }}/> : <></>
       }
     </ButtonGroupBackground>
   );
