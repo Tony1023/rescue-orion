@@ -28,14 +28,18 @@ const GeminiShip = styled.div`
 `;
 const Gemini1 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini1.png`});
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
 `;
 const Gemini2 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini2.png`});
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
 `;
 const Gemini12 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini12.png`});
-  left: 450px;
-   top: 550px;
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
 `;
 
 export default function() {
@@ -53,27 +57,8 @@ export default function() {
     setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
 
-  useEffect(() => {
-    const position1 = locationData[gemini1NextMove].pixelPosition;
-    const position2 = locationData[gemini2NextMove].pixelPosition;
-    if(position1 === position2) {
-      const item = document.getElementById('Gemini12');
-      if(item !== null) {
-        item.style.left = `${position1.left-40}px`;
-        item.style.top = `${position1.top-50}px`;
-      }
-    }
-    else {
-      const item1 = document.getElementById('Gemini1');
-      const item2 = document.getElementById('Gemini2');
-      if(item1 !== null && item2 !== null) {
-        item1.style.left = `${position1.left-40}px`;
-        item1.style.top = `${position1.top-50}px`;
-        item2.style.left = `${position2.left-40}px`;
-        item2.style.top = `${position2.top-50}px`;
-      }
-    }
-  }, [gemini1NextMove, gemini2NextMove])
+  const position1 = locationData[gemini1NextMove].pixelPosition;
+  const position2 = locationData[gemini2NextMove].pixelPosition;
 
   function popMessageModal() {
     const remainingMessages = messages.slice(0);
@@ -83,21 +68,20 @@ export default function() {
 
   return <>
     <GameBoard>
-      <button 
-        onClick={() => {
-          dispatch(Actions.moveSpaceship({
-            gemini_1: `${gemini1NextMove}`,
-            gemini_2: `${gemini2NextMove}`
-          }))
-        }}>
+      <button onClick={() => {
+        dispatch(Actions.moveSpaceship({
+          gemini_1: `${gemini1NextMove}`,
+          gemini_2: `${gemini2NextMove}`
+        }))
+      }}>
         Confirm Move
       </button>
       {
         gemini1NextMove === gemini2NextMove ? 
-        <Gemini12 id="Gemini12"/> :
+        <Gemini12 position={position1} /> :
         <>
-          <Gemini1 id="Gemini1"/>
-          <Gemini2 id="Gemini2"/>
+          <Gemini1 position={position1} />
+          <Gemini2 position={position2} />
         </>
       }
       {
