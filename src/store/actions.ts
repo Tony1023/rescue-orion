@@ -9,63 +9,45 @@ export function moveSpaceship(nextMoves: {
   };
 }
 
-export function pickUpSupplyResource(from: string, to: string): Types.PickUpSupplyResourceAction {
+export function pickUpSupplyResource(data: Types.Transfer): Types.PickUpSupplyResourceAction {
   return {
-    type: Types.PICKUP_SUPPLY_RESOURCE,
-    payload: {
-      from: from, 
-      to: to,
-    },
+    type: Types.PICK_UP_SUPPLY_RESOURCE,
+    payload: data,
   };
 }
 
-export function pickUpRescueResource(from: string, to: string): Types.PickUpRescueResourceAction {
+export function pickUpRescueResource(data: Types.TransferWithResourceType): Types.PickUpRescueResourceAction {
   return {
     type: Types.PICK_UP_RESCUE_RESOURCE,
-    payload: {
-      from: from, 
-      to: to,
-    },
+    payload: data,
   };
 }
 
-export function dropOffRescueResource(from: string, to: string): Types.DropOffRescueResourceAction {
+export function dropOffRescueResource(data: Types.TransferWithResourceType): Types.DropOffRescueResourceAction {
   return {
     type: Types.DROP_OFF_RESCUE_RESOURCE,
-    payload: {
-      from: from, 
-      to: to,
-    },
+    payload: data,
   };
 }
 
-export function transferEnergyCells(from: string, to: string): Types.TransferEnergyCellsAction {
+export function transferEnergyCells(data: Types.TransferWithCount): Types.TransferEnergyCellsAction {
   return {
     type: Types.TRANSFER_ENERGY_CELLS,
-    payload: {
-      from: from, 
-      to: to,
-    },
+    payload: data,
   };
 }
 
-export function transferLifeSupportPacks(from: string, to: string): Types.TransferLifeSupportPacksAction {
+export function transferLifeSupportPacks(data: Types.TransferWithCount): Types.TransferLifeSupportPacksAction {
   return {
     type: Types.TRANSFER_LIFE_SUPPORT_PACKS,
-    payload: {
-      from: from, 
-      to: to,
-    },
+    payload: data,
   };
 }
 
-export function transferRescueResource(from: string, to: string): Types.TransferRescueResourceAction {
+export function transferRescueResource(data: Types.TransferWithResourceType): Types.TransferRescueResourceAction {
   return {
     type: Types.TRANSFER_RESCUE_RESOURCE,
-    payload: {
-      from: from, 
-      to: to,
-    },
+    payload: data,
   };
 }
 
@@ -73,15 +55,5 @@ export function enqueueMessages(messages: string[]): Types.EnqueueMessagesAction
   return {
     type: Types.ENQUEUE_MESSAGES,
     payload: messages,
-  };
-}
-
-export function emptyMessages(from: string, to: string): Types.EmptyMessagesAction {
-  return {
-    type: Types.EMPTY_MESSAGES,
-    payload: {
-      from: from, 
-      to: to,
-    },
   };
 }

@@ -17,7 +17,11 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     this.lifeSupportPacks = lifeSupportPacks;
     this.rescueResources = resources ?? [];
   }
-  
+
+  getLocation(): string {
+    return this.path[this.path.length - 1];
+  }
+
   getRescueResources(): RescueResource[] {
     return this.rescueResources.slice(0);
   }
@@ -32,11 +36,10 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
 
   pickUpFrom(r: RescueResource): void {
     const index = this.rescueResources.indexOf(r);
-    if (index > 0) {
-      this.rescueResources.splice(index, 1);
-    } else {
+    if (index === -1) {
       throw new Error(`${r} not found onboard.`);
     }
+    this.rescueResources.splice(index, 1);
   }
 
   canPickUp(r: RescueResource): boolean {
