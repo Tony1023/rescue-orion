@@ -11,6 +11,7 @@ import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './classes/Location';
 import * as ID from './metadata/agent-ids';
 import Timer from './Timer';
+import OrionMessageEmitter from './OrionMessageEmitter';
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
@@ -120,5 +121,6 @@ export default function() {
       }
     </GameBoard>
     <Timer />
+    <OrionMessageEmitter />
   </>;
 }
