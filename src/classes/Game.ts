@@ -1,4 +1,4 @@
-import { GameState, PlainSpaceship, PlainSpaceStation } from '../store/types';
+import { GameState, PlainSpaceship, PlainSpaceStation, Message } from '../store/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -25,7 +25,7 @@ function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
 export default class Game {
 
   private time = 0;
-  private messages: string[] = [];
+  private messages: Message[] = [];
   private agents: { [id: string]: TimeVaryingAgent } = {};
   private carriers: { [id: string]: ResourceCarrier } = {};
   private spaceships: { [id: string]: Spaceship } = {};
@@ -81,7 +81,7 @@ export default class Game {
     }
   }
 
-  dumpMessages(): string[] {
+  dumpMessages(): Message[] {
     const messages = this.messages;
     this.messages = [];
     return messages;
