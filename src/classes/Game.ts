@@ -63,7 +63,7 @@ export default class Game {
     this.spaceStations[IDs.CASSIOPEIA] = cassiopeia;
     this.carriers[IDs.CASSIOPEIA] = cassiopeia;
 
-    const orion = new SpaceStationOrion(20, spaceStationData[IDs.ORION].location, 0, 0, [RescueResource.WaterRepairTeam, RescueResource.O2ReplacementCells]);
+    const orion = new SpaceStationOrion(20, spaceStationData[IDs.ORION].location, 0, 0);
     this.spaceStations[IDs.ORION] = orion;
     this.agents[IDs.ORION] = orion;
     this.carriers[IDs.ORION] = orion;
