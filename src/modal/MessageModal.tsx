@@ -10,13 +10,16 @@ import { Message } from '../store/types';
 
 
 const Header = styled.div`
-  font-family: aviano-future, sans-serif;
+  font-family: 'Alegreya Sans SC', sans-serif;
   height: 40px;
   line-height: 40px;
+  font-weight: bold;
+  font-size: 28px;
 `;
 
 const Body = styled.div`
-  white-space: pre-wrap;
+  font-family: 'Roboto' sans-serif;
+  font-size: 20px;
 `;
 
 export default (props: {
@@ -25,8 +28,8 @@ export default (props: {
 }) => {
   return <ModalBackground>
     <Modal>
+      <DismissButton onClose={props.onClose} />
       <Header>
-        <DismissButton onClose={props.onClose} />
         {props.message?.title}
       </Header>
       <Body>

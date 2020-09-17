@@ -15,17 +15,27 @@ export const Modal = styled.div`
   position: absolute;
   top: 80px;
   left: 50%;
+  width: 700px;
   transform: translate(-50%, 0);
   background-color: white;
-  padding: 0 20px;
+  padding: 30px 50px;
+  background-color: rgb(197, 205, 233);
 `;
 
-export const StyledButton = styled.button`
-
+const StyledButton = styled.div`
+  font-family: 'Roboto' sans-serif;
+  background-color: rgb(0, 198, 170);
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  letter-spacing: 1px;
 `;
 
 export function DismissButton({ onClose }: {
   onClose?: () => void,
 }) {
-  return <StyledButton onClick={onClose}>Dismiss</StyledButton>;
+  return <StyledButton
+    onClick={onClose}
+  >DISMISS</StyledButton>;
 }
