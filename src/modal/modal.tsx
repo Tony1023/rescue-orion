@@ -28,8 +28,10 @@ const StyledButton = styled.div`
   display: inline-block;
   cursor: pointer;
   padding: 10px;
+  margin: 10px 0;
   border-radius: 5px;
   letter-spacing: 1px;
+  font-weight: 500;
 `;
 
 export function DismissButton({ onClose }: {
