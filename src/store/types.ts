@@ -19,6 +19,14 @@ export interface PlainSpaceStation {
   scientists?: number,
 };
 
+export interface Message {
+  title: string,
+  paragraphs: {
+    text: string,
+    number?: number,
+  }[],
+}
+
 export interface GameState {
   spaceships: {
     [id: string]: PlainSpaceship,
@@ -27,7 +35,7 @@ export interface GameState {
   spaceStations: {
     [id: string]: PlainSpaceStation,
   },
-  messages: string[],
+  messages: Message[],
   time: number,
 };
 
@@ -90,7 +98,7 @@ export interface TransferRescueResourceAction {
 export const ENQUEUE_MESSAGES = '@GameAction/enqueueMessages';
 export interface EnqueueMessagesAction {
   type: string,
-  payload: string[],
+  payload: Message[],
 };
 
 export type GameAction = MoveSpaceshipAction

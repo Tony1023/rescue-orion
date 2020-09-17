@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
-import { GameState } from './store/types';
+import { GameState, Message } from './store/types';
 import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
 import { locationData } from './metadata';
@@ -54,8 +54,8 @@ export default function() {
 
   const [gemini1NextMove, setGemini1NextMove] = useState(IDs.SAGITTARIUS);
   const [gemini2NextMove, setGemini2NextMove] = useState(IDs.SAGITTARIUS);
-  const [messages, setMessages] = useState<string[]>([]);
-
+  const [messages, setMessages] = useState<Message[]>([]);
+  
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
@@ -111,7 +111,7 @@ export default function() {
       }
 
       {
-        messages.map((message: string, index: number) => {
+        messages.map((message: Message, index: number) => {
           return <MessageModal
             key={index}
             message={message}

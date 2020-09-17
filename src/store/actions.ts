@@ -51,7 +51,7 @@ export function transferRescueResource(data: Types.TransferWithResourceType): Ty
   };
 }
 
-export function enqueueMessages(messages: string[]): Types.EnqueueMessagesAction {
+export function enqueueMessages(messages: Types.Message[]): Types.EnqueueMessagesAction {
   return {
     type: Types.ENQUEUE_MESSAGES,
     payload: messages,
