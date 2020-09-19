@@ -72,6 +72,7 @@ export default class Game {
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
+    this.messages.push(spaceStationData[IDs.SAGITTARIUS].message);
   }
 
   advanceTime(): void {

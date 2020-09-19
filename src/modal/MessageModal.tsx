@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {
+  ExtraModal,
   Modal,
   ModalBackground,
   DismissButton,
 } from './modal';
 import { Message } from '../store/types';
-
 
 const Header = styled.div`
   font-family: 'Alegreya Sans SC', sans-serif;
@@ -15,11 +15,15 @@ const Header = styled.div`
   line-height: 40px;
   font-weight: bold;
   font-size: 28px;
+  text-align: center;
+  color: #b62021;
+  font-family: 'Permanent Marker', cursive;
 `;
 
 const Body = styled.div`
   font-family: 'Roboto' sans-serif;
   font-size: 20px;
+  font-weight: bold;
 `;
 
 export default (props: {
@@ -42,5 +46,12 @@ export default (props: {
         }
       </Body>
     </Modal>
+    {
+      props.message?.technology ?
+      <ExtraModal>
+        <Body>{props.message?.note}</Body>
+        <Header>{props.message?.technology}</Header>
+      </ExtraModal> : <></>
+    }
   </ModalBackground>;
 }

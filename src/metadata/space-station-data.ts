@@ -12,7 +12,9 @@ const metadata: SpaceStationMetadata = {
   },
   'aquarius': {
     location: 't3',
-    message: {
+    message: { 
+      note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
+      technology: "WATER REPAIR TEAM",
       title: 'FOOD AT ORION',
       paragraphs: [
         {text: 'The food processing systems were destroyed at the time of the damage.'},
