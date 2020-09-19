@@ -10,7 +10,7 @@ import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
-import Resource from './Resource';
+import ResourcePanel from './ResourcePanel';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -123,11 +123,12 @@ export default function() {
         })
       }
 
-      <Resource
+      <ResourcePanel
         gemini1={gameState.spaceships[IDs.GEMINI_1]}
         gemini2={gameState.spaceships[IDs.GEMINI_2]}
-      ></Resource>
-      
+        time={gameState.time}
+      ></ResourcePanel>
+
     </GameBoard>
     <Timer />
   </>;

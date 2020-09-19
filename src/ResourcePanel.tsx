@@ -33,6 +33,10 @@ const Gemini2LifeSupport = styled(Number)`
   top: ${LIFE_SUPPORT_OFFSET}px;
   left: ${GEMINI2_LEFT_OFFSET}px;
 `;
+const Time = styled(Number)`
+  top: 550px;
+  left: 100px;
+`
 
 const Resource = styled.div`
   position: absolute;
@@ -61,6 +65,7 @@ const Gemini2Resource = styled(Resource)`
 interface Props {
   gemini1: PlainSpaceship,
   gemini2: PlainSpaceship,
+  time: number,
 }
 
 export default function(props: Props) {
@@ -84,6 +89,7 @@ export default function(props: Props) {
           })
         }
       </Gemini2Resource>
+      <Time>{props.time}</Time>
     </>
   );
 }
