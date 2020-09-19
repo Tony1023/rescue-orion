@@ -6,6 +6,7 @@ let game = new Game();
 game.load();
 
 export default function reduce(state = game.toGameState(), action: Types.GameAction): Types.GameState {
+  console.log(action);
   switch (action.type) {
     case Types.MOVE_SPACESHIP: {
       game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
@@ -50,6 +51,8 @@ export default function reduce(state = game.toGameState(), action: Types.GameAct
       newState.messages = messages;
       return newState;
     }
+    default:
+      return state;
   }
   return game.toGameState();
 };
