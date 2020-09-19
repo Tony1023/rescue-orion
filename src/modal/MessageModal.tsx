@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {
+  BaseModalBackground,
   ExtraModal,
   Modal,
   ModalBackground,
@@ -10,7 +11,6 @@ import {
 import { Message } from '../store/types';
 
 const Header = styled.div`
-  font-family: 'Alegreya Sans SC', sans-serif;
   height: 40px;
   line-height: 40px;
   font-weight: bold;
@@ -38,30 +38,32 @@ export default (props: {
   onClose?: () => void,
 }) => {
   return <ModalBackground>
-    <Modal>
-      <DismissButton onClose={props.onClose} />
-      <Header>
-        {props.message?.title}
-      </Header>
-      <Body>
-        {
-          props.message?.paragraphs.map((paragraph, i) => {
-            return <p key={i}>
-              {paragraph.text}
-            </p>;
-          })
-        }
-      </Body>
-    </Modal>
-    {
-      props.message?.technology?
-      <ExtraModal>
-        <Body>{props.message?.note}</Body>
-        <Header>{props.message?.technology}</Header>
-        {
-          props.message?.sideNote? <Note>{props.message?.sideNote}</Note> : <></>
-        }
-      </ExtraModal> : <></>
-    }
+    <BaseModalBackground>
+      <Modal>
+        <DismissButton onClose={props.onClose} />
+        <Header>
+          {props.message?.title}
+        </Header>
+        <Body>
+          {
+            props.message?.paragraphs.map((paragraph, i) => {
+              return <p key={i}>
+                {paragraph.text}
+              </p>;
+            })
+          }
+        </Body>
+      </Modal>
+      {
+        props.message?.technology?
+        <ExtraModal>
+          <Body>{props.message?.note}</Body>
+          <Header>{props.message?.technology}</Header>
+          {
+            props.message?.sideNote? <Note>{props.message?.sideNote}</Note> : <></>
+          }
+        </ExtraModal> : <></>
+      }
+    </BaseModalBackground>
   </ModalBackground>;
 }

@@ -11,9 +11,15 @@ export const ModalBackground = styled.div`
   background-color: rgba(10, 10, 10, 0.5);
 `;
 
-export const BaseModal = styled.div`
+export const BaseModalBackground = styled.div`
   position: absolute;
+  padding: 30px;
+  top: 80px;
+  left: 50%;
   width: 700px;
+`;
+
+export const BaseModal = styled.div`
   transform: translate(-50%, 0);
   background-color: white;
   padding: 30px;
@@ -22,17 +28,11 @@ export const BaseModal = styled.div`
 `;
 
 export const Modal = styled(BaseModal)`
-  top: 80px;
-  left: 50%;
-  width: 700px;
-  height: 280px;
   border-radius: 50px 20px;
+  margin-bottom: 20px;
 `;
 
 export const ExtraModal = styled(BaseModal)`
-  top: 450px;
-  left: 50%;
-  width: 700px;
   border-radius: 20px 50px;
 `;
 
