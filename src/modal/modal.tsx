@@ -25,11 +25,12 @@ export const Modal = styled(BaseModal)`
   top: 80px;
   left: 50%;
   width: 700px;
+  height: 280px;
   border-radius: 50px 20px;
 `;
 
 export const ExtraModal = styled(BaseModal)`
-  top: 430px;
+  top: 450px;
   left: 50%;
   width: 700px;
   border-radius: 20px 50px;

@@ -24,6 +24,7 @@ export interface Message {
     text: string,
     number?: number,
   }[],
+  sideNote?: string,
   technology?: string,
   title: string,
 }

@@ -9,7 +9,8 @@ const metadata: SpaceStationMetadata = {
       title: 'FOOD REPAIR TEAM',
       paragraphs:[
         {text: 'The Food Repair Team is currently out on another mission and will not return to Andromeda until Day 14.'}
-      ]
+      ],
+      sideNote: "available Day 14",
     }
   },
   'aquarius': {

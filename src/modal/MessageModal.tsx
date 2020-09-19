@@ -26,6 +26,13 @@ const Body = styled.div`
   font-weight: bold;
 `;
 
+const Note = styled.div`
+  font-family: 'Permanent Marker', cursive;
+  font-size: 20px;
+  text-align: center;
+  color: #b62021;
+`;
+
 export default (props: {
   message?: Message,
   onClose?: () => void,
@@ -47,10 +54,13 @@ export default (props: {
       </Body>
     </Modal>
     {
-      props.message?.technology ?
+      props.message?.technology?
       <ExtraModal>
         <Body>{props.message?.note}</Body>
         <Header>{props.message?.technology}</Header>
+        {
+          props.message?.sideNote? <Note>{props.message?.sideNote}</Note> : <></>
+        }
       </ExtraModal> : <></>
     }
   </ModalBackground>;

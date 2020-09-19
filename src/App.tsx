@@ -56,7 +56,7 @@ export default function() {
 
   const [gemini1NextMove, setGemini1NextMove] = useState(IDs.SAGITTARIUS);
   const [gemini2NextMove, setGemini2NextMove] = useState(IDs.SAGITTARIUS);
-  const [messages, setMessages] = useState<Message[]>([spaceStationData[IDs.AQUARIUS].message]);
+  const [messages, setMessages] = useState<Message[]>([]);
   
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
