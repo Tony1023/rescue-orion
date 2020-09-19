@@ -19,11 +19,14 @@ export interface PlainSpaceStation {
 };
 
 export interface Message {
-  title: string,
+  note?: string,
   paragraphs: {
     text: string,
     number?: number,
   }[],
+  sideNote?: string,
+  technology?: string,
+  title: string,
 }
 
 export interface GameState {

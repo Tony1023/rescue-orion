@@ -1,4 +1,5 @@
 import Location from '../classes/Location';
+import { Message } from '../store/types';
 
 export type LocationMetadata = { [id: string]: {
     location: Location,
@@ -9,11 +10,6 @@ export type LocationMetadata = { [id: string]: {
 
 export type SpaceStationMetadata = { [id: string]: {
     location: string,
-    information: Information,
+    message: Message,
   }
 }
-
-type Information = {
-  title: string,
-  bulletPoints: string[],
-} | string;

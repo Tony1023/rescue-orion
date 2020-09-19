@@ -72,6 +72,7 @@ export default class Game {
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
+    this.messages.push(spaceStationData[IDs.SAGITTARIUS].message);
   }
 
   advanceTime(): void {
@@ -91,8 +92,9 @@ export default class Game {
     for (const id in moves) {
       this.spaceships[id].addToPath(moves[id]);
       const spaceStation = locationData[moves[id]].location.spaceStationName;
-      if (spaceStation) {
+      if (spaceStation && !this.spaceStations[spaceStation].visited) {
         this.spaceStations[spaceStation].visited = true;
+        this.messages.push(spaceStationData[spaceStation].message);
       }
     }
   }
