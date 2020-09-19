@@ -17,7 +17,8 @@ const Header = styled.div`
   font-size: 28px;
   text-align: center;
   color: #b62021;
-  font-family: 'Permanent Marker', cursive;
+  font-family: 'Grandstander', cursive;
+  text-transform: uppercase;
 `;
 
 const Body = styled.div`
@@ -27,7 +28,7 @@ const Body = styled.div`
 `;
 
 const Note = styled.div`
-  font-family: 'Permanent Marker', cursive;
+  font-family: 'Grandstander', cursive;
   font-size: 20px;
   text-align: center;
   color: #b62021;

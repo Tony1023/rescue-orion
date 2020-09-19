@@ -4,7 +4,7 @@ import ButtonGroup from './ButtonGroup';
 import { GameState, Message } from './store/types';
 import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
-import { locationData, spaceStationData } from './metadata';
+import { locationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
