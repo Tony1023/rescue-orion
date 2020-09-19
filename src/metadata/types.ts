@@ -13,7 +13,7 @@ export type SpaceStationMetadata = { [id: string]: {
   }
 }
 
-type Information = {
+export type Information = {
   title: string,
   bulletPoints: string[],
-} | string;
+};

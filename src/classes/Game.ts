@@ -91,8 +91,16 @@ export default class Game {
     for (const id in moves) {
       this.spaceships[id].addToPath(moves[id]);
       const spaceStation = locationData[moves[id]].location.spaceStationName;
-      if (spaceStation) {
+      if (spaceStation && !this.spaceStations[spaceStation].visited) {
         this.spaceStations[spaceStation].visited = true;
+        let information = spaceStationData[spaceStation].information;
+        let message = information.bulletPoints.map((item) => {
+          return ({text: item})
+        })
+        this.messages.push({
+          title: information.title,
+          paragraphs: message
+        })
       }
     }
   }

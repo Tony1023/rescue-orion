@@ -3,7 +3,12 @@ import { SpaceStationMetadata } from './types';
 const metadata: SpaceStationMetadata = {
   'andromeda': {
     location: 'andromeda',
-    information: 'The Food Repair Team is currently out on another mission and will not return to Andromeda until Day 14.',
+    information: {
+      title: 'FOOD REPAIR TEAM',
+      bulletPoints:[
+        'The Food Repair Team is currently out on another mission and will not return to Andromeda until Day 14.',
+      ]
+    }
   },
   'aquarius': {
     location: 't3',
