@@ -9,8 +9,8 @@ import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './classes/Location';
-import * as ID from './metadata/agent-ids';
 import Timer from './Timer';
+import Resource from './Resource';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -57,6 +57,7 @@ export default function() {
   const [gemini1NextMove, setGemini1NextMove] = useState(IDs.SAGITTARIUS);
   const [gemini2NextMove, setGemini2NextMove] = useState(IDs.SAGITTARIUS);
   const [messages, setMessages] = useState<Message[]>([]);
+
   
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
@@ -84,8 +85,8 @@ export default function() {
       <button
         onClick={() => {
           dispatch(Actions.transferRescueResource({
-            from: ID.GEMINI_1,
-            to: ID.GEMINI_2,
+            from: IDs.GEMINI_1,
+            to: IDs.GEMINI_2,
             type: RescueResource.O2ReplacementCells,
           }));
         }}
@@ -121,6 +122,12 @@ export default function() {
           />;
         })
       }
+
+      <Resource
+        gemini1={gameState.spaceships[IDs.GEMINI_1]}
+        gemini2={gameState.spaceships[IDs.GEMINI_2]}
+      ></Resource>
+      
     </GameBoard>
     <Timer />
   </>;
