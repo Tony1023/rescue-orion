@@ -93,14 +93,7 @@ export default class Game {
       const spaceStation = locationData[moves[id]].location.spaceStationName;
       if (spaceStation && !this.spaceStations[spaceStation].visited) {
         this.spaceStations[spaceStation].visited = true;
-        let information = spaceStationData[spaceStation].information;
-        let message = information.bulletPoints.map((item) => {
-          return ({text: item})
-        })
-        this.messages.push({
-          title: information.title,
-          paragraphs: message
-        })
+        this.messages.push(spaceStationData[spaceStation].message);
       }
     }
   }
