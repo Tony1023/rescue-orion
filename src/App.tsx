@@ -12,6 +12,9 @@ import { PixelPosition } from './classes/Location';
 import * as ID from './metadata/agent-ids';
 import Timer from './Timer';
 
+const GEMINI_LEFT_OFFSET = 45;
+const GEMINI_TOP_OFFSET = 50;
+
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
   height: 810px;
@@ -30,18 +33,18 @@ const GeminiShip = styled.div`
 `;
 const Gemini1 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini1.png`});
-  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - GEMINI_TOP_OFFSET}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 const Gemini2 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini2.png`});
-  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - GEMINI_TOP_OFFSET}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 const Gemini12 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini12.png`});
-  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - GEMINI_TOP_OFFSET}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 
 export default function() {
