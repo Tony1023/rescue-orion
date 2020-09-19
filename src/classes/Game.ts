@@ -83,7 +83,7 @@ export default class Game {
   }
 
   dumpMessages(): Message[] {
-    const messages = this.messages;
+    const messages = this.messages.slice(0);
     this.messages = [];
     return messages;
   }
