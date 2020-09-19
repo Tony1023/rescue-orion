@@ -4,6 +4,8 @@ const metadata: SpaceStationMetadata = {
   'andromeda': {
     location: 'andromeda',
     message: {
+      note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
+      technology: "FOOD REPAIR TEAM",
       title: 'FOOD REPAIR TEAM',
       paragraphs:[
         {text: 'The Food Repair Team is currently out on another mission and will not return to Andromeda until Day 14.'}
@@ -26,6 +28,8 @@ const metadata: SpaceStationMetadata = {
   'boreallis': {
     location: 't5',
     message: {
+      note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
+      technology: "OXYGEN REPAIR TEAM",
       title: 'O2 REPAIR AT ORION',
       paragraphs: [
         {text: 'The 02 Repair Team can immediately and permanently restore 02 to ORION upon their arrival there.'},
@@ -37,6 +41,8 @@ const metadata: SpaceStationMetadata = {
   'capricorn': {
     location: 't4',
     message: {
+      note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
+      technology: "AI Technology",
       title: 'INJURIES AT ORION',
       paragraphs: [
         {text: 'Three injuries were sustained at the time of the damage.'},
@@ -48,6 +54,8 @@ const metadata: SpaceStationMetadata = {
   'cassiopeia': {
     location: 'cassiopeia',
     message: {
+      note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
+      technology: "MEDICAL REPAIR TEAM",
       title: 'WATER PROVISION AT ORION',
       paragraphs: [
         {text: 'The water purification system shut down during the time of the damage.'},
