@@ -177,6 +177,7 @@ const metadata: LocationMetadata = {
       'b17',
       'b32',
       'b15',
+      'h2',
     ],
     pixelPosition: { left: 1003, top: 509 },
   },

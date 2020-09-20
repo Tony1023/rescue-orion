@@ -9,9 +9,12 @@ import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './classes/Location';
-import * as ID from './metadata/agent-ids';
 import Timer from './Timer';
 import OrionMessageEmitter from './OrionMessageEmitter';
+import ResourcePanel from './ResourcePanel';
+
+const GEMINI_LEFT_OFFSET = 45;
+const GEMINI_TOP_OFFSET = 50;
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
@@ -31,18 +34,18 @@ const GeminiShip = styled.div`
 `;
 const Gemini1 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini1.png`});
-  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - GEMINI_TOP_OFFSET}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 const Gemini2 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini2.png`});
-  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - GEMINI_TOP_OFFSET}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 const Gemini12 = styled(GeminiShip)`
   background-image: url(${`${process.env.PUBLIC_URL}/Gemini12.png`});
-  top: ${(props: { position: PixelPosition }) => `${props.position.top - 40}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 50}px`};
+  top: ${(props: { position: PixelPosition }) => `${props.position.top - GEMINI_TOP_OFFSET}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 
 export default function() {
@@ -55,6 +58,7 @@ export default function() {
   const [gemini1NextMove, setGemini1NextMove] = useState(IDs.SAGITTARIUS);
   const [gemini2NextMove, setGemini2NextMove] = useState(IDs.SAGITTARIUS);
   const [messages, setMessages] = useState<Message[]>([]);
+
   
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
@@ -82,8 +86,8 @@ export default function() {
       <button
         onClick={() => {
           dispatch(Actions.transferRescueResource({
-            from: ID.GEMINI_1,
-            to: ID.GEMINI_2,
+            from: IDs.GEMINI_1,
+            to: IDs.GEMINI_2,
             type: RescueResource.O2ReplacementCells,
           }));
         }}
@@ -119,6 +123,13 @@ export default function() {
           />;
         })
       }
+
+      <ResourcePanel
+        gemini1={gameState.spaceships[IDs.GEMINI_1]}
+        gemini2={gameState.spaceships[IDs.GEMINI_2]}
+        time={gameState.time}
+      ></ResourcePanel>
+
     </GameBoard>
     <Timer />
     <OrionMessageEmitter />
