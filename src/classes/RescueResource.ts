@@ -1,5 +1,5 @@
 export enum RescueResource {
-  O2ReplacementCells = 'Oxygen Replacement Cells',
+  O2ReplacementCells = 'O2 Replacement Cells',
   FoodRepairTeam = 'Food Repair Team',
   WaterRepairTeam = 'Water Repair Team',
   MedicalRepairTeam = 'Medical Repair Team',
