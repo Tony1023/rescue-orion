@@ -29,7 +29,7 @@ export default () => {
   useEffect(constantHints, [minutes]);
  
   useEffect(() => {
-    const interval = setInterval(tickMinute, 60 * 1000);
+    const interval = setInterval(tickMinute, 1000);
     return () => {
       clearInterval(interval);
     }

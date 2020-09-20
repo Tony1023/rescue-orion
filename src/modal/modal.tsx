@@ -9,6 +9,7 @@ export const ModalBackground = styled.div`
   position: absolute;
   margin: 0 auto;
   background-color: rgba(10, 10, 10, 0.5);
+  z-index: 10;
 `;
 
 export const BaseModalBackground = styled.div`
