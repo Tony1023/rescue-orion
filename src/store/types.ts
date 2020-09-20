@@ -16,6 +16,7 @@ export interface PlainSpaceStation {
   lifeSupportPacks: number,
   rescueResources: RescueResource[],
   canPickUp: { [resource: string]: boolean },
+  scientists?: number,
 };
 
 export interface Message {

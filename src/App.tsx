@@ -10,6 +10,7 @@ import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
+import OrionMessageEmitter from './OrionMessageEmitter';
 import ResourcePanel from './ResourcePanel';
 
 const GEMINI_LEFT_OFFSET = 45;
@@ -131,5 +132,6 @@ export default function() {
 
     </GameBoard>
     <Timer />
+    <OrionMessageEmitter />
   </>;
 }

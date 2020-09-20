@@ -168,6 +168,9 @@ export default class Game {
                 return accumulator;
               },
             {})
+          };
+          if (id === IDs.ORION) {
+            accumulator[id].scientists = (spaceStation as SpaceStationOrion).getScientistCount();
           }
           return accumulator;
         },
