@@ -20,6 +20,7 @@ export interface PlainSpaceStation {
 };
 
 export interface Message {
+  asset?: string,
   note?: string,
   paragraphs: {
     text: string,

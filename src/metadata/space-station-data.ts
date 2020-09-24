@@ -4,6 +4,7 @@ const metadata: SpaceStationMetadata = {
   'andromeda': {
     location: 'andromeda',
     message: {
+      asset: 'Andromeda_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
       technology: "FOOD REPAIR TEAM",
       title: 'FOOD REPAIR TEAM',

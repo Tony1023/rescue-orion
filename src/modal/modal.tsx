@@ -8,7 +8,7 @@ export const ModalBackground = styled.div`
   height: 100%;
   position: absolute;
   margin: 0 auto;
-  background-color: rgba(10, 10, 10, 0.5);
+  background-color: rgba(10, 10, 10, 0.2);
   z-index: 10;
 `;
 
@@ -16,8 +16,18 @@ export const BaseModalBackground = styled.div`
   position: absolute;
   padding: 30px;
   top: 80px;
-  left: 50%;
   width: 700px;
+`;
+
+export const BaseModalImageBackground = styled(BaseModalBackground)`
+  left: calc(50% - 350px);
+  height: 500px;
+  background-size: cover;
+  background-image: ${(props: {backgroundImage: string|undefined }) => props.backgroundImage !== undefined ? `url(${`${process.env.PUBLIC_URL}/${props.backgroundImage}`})`: 'none'};
+`;
+
+export const BaseModalTextBackground = styled(BaseModalBackground)`
+  left: 50%;
 `;
 
 export const BaseModal = styled.div`
