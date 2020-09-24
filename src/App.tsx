@@ -59,7 +59,7 @@ export default function() {
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [showRebalanceModal, setShowRebalanceModal] = useState(true);
+  const [showRebalanceModal, setShowRebalanceModal] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
