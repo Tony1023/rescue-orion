@@ -29,12 +29,12 @@ export const BaseModal = styled.div`
 `;
 
 export const Modal = styled(BaseModal)`
-  border-radius: 50px 20px;
+  clip-path: polygon(5% 0, 95% 0, 100% 0, 100% 86%, 94% 100%, 0 100%, 0 87%, 0 12%);
   margin-bottom: 20px;
 `;
 
 export const ExtraModal = styled(BaseModal)`
-  border-radius: 20px 50px;
+  clip-path: polygon(0 0, 95% 0, 100% 11%, 100% 100%, 95% 100%, 5% 100%, 0 87%, 0 12%);
 `;
 
 const StyledButton = styled.div`

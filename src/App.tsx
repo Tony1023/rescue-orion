@@ -4,7 +4,7 @@ import ButtonGroup from './ButtonGroup';
 import { GameState, Message } from './store/types';
 import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
-import { locationData } from './metadata';
+import { locationData, spaceStationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
@@ -57,7 +57,7 @@ export default function() {
 
   const [gemini1NextMove, setGemini1NextMove] = useState(IDs.SAGITTARIUS);
   const [gemini2NextMove, setGemini2NextMove] = useState(IDs.SAGITTARIUS);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([spaceStationData[IDs.ANDROMEDA].message]);
 
   
   useEffect(() => {
