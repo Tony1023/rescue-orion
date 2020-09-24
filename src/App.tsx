@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
 import { GameState, Message } from './store/types';
@@ -55,17 +55,25 @@ export default function() {
 
   console.log(gameState.spaceships);
 
-  const [gemini1NextMove, setGemini1NextMove] = useState(IDs.SAGITTARIUS);
-  const [gemini2NextMove, setGemini2NextMove] = useState(IDs.SAGITTARIUS);
+  const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
+  const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
 
+  useLayoutEffect(() => {
+    setGemini1NextMove(undefined);
+    setGemini2NextMove(undefined);
+  }, [gameState.time]);
   
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
 
-  const position1 = locationData[gemini1NextMove].pixelPosition;
-  const position2 = locationData[gemini2NextMove].pixelPosition;
+  const selectedMove = gemini1NextMove && gemini2NextMove;
+
+  const gemini1Location = gemini1NextMove ?? gameState.spaceships[IDs.GEMINI_1].location;
+  const gemini2Location = gemini2NextMove ?? gameState.spaceships[IDs.GEMINI_2].location;
+  const position1 = locationData[gemini1Location].pixelPosition;
+  const position2 = locationData[gemini2Location].pixelPosition;
 
   function popMessageModal() {
     const remainingMessages = messages.slice(0);
@@ -75,12 +83,15 @@ export default function() {
 
   return <>
     <GameBoard>
-      <button onClick={() => {
-        dispatch(Actions.moveSpaceship({
-          gemini_1: `${gemini1NextMove}`,
-          gemini_2: `${gemini2NextMove}`
-        }))
-      }}>
+      <button 
+        onClick={() => {
+          dispatch(Actions.moveSpaceship({
+            gemini_1: `${gemini1NextMove}`,
+            gemini_2: `${gemini2NextMove}`
+          }))
+        }}
+        disabled={!selectedMove}
+      >
         Confirm Move
       </button>
       <button
@@ -93,7 +104,7 @@ export default function() {
         }}
       >Move Resource</button>
       {
-        gemini1NextMove === gemini2NextMove ? 
+        gemini1Location === gemini2Location ? 
         <Gemini12 position={position1} /> :
         <>
           <Gemini1 position={position1} />
@@ -106,6 +117,8 @@ export default function() {
             <ButtonGroup 
               key={index}
               id={location[0]}
+              gemini1NextMove={gemini1NextMove === location[0]}
+              gemini2NextMove={gemini2NextMove === location[0]}
               setGemini1NextMove={setGemini1NextMove}
               setGemini2NextMove={setGemini2NextMove}
               shipReachability={location[1]}

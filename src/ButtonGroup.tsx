@@ -21,6 +21,10 @@ const NextMoveButton = styled.div`
   height: 12px;
   display: inline-block;
   margin: 0 3px;
+  box-shadow: ${(props: { selected: boolean }) => 
+    props.selected ?
+    '0px 0px 10px 2px #FFFFFF': 'none'
+  };
 `;
 
 const Gemini1Button = styled(NextMoveButton)`
@@ -48,6 +52,8 @@ const Gemini12Button = styled(NextMoveButton)`
 interface Props {
   id: string,
   shipReachability: { [id: string]: boolean },
+  gemini1NextMove: boolean,
+  gemini2NextMove: boolean,
   setGemini1NextMove: (Gemini1NextMove: string) => void,
   setGemini2NextMove: (Gemini2NextMove: string) => void,
 }
@@ -60,22 +66,31 @@ export default function(props: Props) {
     <ButtonGroupBackground position={position}>
       {
         props.shipReachability[IDs.GEMINI_1] ? 
-        <Gemini1Button onClick={()=>{
-          props.setGemini1NextMove(props.id)
-        }}/> : <></>
+        <Gemini1Button
+          selected={props.gemini1NextMove && !props.gemini2NextMove}
+          onClick={()=>{
+            props.setGemini1NextMove(props.id)
+          }}
+        /> : <></>
       }
       {
         props.shipReachability[IDs.GEMINI_2] ? 
-        <Gemini2Button onClick={() => {
-          props.setGemini2NextMove(props.id)
-        }}/> : <></>
+        <Gemini2Button
+          selected={!props.gemini1NextMove && props.gemini2NextMove}
+          onClick={() => {
+            props.setGemini2NextMove(props.id)
+          }}
+        /> : <></>
       }
       {
         props.shipReachability[IDs.GEMINI_1] && props.shipReachability[IDs.GEMINI_2] ? 
-        <Gemini12Button onClick={() => {
-          props.setGemini1NextMove(props.id)
-          props.setGemini2NextMove(props.id)
-        }}/> : <></>
+        <Gemini12Button
+          selected={props.gemini1NextMove && props.gemini2NextMove}
+          onClick={() => {
+            props.setGemini1NextMove(props.id)
+            props.setGemini2NextMove(props.id)
+          }}
+        /> : <></>
       }
     </ButtonGroupBackground>
   );
