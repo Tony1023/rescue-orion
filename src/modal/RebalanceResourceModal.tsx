@@ -1,8 +1,9 @@
 import React, {
   ChangeEvent,
+  KeyboardEvent,
   Dispatch,
   SetStateAction,
-  useState
+  useState,
 } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -90,8 +91,13 @@ const ResourceCountInput = styled.input`
   width: 80px;
   text-align: center;
   background-color: transparent;
+  border-radius: 5px;
   border: none;
-  border-bottom: 1px solid grey;
+  ${(props: { incorrect: boolean }) => props.incorrect ?
+    `background-color: rgba(255, 0, 0, 0.5);`
+    :
+    `border-bottom: 1px solid grey;`
+  }
 
   /* Chrome, Safari, Edge, Opera */
   &::-webkit-outer-spin-button,
@@ -115,161 +121,235 @@ const RightPanelInput = styled(ResourceCountInput)`
   left: 0;
 `;
 
+function handleKeyDown(onSubmit: () => void, setIncorrectFunction: Dispatch<SetStateAction<boolean>>): (event: KeyboardEvent<HTMLInputElement>) => void {
+  return (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onSubmit();
+    } else {
+      setIncorrectFunction(false);
+    }
+  };
+}
+
+function handleInput(_: string, setStateFunction: Dispatch<SetStateAction<string>>)
+    : (event: ChangeEvent<HTMLInputElement>) => void {
+  return (event: ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value;
+    if (input.length > 3) { return; }
+    const trimmed = input.replace(/\D/g, '');
+    setStateFunction(trimmed);
+  };
+}
+
+// If bad input, return -1
+function verifyInput(max: number, input: string): number {
+  if (input.length === 0) { return 0; }
+  const count = Number.parseInt(input);
+  console.log(count, max);
+  if (count === Number.NaN) { return -1; }
+  if (count > max) { return -1; }
+  return count;
+}
+
+function Gemini1Panel() {
+
+  const gemini_1 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_1]);
+  const dispatch = useDispatch();
+
+  const [energyCellsInput, setEnergyCellsInput] = useState('');
+  const [energyCellsIncorrect, setEnergyCellsIncorrect] = useState(false);
+  const [lifeSupportPacksInput, setLifeSupportPacksInput] = useState('');
+  const [lifeSupportPacksIncorrect, setLifeSupportPacksIncorrect] = useState(false);
+
+  function energyCellSubmit() {
+    const count = verifyInput(gemini_1.energyCells, energyCellsInput);
+    if (count === -1) {
+      setEnergyCellsIncorrect(true);
+      return;
+    }
+    setEnergyCellsInput('');
+    dispatch(transferEnergyCells({
+      from: IDs.GEMINI_1,
+      to: IDs.GEMINI_2,
+      count: count,
+    }));
+  }
+
+  function lifeSupportPacksSubmit() {
+    const count = verifyInput(gemini_1.lifeSupportPacks, lifeSupportPacksInput);
+    if (count === -1) {
+      setLifeSupportPacksIncorrect(true);
+      return;
+    }
+    setLifeSupportPacksInput('');
+    dispatch(transferLifeSupportPacks({
+      from: IDs.GEMINI_1,
+      to: IDs.GEMINI_2,
+      count: count,
+    }));
+  }
+
+  return <>
+    <SpaceshipName>Gemini 1</SpaceshipName>
+      <ResourceName>
+        Energy Cells
+        <LeftPanelTriangle
+          onClick={energyCellSubmit}
+        />
+      </ResourceName>
+      <ResourceCount>
+        {gemini_1.energyCells}
+        <LeftPanelInput
+          incorrect={energyCellsIncorrect}
+          placeholder={'0'}
+          value={energyCellsInput}
+          onChange={handleInput(energyCellsInput, setEnergyCellsInput)}
+          onKeyDown={handleKeyDown(energyCellSubmit, setEnergyCellsIncorrect)}
+        />
+      </ResourceCount>
+      <ResourceName>
+        Life Support Packs
+        <LeftPanelTriangle
+          onClick={lifeSupportPacksSubmit}
+        />
+      </ResourceName>
+      <ResourceCount>
+        {gemini_1.lifeSupportPacks}
+        <LeftPanelInput
+          incorrect={lifeSupportPacksIncorrect}
+          placeholder={'0'}
+          value={lifeSupportPacksInput}
+          onChange={handleInput(lifeSupportPacksInput, setLifeSupportPacksInput)}
+          onKeyDown={handleKeyDown(lifeSupportPacksSubmit, setLifeSupportPacksIncorrect)}
+        />          
+      </ResourceCount>
+      <Divider />
+      {
+        gemini_1.rescueResources.map((resource, i) => 
+          <ResourceName key={i}>
+            {resource}
+            <LeftPanelTriangle
+              onClick={() => {
+                dispatch(transferRescueResource({
+                  from: IDs.GEMINI_1,
+                  to: IDs.GEMINI_2,
+                  type: resource,
+                }));
+              }}
+            />
+          </ResourceName>
+        )
+      }
+  </>;
+}
+
+function Gemini2Panel() {
+
+  const gemini_2 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_2]);
+  const dispatch = useDispatch();
+
+  const [energyCellsInput, setEnergyCellsInput] = useState('');
+  const [energyCellsIncorrect, setEnergyCellsIncorrect] = useState(false);
+  const [lifeSupportPacksInput, setLifeSupportPacksInput] = useState('');
+  const [lifeSupportPacksIncorrect, setLifeSupportPacksIncorrect] = useState(false);
+
+  function energyCellSubmit() {
+    const count = verifyInput(gemini_2.energyCells, energyCellsInput);
+    if (count === -1) {
+      setEnergyCellsIncorrect(true);
+      return;
+    }
+    setEnergyCellsInput('');
+    dispatch(transferEnergyCells({
+      from: IDs.GEMINI_2,
+      to: IDs.GEMINI_1,
+      count: count,
+    }));
+  }
+
+  function lifeSupportPacksSubmit() {
+    const count = verifyInput(gemini_2.lifeSupportPacks, lifeSupportPacksInput);
+    if (count === -1) {
+      setLifeSupportPacksIncorrect(true);
+      return;
+    }
+    setLifeSupportPacksInput('');
+    dispatch(transferLifeSupportPacks({
+      from: IDs.GEMINI_2,
+      to: IDs.GEMINI_1,
+      count: count,
+    }));
+  }
+
+  return <>
+    <SpaceshipName>Gemini 2</SpaceshipName>
+      <ResourceName>
+        Energy Cells
+        <RightPanelTriangle
+          onClick={energyCellSubmit}
+        />
+      </ResourceName>
+      <ResourceCount>
+        {gemini_2.energyCells}
+        <RightPanelInput
+          incorrect={energyCellsIncorrect}
+          placeholder={'0'}
+          value={energyCellsInput}
+          onChange={handleInput(energyCellsInput, setEnergyCellsInput)}
+          onKeyDown={handleKeyDown(energyCellSubmit, setEnergyCellsIncorrect)}
+        />
+      </ResourceCount>
+      <ResourceName>
+        Life Support Packs
+        <RightPanelTriangle
+          onClick={lifeSupportPacksSubmit}
+        />
+      </ResourceName>
+      <ResourceCount>
+        {gemini_2.lifeSupportPacks}
+        <RightPanelInput
+          incorrect={lifeSupportPacksIncorrect}
+          placeholder={'0'}
+          value={lifeSupportPacksInput}
+          onChange={handleInput(lifeSupportPacksInput, setLifeSupportPacksInput)}
+          onKeyDown={handleKeyDown(lifeSupportPacksSubmit, setLifeSupportPacksIncorrect)}
+        />          
+      </ResourceCount>
+      <Divider />
+      {
+        gemini_2.rescueResources.map((resource, i) =>
+          <ResourceName key={i}>
+            {resource}
+            <RightPanelTriangle
+              onClick={() => {
+                dispatch(transferRescueResource({
+                  from: IDs.GEMINI_2,
+                  to: IDs.GEMINI_1,
+                  type: resource,
+                }));
+              }}
+            />
+          </ResourceName>
+        )
+      }
+  </>;
+}
+
 export default (props: {
   onClose?: () => void,
 }) => {
-
-  const spaceships = useSelector((state: GameState) => state.spaceships);
-  const dispatch = useDispatch();
-
-  const gemini_1 = spaceships[IDs.GEMINI_1];
-  const gemini_2 = spaceships[IDs.GEMINI_2];
-
-  const [energyCellsInputLeft, setEnergyCellsInputLeft] = useState('');
-  const [lifeSupportPacksInputLeft, setLifeSupportPacksInputLeft] = useState('');
-  const [energyCellsInputRight, setEnergyCellsInputRight] = useState('');
-  const [lifeSupportPacksInputRight, setLifeSupportPacksInputRight] = useState('');
-
-  function handleInput(_: string, setStateFunction: Dispatch<SetStateAction<string>>)
-      : (event: ChangeEvent<HTMLInputElement>) => void {
-    return (event: ChangeEvent<HTMLInputElement>) => {
-      const input = event.target.value;
-      if (input.length > 3) { return; }
-      const trimmed = input.replace(/\D/g, '');
-      setStateFunction(trimmed);
-    };
-  }
-
   return <ModalBackground>
     <ModalWrapper>
       <Column style={{ width: '45%' }}>
         <StyledModal>
-          <SpaceshipName>Gemini 1</SpaceshipName>
-          <ResourceName>
-            Energy Cells
-            <LeftPanelTriangle
-              onClick={() => {
-                setEnergyCellsInputLeft('');
-                dispatch(transferEnergyCells({
-                  from: IDs.GEMINI_1,
-                  to: IDs.GEMINI_2,
-                  count: Number.parseInt(energyCellsInputLeft)
-                }));
-              }}
-            />
-          </ResourceName>
-          <ResourceCount>
-            {gemini_1.energyCells}
-            <LeftPanelInput
-              placeholder={'0'}
-              value={energyCellsInputLeft}
-              onChange={handleInput(energyCellsInputLeft, setEnergyCellsInputLeft)}
-            />
-          </ResourceCount>
-          <ResourceName>
-            Life Support Packs
-            <LeftPanelTriangle
-              onClick={() => {
-                setLifeSupportPacksInputLeft('');
-                dispatch(transferLifeSupportPacks({
-                  from: IDs.GEMINI_1,
-                  to: IDs.GEMINI_2,
-                  count: Number.parseInt(lifeSupportPacksInputLeft)
-                }));
-              }}
-            />
-          </ResourceName>
-          <ResourceCount>
-            {gemini_1.lifeSupportPacks}
-            <LeftPanelInput
-              placeholder={'0'}
-              value={lifeSupportPacksInputLeft}
-              onChange={handleInput(lifeSupportPacksInputLeft, setLifeSupportPacksInputLeft)}
-            />          
-          </ResourceCount>
-          <Divider />
-          {
-            gemini_1.rescueResources.map((resource, i) => 
-              <ResourceName key={i}>
-                {resource}
-                <LeftPanelTriangle
-                  onClick={() => {
-                    dispatch(transferRescueResource({
-                      from: IDs.GEMINI_1,
-                      to: IDs.GEMINI_2,
-                      type: resource,
-                    }));
-                  }}
-                />
-              </ResourceName>
-            )
-          }
+          <Gemini1Panel />
         </StyledModal>
       </Column>
       <Column style={{ width: '10%' }} />
       <Column style={{ width: '45%' }}>
         <StyledModal>
           <StyledButton onClose={props.onClose} />
-          <SpaceshipName>Gemini 2</SpaceshipName>
-          <ResourceName>
-            Energy Cells
-            <RightPanelTriangle
-              onClick={() => {
-                setEnergyCellsInputRight('');
-                dispatch(transferEnergyCells({
-                  from: IDs.GEMINI_2,
-                  to: IDs.GEMINI_1,
-                  count: Number.parseInt(energyCellsInputRight)
-                }));
-              }}
-            />
-          </ResourceName>
-          <ResourceCount>
-            {gemini_2.energyCells}
-            <RightPanelInput
-              placeholder={'0'}
-              value={energyCellsInputRight}
-              onChange={handleInput(energyCellsInputRight, setEnergyCellsInputRight)}
-            />
-          </ResourceCount>
-          <ResourceName>
-            Life Support Packs
-            <RightPanelTriangle
-              onClick={() => {
-                setLifeSupportPacksInputRight('');
-                dispatch(transferLifeSupportPacks({
-                  from: IDs.GEMINI_2,
-                  to: IDs.GEMINI_1,
-                  count: Number.parseInt(lifeSupportPacksInputRight)
-                }));
-              }}
-            />
-          </ResourceName>
-          <ResourceCount>
-            {gemini_2.lifeSupportPacks}
-            <RightPanelInput
-              placeholder={'0'}
-              value={lifeSupportPacksInputRight}
-              onChange={handleInput(lifeSupportPacksInputRight, setLifeSupportPacksInputRight)}
-            />          
-          </ResourceCount>
-          <Divider />
-          {
-            gemini_2.rescueResources.map((resource, i) =>
-              <ResourceName key={i}>
-                {resource}
-                <RightPanelTriangle
-                  onClick={() => {
-                    dispatch(transferRescueResource({
-                      from: IDs.GEMINI_2,
-                      to: IDs.GEMINI_1,
-                      type: resource,
-                    }));
-                  }}
-                />
-              </ResourceName>
-            )
-          }
+          <Gemini2Panel />
         </StyledModal>
       </Column>
     </ModalWrapper>
