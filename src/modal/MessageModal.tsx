@@ -35,6 +35,19 @@ const Note = styled.div`
   color: #b62021;
 `;
 
+const StyledModal = styled(Modal)`
+  padding: 30px;
+`;
+
+const StyledExtraModal = styled(ExtraModal)`
+  padding: 30px;
+`;
+
+const StyledDismissButton = styled(DismissButton)`
+  display: flex;
+  margin-left: auto;
+`;
+
 export default (props: {
   message?: Message,
   onClose?: () => void,
@@ -43,8 +56,8 @@ export default (props: {
     {
       !props.message?.asset ?
       <BaseModalTextBackground>
-        <Modal>
-          <DismissButton onClose={props.onClose} />
+        <StyledModal>
+          <StyledDismissButton onClose={props.onClose} />
           <Header>
             {props.message?.title}
           </Header>
@@ -57,19 +70,19 @@ export default (props: {
               })
             }
           </Body>
-        </Modal>          
+        </StyledModal>          
         {props.message?.technology?
-          <ExtraModal>
+          <StyledExtraModal>
             <Body>{props.message?.note}</Body>
             <Header>{props.message?.technology}</Header>
             {
               props.message?.sideNote? <Note>{props.message?.sideNote}</Note> : <></>
             }
-          </ExtraModal> : <></>
+          </StyledExtraModal> : <></>
         }
       </BaseModalTextBackground> :
       <BaseModalImageBackground backgroundImage={props.message?.asset}>
-        <DismissButton onClose={props.onClose} />
+        <StyledDismissButton onClose={props.onClose} />
       </BaseModalImageBackground>
     }
   </ModalBackground>;
