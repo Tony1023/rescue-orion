@@ -17,21 +17,20 @@ export const BaseModalBackground = styled.div`
   padding: 30px;
   top: 80px;
   width: 700px;
+  left: 50%;
+  transform: translate(-50%, 0);
 `;
 
 export const BaseModalImageBackground = styled(BaseModalBackground)`
-  left: calc(50% - 350px);
   height: 500px;
   background-size: cover;
   background-image: ${(props: {backgroundImage: string|undefined }) => props.backgroundImage !== undefined ? `url(${`${process.env.PUBLIC_URL}/${props.backgroundImage}`})`: 'none'};
 `;
 
 export const BaseModalTextBackground = styled(BaseModalBackground)`
-  left: 50%;
 `;
 
 export const BaseModal = styled.div`
-  transform: translate(-50%, 0);
   background-color: white;
   padding: 30px;
   background-color: rgb(197, 205, 233);
