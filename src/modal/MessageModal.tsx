@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {
-  BaseModalBackground,
+  BaseModalTextBackground,
+  BaseModalImageBackground,
   ExtraModal,
   Modal,
   ModalBackground,
@@ -38,33 +39,38 @@ export default (props: {
   message?: Message,
   onClose?: () => void,
 }) => {
-  return <ModalBackground>
-    <BaseModalBackground>
-      <Modal>
+  return <ModalBackground> 
+    {
+      !props.message?.asset ?
+      <BaseModalTextBackground>
+        <Modal>
+          <DismissButton onClose={props.onClose} />
+          <Header>
+            {props.message?.title}
+          </Header>
+          <Body>
+            {
+              props.message?.paragraphs.map((paragraph, i) => {
+                return <p key={i}>
+                  {paragraph.text}
+                </p>;
+              })
+            }
+          </Body>
+        </Modal>          
+        {props.message?.technology?
+          <ExtraModal>
+            <Body>{props.message?.note}</Body>
+            <Header>{props.message?.technology}</Header>
+            {
+              props.message?.sideNote? <Note>{props.message?.sideNote}</Note> : <></>
+            }
+          </ExtraModal> : <></>
+        }
+      </BaseModalTextBackground> :
+      <BaseModalImageBackground backgroundImage={props.message?.asset}>
         <DismissButton onClose={props.onClose} />
-        <Header>
-          {props.message?.title}
-        </Header>
-        <Body>
-          {
-            props.message?.paragraphs.map((paragraph, i) => {
-              return <p key={i}>
-                {paragraph.text}
-              </p>;
-            })
-          }
-        </Body>
-      </Modal>
-      {
-        props.message?.technology?
-        <ExtraModal>
-          <Body>{props.message?.note}</Body>
-          <Header>{props.message?.technology}</Header>
-          {
-            props.message?.sideNote? <Note>{props.message?.sideNote}</Note> : <></>
-          }
-        </ExtraModal> : <></>
-      }
-    </BaseModalBackground>
+      </BaseModalImageBackground>
+    }
   </ModalBackground>;
 }
