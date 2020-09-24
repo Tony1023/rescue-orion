@@ -17,6 +17,7 @@ const metadata: SpaceStationMetadata = {
   'aquarius': {
     location: 't3',
     message: { 
+      asset: 'Aquarius_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
       technology: "WATER REPAIR TEAM",
       title: 'FOOD AT ORION',
@@ -30,6 +31,7 @@ const metadata: SpaceStationMetadata = {
   'boreallis': {
     location: 't5',
     message: {
+      asset: 'Borealis_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
       technology: "OXYGEN REPAIR TEAM",
       title: 'O2 REPAIR AT ORION',
@@ -43,6 +45,7 @@ const metadata: SpaceStationMetadata = {
   'capricorn': {
     location: 't4',
     message: {
+      asset: 'Capricorn_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
       technology: "AI Technology",
       title: 'INJURIES AT ORION',
@@ -56,6 +59,7 @@ const metadata: SpaceStationMetadata = {
   'cassiopeia': {
     location: 'cassiopeia',
     message: {
+      asset: 'Cassiopeia_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
       technology: "MEDICAL REPAIR TEAM",
       title: 'WATER PROVISION AT ORION',
@@ -69,6 +73,7 @@ const metadata: SpaceStationMetadata = {
   'orion': {
     location: 't2',
     message: {
+      asset: 'Orion_Information_Card.jpg',
       title: 'O2 AT ORION',
       paragraphs: [
         {text: 'The scientists of Space Station Orion are quickly running out of oxygen.'},
@@ -80,6 +85,7 @@ const metadata: SpaceStationMetadata = {
   'sagittarius': {
     location: 'sagittarius',
     message: {
+      asset: 'Sagittarius_Information_Card.jpg',
       title: 'DAMAGE TO SPACE STATION ORION',
       paragraphs: [
         {text: 'Orion’s primary source of oxygen generation has been badly hit.'},
