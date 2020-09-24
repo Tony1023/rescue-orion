@@ -8,7 +8,7 @@ export const ModalBackground = styled.div`
   height: 100%;
   position: absolute;
   margin: 0 auto;
-  background-color: rgba(10, 10, 10, 0.5);
+  background-color: rgba(10, 10, 10, 0.2);
   z-index: 10;
 `;
 
@@ -16,12 +16,21 @@ export const BaseModalBackground = styled.div`
   position: absolute;
   padding: 30px;
   top: 80px;
-  left: 50%;
   width: 700px;
+  left: 50%;
+  transform: translate(-50%, 0);
+`;
+
+export const BaseModalImageBackground = styled(BaseModalBackground)`
+  height: 500px;
+  background-size: cover;
+  background-image: ${(props: {backgroundImage: string|undefined }) => props.backgroundImage !== undefined ? `url(${`${process.env.PUBLIC_URL}/${props.backgroundImage}`})`: 'none'};
+`;
+
+export const BaseModalTextBackground = styled(BaseModalBackground)`
 `;
 
 export const BaseModal = styled.div`
-  transform: translate(-50%, 0);
   background-color: white;
   padding: 30px;
   background-color: rgb(197, 205, 233);
@@ -29,12 +38,12 @@ export const BaseModal = styled.div`
 `;
 
 export const Modal = styled(BaseModal)`
-  border-radius: 50px 20px;
+  clip-path: polygon(5% 0, 95% 0, 100% 0, 100% 86%, 94% 100%, 0 100%, 0 87%, 0 12%);
   margin-bottom: 20px;
 `;
 
 export const ExtraModal = styled(BaseModal)`
-  border-radius: 20px 50px;
+  clip-path: polygon(0 0, 95% 0, 100% 11%, 100% 100%, 95% 100%, 5% 100%, 0 87%, 0 12%);
 `;
 
 const StyledButton = styled.div`
