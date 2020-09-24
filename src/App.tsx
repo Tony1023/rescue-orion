@@ -12,6 +12,7 @@ import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
 import OrionMessageEmitter from './OrionMessageEmitter';
 import ResourcePanel from './ResourcePanel';
+import RebalanceResourceModal from './modal/RebalanceResourceModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -58,6 +59,7 @@ export default function() {
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [showRebalanceModal, setShowRebalanceModal] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
@@ -70,8 +72,10 @@ export default function() {
 
   const selectedMove = gemini1NextMove && gemini2NextMove;
 
-  const gemini1Location = gemini1NextMove ?? gameState.spaceships[IDs.GEMINI_1].location;
-  const gemini2Location = gemini2NextMove ?? gameState.spaceships[IDs.GEMINI_2].location;
+  const gemini1CurrentLocation = gameState.spaceships[IDs.GEMINI_1].location;
+  const gemini2CurrentLocation = gameState.spaceships[IDs.GEMINI_2].location
+  const gemini1Location = gemini1NextMove ?? gemini1CurrentLocation;
+  const gemini2Location = gemini2NextMove ?? gemini2CurrentLocation;
   const position1 = locationData[gemini1Location].pixelPosition;
   const position2 = locationData[gemini2Location].pixelPosition;
 
@@ -95,14 +99,9 @@ export default function() {
         Confirm Move
       </button>
       <button
-        onClick={() => {
-          dispatch(Actions.transferRescueResource({
-            from: IDs.GEMINI_1,
-            to: IDs.GEMINI_2,
-            type: RescueResource.O2ReplacementCells,
-          }));
-        }}
-      >Move Resource</button>
+        onClick={() => setShowRebalanceModal(true)}
+        disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
+      >Rebalance Resources</button>
       {
         gemini1Location === gemini2Location ? 
         <Gemini12 position={position1} /> :
@@ -135,6 +134,13 @@ export default function() {
             onClose={popMessageModal}
           />;
         })
+      }
+
+      {
+        showRebalanceModal ?
+        <RebalanceResourceModal
+          onClose={() => setShowRebalanceModal(false)}
+        /> : <></>
       }
 
       <ResourcePanel

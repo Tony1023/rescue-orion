@@ -49,7 +49,6 @@ export const ExtraModal = styled(BaseModal)`
 const StyledButton = styled.div`
   font-family: 'Roboto' sans-serif;
   background-color: rgb(0, 198, 170);
-  display: flex;
   cursor: pointer;
   padding: 10px;
   margin: 10px 0;
@@ -57,13 +56,14 @@ const StyledButton = styled.div`
   letter-spacing: 1px;
   font-weight: 500;
   width: 70px;
-  margin-left: auto;
 `;
 
-export function DismissButton({ onClose }: {
+export function DismissButton(props: {
   onClose?: () => void,
+  className?: string,
 }) {
   return <StyledButton
-    onClick={onClose}
+    onClick={props.onClose}
+    className={props.className}
   >DISMISS</StyledButton>;
 }
