@@ -526,7 +526,7 @@ const metadata: LocationMetadata = {
     location: {
       id: 't5',
       type: LocationType.TimePortal,
-      spaceStationName: 'boreallis',
+      spaceStationName: 'borealis',
     },
     neighbors: [
       'b7',

@@ -28,7 +28,7 @@ const metadata: SpaceStationMetadata = {
       ],
     }
   },
-  'boreallis': {
+  'borealis': {
     location: 't5',
     message: {
       asset: 'Borealis_Information_Card.jpg',

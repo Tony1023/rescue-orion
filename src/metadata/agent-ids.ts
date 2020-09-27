@@ -6,4 +6,4 @@ export const ANDROMEDA = 'andromeda';
 export const ORION = 'orion';
 export const AQUARIUS = 'aquarius';
 export const CAPRICORN = 'capricorn';
-export const BOREALIS = 'boreallis';
+export const BOREALIS = 'borealis';
