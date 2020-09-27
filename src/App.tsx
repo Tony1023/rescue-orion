@@ -9,11 +9,13 @@ import { locationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
+import StationProps from './modal/StationInformationModel';
 import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
 import OrionMessageEmitter from './OrionMessageEmitter';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
+import StationData from './metadata/space-station-data'
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -146,7 +148,9 @@ export default function() {
           />;
         })
       }
-
+      {
+        
+      }
       {
         showRebalanceModal ?
         <RebalanceResourceModal

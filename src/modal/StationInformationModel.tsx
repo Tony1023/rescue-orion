@@ -23,6 +23,7 @@ import {
 } from '../store/actions';
 import { PlainSpaceStation } from '../store/types';
 import Props from '../StationInformationButton'
+import { Message } from '../store/types';
 
 const PickUpButton = styled.button`
   font-family: 'Grandstander', cursive;
@@ -178,8 +179,7 @@ function Gemini2Panel() {
 export default (props: {
   onClose?: () => void,
 }) => {
-  console.log(StationData[IDs.AQUARIUS]);
-  
+
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
   const gemini1CurrentLocation = gameState.spaceships[IDs.GEMINI_1].location;
