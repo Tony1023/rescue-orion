@@ -50,16 +50,6 @@ const Gemini12Button = styled(NextMoveButton)`
     cursor: pointer;
   }
 `;
-const StationInformationButton = styled.button`
-  position: absolute; 
-  font-family: 'Grandstander', cursive;
-  top: ${(props: { position: PixelPosition }) => `${props.position.top + 100}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 60}px`};
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 
 interface Props {
   id: string,
@@ -73,7 +63,6 @@ interface Props {
 export default function(props: Props) {
 
   const position = locationData[props.id].pixelPosition;
-  console.log(props.id);
   const StationPosition =  locationData['t3'].pixelPosition;
   const [showStationInformationModel, setStationInformationModel] = useState(false);
   return <>
@@ -107,25 +96,5 @@ export default function(props: Props) {
         /> : <></>
       }
     </ButtonGroupBackground>
-
-    <div>
-      <StationInformationButton position={StationPosition}
-        onClick={() => setStationInformationModel(true)}
-        disabled={false}
-      >
-        Station Information
-      </StationInformationButton>
-    </div>
-    
-    {
-      showStationInformationModel ?
-        <StationInformationModel
-          onClose={() => setStationInformationModel(false)}
-        /> : <></>
-      }
-
-
-
-
   </>;
 }

@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-
+import StationData from '../metadata/space-station-data'
 import {
   BaseModalTextBackground,
   Modal,
@@ -21,7 +21,8 @@ import {
   pickUpRescueResource,
   dropOffRescueResource
 } from '../store/actions';
-import stationData from '../metadata/space-station-data';
+import { PlainSpaceStation } from '../store/types';
+import Props from '../StationInformationButton'
 
 const PickUpButton = styled.button`
   font-family: 'Grandstander', cursive;
@@ -95,7 +96,6 @@ const StyledButton = styled(DismissButton)`
 function StationPanel() {
   const station = useSelector((state: GameState) => state.spaceStations[IDs.AQUARIUS]);
   const dispatch = useDispatch();
-  console.log(station);
   return <>
     <StationName>
       {station.location}
@@ -131,18 +131,20 @@ function StationPanel() {
 
 
 function Gemini1Panel() {
+  const gemini1 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_1]);
+  const dispatch = useDispatch();
 
   return <>
     <StationName>
       Gemini 1
     </StationName>
     <ResourceInfo>
-      Energy Cells<br />
-      Life Support Packs
+      Energy Cells: {gemini1.energyCells}<br />
+      Life Support Packs: {gemini1.lifeSupportPacks}
     </ResourceInfo>
-
+    <br /><br />
     <TechnologyInfo>
-      Medical Team
+      {gemini1.rescueResources}
       <DropOffButton>
         Drop Off
       </DropOffButton>
@@ -152,18 +154,19 @@ function Gemini1Panel() {
 }
 
 function Gemini2Panel() {
-
+  const gemini2 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_2]);
+  const dispatch = useDispatch();
   return <>
     <StationName>
       Gemini 2
     </StationName>
     <ResourceInfo>
-      Energy Cells<br />
-      Life Support Packs
+      Energy Cells: {gemini2.energyCells}<br />
+      Life Support Packs: {gemini2.lifeSupportPacks}
     </ResourceInfo>
-
+    <br /><br />
     <TechnologyInfo>
-      Medical Team
+      {gemini2.rescueResources}
       <DropOffButton>
         Drop Off
       </DropOffButton>
@@ -175,6 +178,8 @@ function Gemini2Panel() {
 export default (props: {
   onClose?: () => void,
 }) => {
+  console.log(StationData[IDs.AQUARIUS]);
+  
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
   const gemini1CurrentLocation = gameState.spaceships[IDs.GEMINI_1].location;

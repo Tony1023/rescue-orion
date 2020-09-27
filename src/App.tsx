@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
+import StationButton from './StationInformationButton'
 import { GameState, Message } from './store/types';
 import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
@@ -101,7 +102,8 @@ export default function() {
       <button
         onClick={() => setShowRebalanceModal(true)}
         disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
-      >Rebalance Resources</button>
+      >Rebalance Resources
+      </button>
       {
         gemini1Location === gemini2Location ? 
         <Gemini12 position={position1} /> :
@@ -125,7 +127,16 @@ export default function() {
           );
         })
       }
-
+      {
+        Object.entries(gameState.spaceStations).map((location, index) => {
+          return (
+            <StationButton 
+              name={location[0]}
+              info={location[1]}
+            />
+          );
+        })
+      }
       {
         messages.map((message: Message, index: number) => {
           return <MessageModal
