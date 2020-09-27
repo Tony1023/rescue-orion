@@ -38,12 +38,12 @@ export const BaseModal = styled.div`
 `;
 
 export const Modal = styled(BaseModal)`
-  clip-path: polygon(5% 0, 95% 0, 100% 0, 100% 86%, 94% 100%, 0 100%, 0 87%, 0 12%);
+  clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 25% 100%, 0 100%, 0 25px);
   margin-bottom: 20px;
 `;
 
 export const ExtraModal = styled(BaseModal)`
-  clip-path: polygon(0 0, 95% 0, 100% 11%, 100% 100%, 95% 100%, 5% 100%, 0 87%, 0 12%);
+  clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 1% calc(100% - 25px), 0 13%);
 `;
 
 const StyledButton = styled.div`
