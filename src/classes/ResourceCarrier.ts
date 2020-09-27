@@ -7,5 +7,5 @@ export default interface ResourceCarrier {
   pickUpFrom(r: RescueResource): void,
   canPickUp(r: RescueResource): boolean,
   dropOffTo(r: RescueResource): void,
-  getLocation(): string,
+  getLocation(): string
 }

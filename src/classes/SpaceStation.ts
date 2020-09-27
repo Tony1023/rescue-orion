@@ -14,6 +14,7 @@ export default class SpaceStation implements ResourceCarrier {
     this.rescueResources = resources ?? [];
     this.location = location;
   }
+
   getLocation(): string {
     return this.location;
   }
