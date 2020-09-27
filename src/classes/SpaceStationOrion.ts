@@ -39,7 +39,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     
     //Water Related
     if(day>23 && this.rescueResources.includes(RescueResource.WaterRepairTeam)==false){
-      if(day==31){
+      if(day>30){
         //All Scientist Die
         this.scientistCount=0;
         return;
@@ -52,7 +52,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
 
     //Food Related
     if(day>24 && this.rescueResources.includes(RescueResource.FoodRepairTeam)==false){
-      if(day==31){
+      if(day>30){
         //All Scientist Die
         this.scientistCount=0;
         return;
@@ -67,7 +67,6 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     if(day==25 && this.rescueResources.includes(RescueResource.MedicalRepairTeam)==false){
         //I just got an update from Orion. Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!
         this.scientistCount-=3;
-      
     }
   }
 
