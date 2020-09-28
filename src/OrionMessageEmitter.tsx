@@ -21,7 +21,7 @@ export default () => {
   function emitDaySensitiveMessage() {
     console.log(current.day);
     switch (current.day) {
-      case 7: // by day 6, which means dropping off stuff on day 6 still fixes the problem
+      case 6:
         if (current.orion.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
           dispatch(enqueueMessages([{
             title: 'Incident at Orion',
@@ -33,7 +33,7 @@ export default () => {
           }]));
         }
         break;
-      case 22:
+      case 21:
         if (current.orion.rescueResources.indexOf(RescueResource.OxygenRepairTeam) === -1) {
           if (current.orion.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
             dispatch(enqueueMessages([{
@@ -56,7 +56,7 @@ export default () => {
           }
         }
         break;
-      case 24:
+      case 23:
         if (current.orion.rescueResources.indexOf(RescueResource.WaterRepairTeam) === -1) {
           dispatch(enqueueMessages([{
             title: 'Incident at Orion',
@@ -68,7 +68,7 @@ export default () => {
           }]));
         }
         break;
-      case 25:
+      case 24:
         if (current.orion.rescueResources.indexOf(RescueResource.FoodRepairTeam) === -1) {
           dispatch(enqueueMessages([{
             title: 'Incident at Orion',
@@ -80,7 +80,7 @@ export default () => {
           }]));
         }
         break;
-      case 26:
+      case 25:
         if (current.orion.rescueResources.indexOf(RescueResource.MedicalRepairTeam) === -1) {
           dispatch(enqueueMessages([{
             title: 'Incident at Orion',

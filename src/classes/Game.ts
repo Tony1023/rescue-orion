@@ -76,10 +76,11 @@ export default class Game {
   }
 
   advanceTime(): void {
-    ++this.time;
+    // Invoking onDayUpdate at the end of day
     for (const id in this.agents) {
       this.agents[id].onDayUpdate(this.time);
     }
+    ++this.time;
   }
 
   dumpMessages(): Message[] {

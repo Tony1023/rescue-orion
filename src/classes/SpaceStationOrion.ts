@@ -17,29 +17,26 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
 
   onDayUpdate(day: number): void {
     if(this.scientistCount<=0){
-      //Gameend, all scientist have died.
       return;
     }
 
     //Oxygen Related
-    if(day>6 && this.rescueResources.includes(RescueResource.O2ReplacementCells)===false){
-      if(day>21){
-        //Oh no! It appears you were too late. The oxygen systems were not permanently fixed in time and the worst has happened. All of the scientists on Space Station Orion have passed away and have taken their place amongst the stars!While we may not have successfully complete our mission, let’s have a discussion, where did we go wrong? What could we have done differently
-        this.scientistCount=0;
-        return;
-        //Gameend
-      }else{//6<=day<=21
-        //"Oh no! It appears you were too late. The oxygen systems were not fixed in time and 1 scientist has passed away and taken their place amongst the stars!Hurry to fix this before total loss of life happens!"
-        this.scientistCount--;
+    if (day >= 6 && day < 21) {
+      if (!this.rescueResources.includes(RescueResource.O2ReplacementCells) && !this.rescueResources.includes(RescueResource.OxygenRepairTeam)) {
+        --this.scientistCount;
       }
-    }else if(day>21 && this.rescueResources.includes(RescueResource.OxygenRepairTeam)==false){
-      //Oh no! It appears you were too late. The oxygen systems were not permanently fixed in time and one scientist has passed away and taken their place amongst the stars!Hurry to fix this before total loss of life happens
-      this.scientistCount--;
+    } else if (day >= 21) {
+      if (!this.rescueResources.includes(RescueResource.O2ReplacementCells) && !this.rescueResources.includes(RescueResource.OxygenRepairTeam)) {
+        this.scientistCount = 0;
+        return;
+      } else if (!this.rescueResources.includes(RescueResource.OxygenRepairTeam)) {
+        --this.scientistCount;
+      }
     }
     
     //Water Related
-    if(day>23 && this.rescueResources.includes(RescueResource.WaterRepairTeam)==false){
-      if(day>30){
+    if(day>=23 && this.rescueResources.includes(RescueResource.WaterRepairTeam)==false){
+      if(day>=30){
         //All Scientist Die
         this.scientistCount=0;
         return;
@@ -51,8 +48,8 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     }
 
     //Food Related
-    if(day>24 && this.rescueResources.includes(RescueResource.FoodRepairTeam)==false){
-      if(day>30){
+    if(day>=24 && this.rescueResources.includes(RescueResource.FoodRepairTeam)==false){
+      if(day>=30){
         //All Scientist Die
         this.scientistCount=0;
         return;
@@ -65,8 +62,12 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
 
     //Medical Related
     if(day==25 && this.rescueResources.includes(RescueResource.MedicalRepairTeam)==false){
-        //I just got an update from Orion. Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!
-        this.scientistCount-=3;
+      //I just got an update from Orion. Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!
+      this.scientistCount-=3;
+    }
+    
+    if (this.scientistCount < 0) {
+      this.scientistCount = 0;
     }
   }
 
