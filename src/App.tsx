@@ -59,10 +59,14 @@ export default function() {
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
     setGemini2NextMove(undefined);
+    if (gameState.time > 30) {
+      setGameOver(true);
+    }
   }, [gameState.time]);
   
   useEffect(() => {
@@ -102,6 +106,9 @@ export default function() {
         disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
       >Rebalance Resources
       </button>
+      <button
+        onClick={() => setGameOver(true)}
+      >Terminate Game</button>
       {
         gemini1Location === gemini2Location ? 
         <Gemini12 position={position1} /> :
@@ -149,7 +156,7 @@ export default function() {
         /> : <></>
       }
       {
-        gameState.time === 31 ?
+        gameOver ?
         <EndGameModal/> : <></>
       }
 
@@ -161,8 +168,8 @@ export default function() {
 
     </GameBoard>
     {
-      gameState.time < 31 ?
-      <Timer /> : <></>
+      gameOver ?
+      <></> : <Timer />
     }
     <OrionMessageEmitter />
   </>;

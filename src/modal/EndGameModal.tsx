@@ -2,6 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { GameState } from '../store/types';
+import * as IDs from '../metadata/agent-ids';
+import { locationData } from '../metadata';
 
 import {
   BaseModalTextBackground,
@@ -21,7 +23,10 @@ const Title = styled.h1`
 
 export default () => {
 
-  const stats = useSelector((state: GameState) => state.gameStats);
+  const state = useSelector((state: GameState) => state);
+  const stats = state.gameStats;
+  const gemini_1 = state.spaceships[IDs.GEMINI_1];
+  const gemini_2 = state.spaceships[IDs.GEMINI_2];
 
   return <ModalBackground>
     <BaseModalTextBackground>
@@ -34,6 +39,12 @@ export default () => {
             :
             <p key={index}>You dropped off {item} on day {stats.dropOffTimes[item]}</p>
           )
+        }
+        {
+          gemini_1.location === locationData[IDs.SAGITTARIUS].location.id &&
+          gemini_2.location === locationData[IDs.SAGITTARIUS].location.id ?
+          <p>You successfully returned to SAGITTARIUS on day {state.time}.</p> :
+          <p>You did not return to SAGITTARIUS.</p>
         }
       </StyledModal>
     </BaseModalTextBackground>
