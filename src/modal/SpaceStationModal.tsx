@@ -1,13 +1,7 @@
-import React, {
-  ChangeEvent,
-  KeyboardEvent,
-  Dispatch,
-  SetStateAction,
-  useState,
-} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import StationData from '../metadata/space-station-data'
+import { spaceStationData } from '../metadata';
 import {
   BaseModalTextBackground,
   Modal,
@@ -21,61 +15,31 @@ import {
   pickUpRescueResource,
   dropOffRescueResource
 } from '../store/actions';
-import { PlainSpaceStation } from '../store/types';
 import { Message } from '../store/types';
+import Triangle from './TriangleButton';
 
-const PickUpButton = styled.button`
-  font-family: 'Grandstander', cursive;
-  position: absolute; 
-  right: 0;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-const DropOffButton = styled.button`
-  font-family: 'Grandstander', cursive;
-  position: absolute; 
-  right: 0;
-  &:hover {
-    cursor: pointer;
-  }
-`;
 const StationName = styled.div`
   font-family: 'Grandstander', cursive;
   text-align: center;
   font-size: 40px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 `;
+
 const TextInfo = styled.div`
   font-family: 'Roboto' sans-serif;
   text-align: center;
   font-weight: 500;
-  font-size: 24px;
+  font-size: 18px;
   margin-top: 10px;
   margin-bottom: 5px;
   position: relative;
-`;
-const ResourceInfo= styled.div`
-  font-family: 'Roboto' sans-serif;
   text-align: left;
-  font-weight: 500;
-  font-size: 16px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  position: relative;
-`;
-const TechnologyInfo= styled.div`
-  font-family: 'Roboto' sans-serif;
-  text-align: left;
-  font-weight: 500;
-  font-size: 16px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  position: relative;
 `;
 const ModalWrapper = styled(BaseModalTextBackground)`
-  width: 1000px;
+  width: 1200px;
   padding: 0;
+  text-align: center;
 `;
 const Column = styled.div`
   display: inline-block;
@@ -93,38 +57,140 @@ const StyledButton = styled(DismissButton)`
   bottom: 20px;
 `;
 
-function StationPanel() {
-  const station = useSelector((state: GameState) => state.spaceStations[IDs.AQUARIUS]);
+const Header = styled.div`
+  font-weight: bold;
+  font-size: 22px;
+  text-align: center;
+  color: #b62021;
+  font-family: 'Grandstander', cursive;
+  text-transform: uppercase;
+`;
+
+const Body = styled.div`
+  font-family: 'Roboto' sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const SupplyGroup = styled.div`
+  position: relative;
+`;
+
+const Resource = styled.div`
+  font-family: 'Roboto' sans-serif;
+  text-align: center;
+  font-weight: 500;
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  position: relative;
+`;
+
+const LeftPanelTriangle = styled(Triangle)`
+  position: absolute;
+  right: 5px;
+  top: 0;
+`;
+
+const Divider = styled.div`
+  border-bottom: 1px solid grey;
+  margin: 10px 0;
+`;
+
+function StationPanel(props: {
+  id: string,
+  message: Message,
+}) {
+  const gameState = useSelector((state: GameState) => state);
+  const station = gameState.spaceStations[props.id];
+  const gemini_1 = gameState.spaceships[IDs.GEMINI_1];
+  const gemini_2 = gameState.spaceships[IDs.GEMINI_2];
   const dispatch = useDispatch();
+
+  const showResources = gemini_1.location === station.location || gemini_2.location === station.location;
+  let supplyReceiverId: string;
+  let resourceReceiverId: string;
+  if (gemini_1.location === station.location) {
+    supplyReceiverId = IDs.GEMINI_1;
+    if (!gemini_1.isInTimePortal) {
+      resourceReceiverId = IDs.GEMINI_1;
+    }
+  } else if (gemini_2.location === station.location) {
+    supplyReceiverId = IDs.GEMINI_2;
+    if (!gemini_2.isInTimePortal) {
+      resourceReceiverId = IDs.GEMINI_2;
+    }
+  }
+
   return <>
     <StationName>
-      {station.location}
+      {props.id}
     </StationName>
     <TextInfo>
-      abababababa
-      <br /><br />
+      <Header>
+        {props.message.title}
+      </Header>
+      <Body>
+        {
+          props.message.paragraphs.map((paragraph, i) => {
+            return <p key={i}>
+              {paragraph.number}
+              {paragraph.text}
+            </p>;
+          })
+        }
+      </Body>
     </TextInfo>
-
-    <ResourceInfo>
-    <br /><br />Energy Cells: {station.energyCells}<br />
-      Life Support Packs: {station.lifeSupportPacks}
-      <PickUpButton onClick={() => {
-        dispatch(pickUpSupplyResource({
-          from: IDs.AQUARIUS,
-          to: IDs.GEMINI_1,
-        }));
-      }}>
-      Pick Up
-      </PickUpButton><br /><br />
-      
-    </ResourceInfo>
-
-    <TechnologyInfo>
-      {station.rescueResources}
-      <PickUpButton>
-        Pick Up
-      </PickUpButton>
-    </TechnologyInfo>
+    {
+      showResources ?
+      <>
+        <Divider />
+        <SupplyGroup>
+          <Resource>
+            Energy Cells: {station.energyCells}
+          </Resource>
+          <Resource>
+            Life Support Packs: {station.lifeSupportPacks}
+          </Resource>
+          <LeftPanelTriangle
+            style={{
+              top: '50%',
+              transform: 'translate(0, -50%)',
+            }}
+            onClick={() => {
+              dispatch(pickUpSupplyResource({
+                from: props.id,
+                to: supplyReceiverId,
+              }))
+            }}
+            disabled={station.energyCells === 0}
+          />
+        </SupplyGroup>
+        <Divider
+          style={{
+            width: '70%',
+            margin: '10px auto',
+          }}
+        />
+        {
+          station.rescueResources.map((resource, i) => 
+            <Resource key={i}>
+              {resource}
+              <LeftPanelTriangle
+                onClick={() => {
+                  dispatch(pickUpRescueResource({
+                    from: props.id,
+                    to: resourceReceiverId,
+                    type: resource,
+                  }));
+                }}
+                disabled={!resourceReceiverId || !station.canPickUp[resource]}
+              />
+            </Resource>
+          )
+        }
+      </> : <></>
+    }
   </>
 }
 
@@ -135,20 +201,6 @@ function Gemini1Panel() {
   const dispatch = useDispatch();
 
   return <>
-    <StationName>
-      Gemini 1
-    </StationName>
-    <ResourceInfo>
-      Energy Cells: {gemini1.energyCells}<br />
-      Life Support Packs: {gemini1.lifeSupportPacks}
-    </ResourceInfo>
-    <br /><br />
-    <TechnologyInfo>
-      {gemini1.rescueResources}
-      <DropOffButton>
-        Drop Off
-      </DropOffButton>
-    </TechnologyInfo>
 
   </>
 }
@@ -157,68 +209,58 @@ function Gemini2Panel() {
   const gemini2 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_2]);
   const dispatch = useDispatch();
   return <>
-    <StationName>
-      Gemini 2
-    </StationName>
-    <ResourceInfo>
-      Energy Cells: {gemini2.energyCells}<br />
-      Life Support Packs: {gemini2.lifeSupportPacks}
-    </ResourceInfo>
-    <br /><br />
-    <TechnologyInfo>
-      {gemini2.rescueResources}
-      <DropOffButton>
-        Drop Off
-      </DropOffButton>
-    </TechnologyInfo>
-
   </>
 }
 
 export default (props: {
   onClose?: () => void,
   id: string,
+  message: Message,
 }) => {
 
   const gameState = useSelector((state: GameState) => state);
-  const dispatch = useDispatch();
-  const gemini1CurrentLocation = gameState.spaceships[IDs.GEMINI_1].location;
-  const gemini2CurrentLocation = gameState.spaceships[IDs.GEMINI_2].location;
-  const spaceStationLocation = gameState.spaceStations[IDs.AQUARIUS].location;
-  console.log(gemini1CurrentLocation, gemini2CurrentLocation, spaceStationLocation);
-  let columnStyle;
-  columnStyle = {width: '33%'};
-
-  if (gemini1CurrentLocation != spaceStationLocation) {
-    columnStyle = {display: 'none'};
-  }
-  if (gemini2CurrentLocation != spaceStationLocation) {
-    columnStyle = {display: 'none'};
-  }
+  const spaceStationLocation = gameState.spaceStations[props.id].location;
+  const gemini1AtStation = gameState.spaceships[IDs.GEMINI_1].location === spaceStationLocation;
+  const gemini2AtStation = gameState.spaceships[IDs.GEMINI_2].location === spaceStationLocation;
 
   return <ModalBackground>
     <ModalWrapper>
-      <Column style={{ width: '33%' }}>
+      <Column style={{ width: '40%' }}>
         <StyledModal>
-          <StationPanel />
+          <StationPanel
+            id={props.id}
+            message={props.message}
+          />
           <StyledButton onClose={props.onClose} />
         </StyledModal>
       </Column>
     
-      <Column style={columnStyle}>
-        <StyledModal>
-          <Gemini1Panel />
-        </StyledModal>
-      </Column>
-
-      <Column style={columnStyle}>
-        <StyledModal>
-          
-          <Gemini2Panel />
-        </StyledModal>
-      </Column>
-
-
+      {
+        gemini1AtStation ?
+        <>
+          <Column style={{ width: '3%' }} />
+          <Column style={{ width: '27%' }}>
+            <StyledModal>
+              <Gemini1Panel />
+            </StyledModal>
+          </Column>
+        </>
+        :
+        null
+      }
+      {
+        gemini2AtStation ?
+        <>
+          <Column style={{ width: '3%' }} />
+          <Column style={{ width: '27%' }}>
+            <StyledModal>
+              <Gemini2Panel />
+            </StyledModal>
+          </Column>
+        </>
+        :
+        null
+      }
     </ModalWrapper>
   </ModalBackground>;
 }

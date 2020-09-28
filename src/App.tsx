@@ -54,7 +54,7 @@ export default function() {
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
 
-  console.log(gameState.spaceships);
+  console.log(gameState.spaceStations[IDs.ORION]);
 
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();

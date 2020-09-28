@@ -26,7 +26,7 @@ export default (props: {
   const spaceStation = spaceStationData[props.id];
   const StationPosition = locationData[spaceStation.location].pixelPosition;
   const [showModal, setShowModal] = useState(false);
-  
+
   return <>
     {
       visited ?
@@ -45,6 +45,7 @@ export default (props: {
           <SpaceStationModal
             onClose={() => setShowModal(false)}
             id={props.id}
+            message={spaceStation.message}
           /> : <></>
         }
       </> : null
