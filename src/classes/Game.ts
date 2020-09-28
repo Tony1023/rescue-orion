@@ -127,6 +127,7 @@ export default class Game {
   }
 
   toGameState(): GameState {
+    const orion = this.spaceStations[IDs.ORION] as SpaceStationOrion;
     return {
       spaceships: Object.keys(this.spaceships).reduce((accumulator: {
           [id: string]: PlainSpaceship 
@@ -170,14 +171,15 @@ export default class Game {
               },
             {})
           };
-          if (id === IDs.ORION) {
-            accumulator[id].scientists = (spaceStation as SpaceStationOrion).getScientistCount();
-          }
           return accumulator;
         },
       {}),
       messages: this.dumpMessages(),
       time: this.time,
+      gameStats: {
+        scientistsRemaining: orion.getScientistCount(),
+        dropOffTimes: orion.getDropOffTimes(),
+      },
     };
   }
 };

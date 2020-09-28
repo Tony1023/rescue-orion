@@ -5,6 +5,11 @@ import { GameState } from './store/types';
 
 export default () => {
 
+  const day = useSelector((state: GameState) => state.time);
+  if (day === 31) {
+    return <></>;
+  }
+
   const dispatch = useDispatch();
   const spaceshipPositions = useSelector((state: GameState): 
     { [id: string]: string } => {

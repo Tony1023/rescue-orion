@@ -52,7 +52,6 @@ export default (props: {
   message?: Message,
   onClose?: () => void,
 }) => {
-console.log(props.message);
 
   return <ModalBackground> 
     {

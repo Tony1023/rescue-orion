@@ -16,7 +16,6 @@ export interface PlainSpaceStation {
   lifeSupportPacks: number,
   rescueResources: RescueResource[],
   canPickUp: { [resource: string]: boolean },
-  scientists?: number,
 };
 
 export interface Message {
@@ -41,6 +40,12 @@ export interface GameState {
   },
   messages: Message[],
   time: number,
+  gameStats: {
+    scientistsRemaining: number,
+    dropOffTimes: {
+      [resource: string]: number
+    }
+  }
 };
 
 export interface Transfer {

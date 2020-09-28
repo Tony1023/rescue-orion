@@ -13,6 +13,7 @@ import Timer from './Timer';
 import OrionMessageEmitter from './OrionMessageEmitter';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
+import EndGameModal from './modal/EndGameModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -53,8 +54,6 @@ export default function() {
 
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
-
-  console.log(gameState.spaceStations[IDs.ORION]);
 
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
@@ -149,6 +148,10 @@ export default function() {
           onClose={() => setShowRebalanceModal(false)}
         /> : <></>
       }
+      {
+        gameState.time === 31 ?
+        <EndGameModal/> : <></>
+      }
 
       <ResourcePanel
         gemini1={gameState.spaceships[IDs.GEMINI_1]}
@@ -157,7 +160,10 @@ export default function() {
       ></ResourcePanel>
 
     </GameBoard>
-    <Timer />
+    {
+      gameState.time >= 31 ?
+      <Timer /> : <></>
+    }
     <OrionMessageEmitter />
   </>;
 }

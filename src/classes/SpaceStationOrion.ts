@@ -5,17 +5,35 @@ import TimeVaryingAgent from "./TimeVaryingAgent";
 export default class SpaceStationOrion extends SpaceStation implements TimeVaryingAgent {
 
   private scientistCount: number = 20;
+  private time: number = 0;
+  private dropOffTimes: { [resource: string]: number} = {
+    [RescueResource.O2ReplacementCells]: -1,
+    [RescueResource.FoodRepairTeam]: -1,
+    [RescueResource.WaterRepairTeam]: -1,
+    [RescueResource.MedicalRepairTeam]: -1,
+    [RescueResource.OxygenRepairTeam]: -1,
+  };
 
   constructor(scientistCount: number, location: string, energyCells: number, lifeSupportPacks: number, resources?: RescueResource[]) {
     super(location, energyCells, lifeSupportPacks, resources);
     this.scientistCount = scientistCount;
   }
 
-  canPickUp(r: RescueResource): boolean {
+  dropOffTo(r: RescueResource): void {
+    super.dropOffTo(r);
+    this.dropOffTimes[r] = this.time;
+  }
+
+  getDropOffTimes(): { [resource: string]: number } {
+    return this.dropOffTimes;
+  }
+
+  canPickUp(_: RescueResource): boolean {
     return false;
   }
 
   onDayUpdate(day: number): void {
+    this.time = day;
     if(this.scientistCount<=0){
       return;
     }
