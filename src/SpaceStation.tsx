@@ -1,11 +1,11 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { PixelPosition } from './classes/Location';
-import * as IDs from './metadata/agent-ids';
 import locationData from './metadata/location-data';
-import spaceStationData from './metadata/space-station-data';
+import { spaceStationData } from './metadata';
 import SpaceStationModal from './modal/SpaceStationModal';
-import { PlainSpaceStation } from './store/types';
+import { GameState } from './store/types';
 
 const StationInformationButton = styled.button`
   position: absolute; 
@@ -17,28 +17,37 @@ const StationInformationButton = styled.button`
   }
 `;
 
-export interface Props {
-    name: string,
-    info: PlainSpaceStation,
-  }
+export default (props: {
+  id: string,
+}) => {
+
+  const visited = useSelector((state: GameState) => state.spaceStations[props.id].visited);
+
+  const spaceStation = spaceStationData[props.id];
+  const StationPosition = locationData[spaceStation.location].pixelPosition;
+  const [showModal, setShowModal] = useState(false);
   
-export default function(props: Props) {
-    const StationPosition =  locationData[props.info.location].pixelPosition;
-    const [showStationInformationModel, setStationInformationModel] = useState(false);
-    return <>
-    <div>
-        <StationInformationButton position={StationPosition}
-        onClick={() => setStationInformationModel(true)}
-        disabled={false}>
-            Station Information
-        </StationInformationButton>
-    </div>
-    
+  return <>
     {
-        showStationInformationModel ?
-        <SpaceStationModal
-          onClose={() => setStationInformationModel(false)}
-        /> : <></>
+      visited ?
+      <>
+        <div>
+          <StationInformationButton
+            position={StationPosition}
+            onClick={() => setShowModal(true)}
+          >
+            Station Information
+          </StationInformationButton>
+        </div>
+        
+        {
+          showModal ?
+          <SpaceStationModal
+            onClose={() => setShowModal(false)}
+            id={props.id}
+          /> : <></>
+        }
+      </> : null
     }
-    </>;
-  }
+  </>;
+}

@@ -3,9 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
 import SpaceStation from './SpaceStation'
 import { GameState, Message } from './store/types';
-import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
-import { locationData } from './metadata';
+import { locationData, spaceStationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
@@ -14,7 +13,6 @@ import Timer from './Timer';
 import OrionMessageEmitter from './OrionMessageEmitter';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
-import StationData from './metadata/space-station-data'
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -129,13 +127,11 @@ export default function() {
         })
       }
       {
-        Object.entries(gameState.spaceStations).map((location, index) => {
-          return (
-            <SpaceStation 
-              name={location[0]}
-              info={location[1]}
-            />
-          );
+        Object.entries(spaceStationData).map((spaceStation, index) => {
+          return <SpaceStation
+            key={index}
+            id={spaceStation[0]}
+          />;
         })
       }
       {
@@ -146,9 +142,6 @@ export default function() {
             onClose={popMessageModal}
           />;
         })
-      }
-      {
-        
       }
       {
         showRebalanceModal ?

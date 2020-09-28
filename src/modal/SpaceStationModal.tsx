@@ -177,6 +177,7 @@ function Gemini2Panel() {
 
 export default (props: {
   onClose?: () => void,
+  id: string,
 }) => {
 
   const gameState = useSelector((state: GameState) => state);
