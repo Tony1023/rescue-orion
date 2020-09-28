@@ -22,7 +22,6 @@ import {
   dropOffRescueResource
 } from '../store/actions';
 import { PlainSpaceStation } from '../store/types';
-import Props from '../StationInformationButton'
 import { Message } from '../store/types';
 
 const PickUpButton = styled.button`

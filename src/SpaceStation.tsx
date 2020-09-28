@@ -4,7 +4,7 @@ import { PixelPosition } from './classes/Location';
 import * as IDs from './metadata/agent-ids';
 import locationData from './metadata/location-data';
 import spaceStationData from './metadata/space-station-data';
-import StationInformationModel from './modal/StationInformationModel';
+import SpaceStationModal from './modal/SpaceStationModal';
 import { PlainSpaceStation } from './store/types';
 
 const StationInformationButton = styled.button`
@@ -36,7 +36,7 @@ export default function(props: Props) {
     
     {
         showStationInformationModel ?
-        <StationInformationModel
+        <SpaceStationModal
           onClose={() => setStationInformationModel(false)}
         /> : <></>
     }

@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
-import StationButton from './StationInformationButton'
+import SpaceStation from './SpaceStation'
 import { GameState, Message } from './store/types';
 import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
@@ -9,7 +9,6 @@ import { locationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
-import StationProps from './modal/StationInformationModel';
 import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
 import OrionMessageEmitter from './OrionMessageEmitter';
@@ -132,7 +131,7 @@ export default function() {
       {
         Object.entries(gameState.spaceStations).map((location, index) => {
           return (
-            <StationButton 
+            <SpaceStation 
               name={location[0]}
               info={location[1]}
             />
