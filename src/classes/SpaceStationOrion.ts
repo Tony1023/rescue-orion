@@ -21,7 +21,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
 
   dropOffTo(r: RescueResource): void {
     super.dropOffTo(r);
-    this.dropOffTimes[r] = this.time;
+    this.dropOffTimes[r] = this.time + 1;
   }
 
   getDropOffTimes(): { [resource: string]: number } {

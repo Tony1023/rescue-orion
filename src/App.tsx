@@ -161,7 +161,7 @@ export default function() {
 
     </GameBoard>
     {
-      gameState.time >= 31 ?
+      gameState.time < 31 ?
       <Timer /> : <></>
     }
     <OrionMessageEmitter />
