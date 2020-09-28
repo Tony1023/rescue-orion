@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { spaceStationData } from '../metadata';
 import {
   BaseModalTextBackground,
   Modal,
@@ -53,7 +52,7 @@ const StyledModal = styled(Modal)`
 `;
 const StyledButton = styled(DismissButton)`
   position: absolute;
-  left: 30px;
+  left: 25px;
   bottom: 20px;
 `;
 
@@ -194,21 +193,88 @@ function StationPanel(props: {
   </>
 }
 
+const SpaceshipName = styled.h1`
+  font-family: 'Grandstander', cursive;
+  text-align: center;
+  margin-bottom: 30px;
+`;
 
+const RightPanelTriangle = styled(Triangle)`
+  position: absolute;
+  left: 5px;
+  top: 0;
+  transform: rotate(180deg);
+`;
 
-function Gemini1Panel() {
-  const gemini1 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_1]);
+const ResourceRightAlign = styled(Resource)`
+  text-align: right;
+  margin-top: 10px;
+`;
+
+function Gemini1Panel(props: {
+  id: string
+}) {
+  const gemini_1 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_1]);
   const dispatch = useDispatch();
 
   return <>
-
+    <SpaceshipName>Gemini 1</SpaceshipName>
+    <Resource>
+      Energy Cells: {gemini_1.energyCells}
+    </Resource>
+    <Resource>
+      Life Support Packs: {gemini_1.lifeSupportPacks}
+    </Resource>
+    <Divider />
+    {
+      gemini_1.rescueResources.map((resource, i) => 
+      <ResourceRightAlign key={i}>
+          {resource}
+          <RightPanelTriangle
+            onClick={() => {
+              dispatch(dropOffRescueResource({
+                from: IDs.GEMINI_1,
+                to: props.id,
+                type: resource,
+              }));
+            }}
+          />
+        </ResourceRightAlign>
+      )
+    }
   </>
 }
 
-function Gemini2Panel() {
-  const gemini2 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_2]);
+function Gemini2Panel(props: {
+  id: string
+}) {
+  const gemini_2 = useSelector((state: GameState) => state.spaceships[IDs.GEMINI_2]);
   const dispatch = useDispatch();
   return <>
+    <SpaceshipName>Gemini 2</SpaceshipName>
+    <Resource>
+      Energy Cells: {gemini_2.energyCells}
+    </Resource>
+    <Resource>
+      Life Support Packs: {gemini_2.lifeSupportPacks}
+    </Resource>
+    <Divider />
+    {
+      gemini_2.rescueResources.map((resource, i) => 
+      <ResourceRightAlign key={i}>
+          {resource}
+          <RightPanelTriangle
+            onClick={() => {
+              dispatch(dropOffRescueResource({
+                from: IDs.GEMINI_2,
+                to: props.id,
+                type: resource,
+              }));
+            }}
+          />
+        </ResourceRightAlign>
+      )
+    }
   </>
 }
 
@@ -241,7 +307,7 @@ export default (props: {
           <Column style={{ width: '3%' }} />
           <Column style={{ width: '27%' }}>
             <StyledModal>
-              <Gemini1Panel />
+              <Gemini1Panel id={props.id}/>
             </StyledModal>
           </Column>
         </>
@@ -254,7 +320,7 @@ export default (props: {
           <Column style={{ width: '3%' }} />
           <Column style={{ width: '27%' }}>
             <StyledModal>
-              <Gemini2Panel />
+              <Gemini2Panel id={props.id}/>
             </StyledModal>
           </Column>
         </>
