@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import styled from 'styled-components';
 import { PixelPosition } from './classes/Location';
 import * as IDs from './metadata/agent-ids';
 import locationData from './metadata/location-data';
+import spaceStationData from './metadata/space-station-data';
+import StationInformationModel from './modal/StationInformationModel';
 
 const ButtonGroupBackground = styled.div`
   position: absolute;
@@ -61,8 +63,9 @@ interface Props {
 export default function(props: Props) {
 
   const position = locationData[props.id].pixelPosition;
-
-  return (
+  const StationPosition =  locationData['t3'].pixelPosition;
+  const [showStationInformationModel, setStationInformationModel] = useState(false);
+  return <>
     <ButtonGroupBackground position={position}>
       {
         props.shipReachability[IDs.GEMINI_1] ? 
@@ -93,5 +96,5 @@ export default function(props: Props) {
         /> : <></>
       }
     </ButtonGroupBackground>
-  );
+  </>;
 }

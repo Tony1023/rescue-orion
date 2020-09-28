@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
+import StationButton from './StationInformationButton'
 import { GameState, Message } from './store/types';
 import { RescueResource } from './classes/RescueResource';
 import styled from 'styled-components';
@@ -8,11 +9,13 @@ import { locationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
 import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
+import StationProps from './modal/StationInformationModel';
 import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
 import OrionMessageEmitter from './OrionMessageEmitter';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
+import StationData from './metadata/space-station-data'
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -101,7 +104,8 @@ export default function() {
       <button
         onClick={() => setShowRebalanceModal(true)}
         disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
-      >Rebalance Resources</button>
+      >Rebalance Resources
+      </button>
       {
         gemini1Location === gemini2Location ? 
         <Gemini12 position={position1} /> :
@@ -125,7 +129,16 @@ export default function() {
           );
         })
       }
-
+      {
+        Object.entries(gameState.spaceStations).map((location, index) => {
+          return (
+            <StationButton 
+              name={location[0]}
+              info={location[1]}
+            />
+          );
+        })
+      }
       {
         messages.map((message: Message, index: number) => {
           return <MessageModal
@@ -135,7 +148,9 @@ export default function() {
           />;
         })
       }
-
+      {
+        
+      }
       {
         showRebalanceModal ?
         <RebalanceResourceModal
