@@ -10,8 +10,13 @@ import { GameState } from './store/types';
 const StationInformationButton = styled.button`
   position: absolute; 
   font-family: 'Grandstander', cursive;
-  top: ${(props: { position: PixelPosition }) => `${props.position.top + 50}px`};
-  left: ${(props: { position: PixelPosition }) => `${props.position.left - 60}px`};
+  top: ${(props: { position: PixelPosition }) => `${props.position.top}px`};
+  left: ${(props: { position: PixelPosition }) => `${props.position.left - 80}px`};
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  line-height: 30px;
+  font-size: 20px;
   &:hover {
     cursor: pointer;
   }
@@ -36,7 +41,7 @@ export default (props: {
             position={StationPosition}
             onClick={() => setShowModal(true)}
           >
-            Station Information
+            i
           </StationInformationButton>
         </div>
         

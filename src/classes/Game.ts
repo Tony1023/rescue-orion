@@ -68,7 +68,7 @@ export default class Game {
     this.agents[IDs.ORION] = orion;
     this.carriers[IDs.ORION] = orion;
 
-    const sagittarius = new SpaceStation(spaceStationData[IDs.SAGITTARIUS].location, 0, 0, [RescueResource.O2ReplacementCells]);
+    const sagittarius = new SpaceStation(spaceStationData[IDs.SAGITTARIUS].location, 0, 0);
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
