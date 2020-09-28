@@ -14,7 +14,7 @@ export default () => {
     } => {
       return {
         orion: state.spaceStations[ID.ORION],
-        day: state.time
+        day: state.time - 1, // number of days that HAS ALREADY PASSED
       };
   });
 
