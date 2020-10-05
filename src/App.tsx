@@ -10,7 +10,6 @@ import * as Actions from './store/actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
-import OrionMessageEmitter from './OrionMessageEmitter';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
@@ -171,6 +170,5 @@ export default function() {
       gameOver ?
       <></> : <Timer />
     }
-    <OrionMessageEmitter />
   </>;
 }
