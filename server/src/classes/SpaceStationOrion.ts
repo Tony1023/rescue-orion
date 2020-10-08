@@ -14,7 +14,6 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     [RescueResource.MedicalRepairTeam]: -1,
     [RescueResource.OxygenRepairTeam]: -1,
   };
-  // Does this cause circular reference?
   private messageQueue: MessageQueue;
 
   constructor(location: string, energyCells: number, lifeSupportPacks: number, resources: RescueResource[], messageQueue: MessageQueue, scientistCount: number) {
