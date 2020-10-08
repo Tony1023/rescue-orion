@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector } from './redux-hook-adapters';
 import styled from 'styled-components';
-import { PixelPosition } from './classes/Location';
+import { PixelPosition } from './metadata/types';
 import locationData from './metadata/location-data';
 import { spaceStationData } from './metadata';
 import SpaceStationModal from './modal/SpaceStationModal';
-import { GameState } from './store/types';
+import { GameState } from './metadata/types';
 
 const StationInformationButton = styled.button`
   position: absolute; 

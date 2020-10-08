@@ -4,7 +4,6 @@ import React, {
   Dispatch,
   SetStateAction,
   useState,
-  useContext,
 } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from '../redux-hook-adapters';
@@ -15,15 +14,14 @@ import {
   ModalBackground,
   DismissButton,
 } from './modal';
-import { GameState } from '../store/types';
+import { GameState } from '../metadata/types';
 import * as IDs from '../metadata/agent-ids';
 import {
   transferEnergyCells,
   transferRescueResource,
   transferLifeSupportPacks,
-} from '../store/actions';
+} from '../actions';
 import Triangle from './TriangleButton';
-import GameContext from '../GameContext';
 
 const Gemini = styled.img`
   width: 120px;

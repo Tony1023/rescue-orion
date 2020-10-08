@@ -1,4 +1,4 @@
-import { GameState, PlainSpaceship, PlainSpaceStation, Message } from '../types';
+import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves } from '../metadata/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -12,10 +12,6 @@ import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../metadata';
 import Websocket = require('ws');
-
-export interface SpaceshipNextMoves {
-  [location: string]: { [id: string]: boolean }
-};
 
 function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   if (left.getLocation() !== right.getLocation()) {

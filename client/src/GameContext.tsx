@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { GameState } from "./store/types";
+import { GameState } from "./metadata/types";
 
 interface Context {
   socket?: WebSocket,

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import GameBoard from './GameBoard';
-import store from './store';
 import SocketContext from './GameContext';
-import { GameState } from './store/types';
+import { GameState } from './metadata/types';
 
 export default () => {
 

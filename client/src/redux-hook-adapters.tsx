@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import GameContext from './GameContext';
-import * as Types from './store/types';
+import * as Types from './metadata/types';
 
 export function useSelector<TSelected = unknown>(
   selector: (state: Types.GameState) => TSelected

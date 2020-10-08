@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { PlainSpaceship } from "./store/types";
+import { PlainSpaceship } from "./metadata/types";
 
 const GEMINI1_LEFT_OFFSET = 38;
 const GEMINI2_LEFT_OFFSET = 175;

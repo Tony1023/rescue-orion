@@ -1,5 +1,4 @@
-import { LocationMetadata } from './types';
-import { LocationType } from '../classes/Location';
+import { LocationType, LocationMetadata } from './types';
 
 const metadata: LocationMetadata = {
   'sagittarius': {

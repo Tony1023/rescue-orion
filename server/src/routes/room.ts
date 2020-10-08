@@ -1,7 +1,7 @@
 import express from 'express';
 import WebSocket from 'ws';
 import Game from '../classes/Game';
-import * as Types from '../types';
+import * as Types from '../metadata/types';
 
 let rooms: {
   [room: string]: Game
