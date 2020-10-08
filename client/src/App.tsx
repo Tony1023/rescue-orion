@@ -51,7 +51,7 @@ const Gemini12 = styled(GeminiShip)`
 
 const ActionButton = styled.div`
   width: 120px;
-  height: 35px;
+  height: 40px;
   position: absolute;
   background-size: cover;
   cursor: pointer;
@@ -64,6 +64,16 @@ const ConfirmMoveButton = styled(ActionButton)`
   cursor: ${(props: { noMove: Boolean }) => !props.noMove ? 'cursor': `not-allowed`};
   :hover {
     background-image: url(${`${process.env.PUBLIC_URL}/confirm_move_hover.png`});
+  }
+`;
+
+const MoveResourceButton = styled(ActionButton)`
+  background-image: ${(props: { disabled: Boolean }) => !props.disabled ? `url(${process.env.PUBLIC_URL}/move_resources.png)`: `url(${process.env.PUBLIC_URL}/move_resources_hover.png)`};
+  top: 580px;
+  left: 100px;
+  cursor: ${(props: { disabled: Boolean }) => !props.disabled ? 'cursor': `not-allowed`};
+  :hover {
+    background-image: url(${`${process.env.PUBLIC_URL}/move_resources_hover.png`});
   }
 `;
 
@@ -118,11 +128,14 @@ export default function() {
           }
         }}
         ></ConfirmMoveButton>
-      <button
-        onClick={() => setShowRebalanceModal(true)}
+      <MoveResourceButton
         disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
-      >Rebalance Resources
-      </button>
+        onClick={() => {
+          if(gemini1CurrentLocation === gemini2CurrentLocation) {
+            setShowRebalanceModal(true)
+          }
+        }}
+      ></MoveResourceButton>
       <button
         onClick={() => setGameOver(true)}
       >Terminate Game</button>
