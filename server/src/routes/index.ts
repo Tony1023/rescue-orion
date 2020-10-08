@@ -8,5 +8,7 @@ module.exports = (app: express.Express, server: http.Server) => {
     server: server,
     path: '/rooms',
   });
-  require('./room')(app, wss);
+  const roomRouter = express.Router();
+  app.use('/rooms', roomRouter);
+  require('./room')(roomRouter, wss);
 }

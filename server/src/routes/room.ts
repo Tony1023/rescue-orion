@@ -7,7 +7,7 @@ let rooms: {
   [room: string]: Game
 } = {};
 
-module.exports = (app: express.Express, wss: WebSocket.Server) => {
+module.exports = (router: express.Router, wss: WebSocket.Server) => {
 
   wss.on('connection', (ws) => {
     let game: Game;
