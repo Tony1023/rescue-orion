@@ -49,6 +49,24 @@ const Gemini12 = styled(GeminiShip)`
   left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 
+const ActionButton = styled.div`
+  width: 120px;
+  height: 35px;
+  position: absolute;
+  background-size: cover;
+  cursor: pointer;
+`;
+
+const ConfirmMoveButton = styled(ActionButton)`
+  background-image: ${(props: { noMove: Boolean }) => !props.noMove ? `url(${process.env.PUBLIC_URL}/confirm_move.png)`: `url(${process.env.PUBLIC_URL}/confirm_move_hover.png)`};
+  top: 15px;
+  left: 30px;
+  cursor: ${(props: { noMove: Boolean }) => !props.noMove ? 'cursor': `not-allowed`};
+  :hover {
+    background-image: url(${`${process.env.PUBLIC_URL}/confirm_move_hover.png`});
+  }
+`;
+
 export default function() {
 
   const gameState = useSelector((state: GameState) => state);
@@ -89,17 +107,17 @@ export default function() {
 
   return <>
     <GameBoard>
-      <button 
+      <ConfirmMoveButton  
+        noMove={!selectedMove}
         onClick={() => {
-          dispatch(Actions.moveSpaceship({
-            gemini_1: `${gemini1NextMove}`,
-            gemini_2: `${gemini2NextMove}`
-          }))
+          if(selectedMove) {
+            dispatch(Actions.moveSpaceship({
+              gemini_1: `${gemini1NextMove}`,
+              gemini_2: `${gemini2NextMove}`
+            }))
+          }
         }}
-        disabled={!selectedMove}
-      >
-        Confirm Move
-      </button>
+        ></ConfirmMoveButton>
       <button
         onClick={() => setShowRebalanceModal(true)}
         disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
