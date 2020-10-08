@@ -49,6 +49,43 @@ const Gemini12 = styled(GeminiShip)`
   left: ${(props: { position: PixelPosition }) => `${props.position.left - GEMINI_LEFT_OFFSET}px`};
 `;
 
+const ActionButton = styled.div`
+  width: 120px;
+  height: 40px;
+  position: absolute;
+  background-size: cover;
+  cursor: pointer;
+`;
+
+const ConfirmMoveButton = styled(ActionButton)`
+  background-image: url(${`${process.env.PUBLIC_URL}/confirm_move.png`});
+  top: 15px;
+  left: 30px;
+  cursor: ${(props: { noMove: Boolean }) => !props.noMove ? 'cursor': `not-allowed`};
+  :hover {
+    background-image: ${(props: { noMove: Boolean }) => props.noMove ? `url(${process.env.PUBLIC_URL}/confirm_move.png)`: `url(${process.env.PUBLIC_URL}/confirm_move_hover.png)`};
+  }
+`;
+
+const MoveResourceButton = styled(ActionButton)`
+  background-image: url(${`${process.env.PUBLIC_URL}/move_resources.png`});
+  top: 580px;
+  left: 100px;
+  cursor: ${(props: { disabled: Boolean }) => !props.disabled ? 'cursor': `not-allowed`};
+  :hover {
+    background-image: ${(props: { disabled: Boolean }) => !props.disabled ? `url(${process.env.PUBLIC_URL}/move_resources_hover.png)`: `url(${process.env.PUBLIC_URL}/move_resources.png)`};
+  }
+`;
+
+const TerminateGameButton = styled(ActionButton)`
+  background-image: url(${`${process.env.PUBLIC_URL}/pickup.png`});
+  top: 55px;
+  left: 30px;
+  :hover {
+    background-image: url(${`${process.env.PUBLIC_URL}/pickup_hover.png`});
+  }
+`;
+
 export default function() {
 
   const gameState = useSelector((state: GameState) => state);
@@ -89,25 +126,28 @@ export default function() {
 
   return <>
     <GameBoard>
-      <button 
+      <ConfirmMoveButton  
+        noMove={!selectedMove}
         onClick={() => {
-          dispatch(Actions.moveSpaceship({
-            gemini_1: `${gemini1NextMove}`,
-            gemini_2: `${gemini2NextMove}`
-          }))
+          if(selectedMove) {
+            dispatch(Actions.moveSpaceship({
+              gemini_1: `${gemini1NextMove}`,
+              gemini_2: `${gemini2NextMove}`
+            }))
+          }
         }}
-        disabled={!selectedMove}
-      >
-        Confirm Move
-      </button>
-      <button
-        onClick={() => setShowRebalanceModal(true)}
+        ></ConfirmMoveButton>
+      <MoveResourceButton
         disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
-      >Rebalance Resources
-      </button>
-      <button
+        onClick={() => {
+          if(gemini1CurrentLocation === gemini2CurrentLocation) {
+            setShowRebalanceModal(true)
+          }
+        }}
+      ></MoveResourceButton>
+      <TerminateGameButton 
         onClick={() => setGameOver(true)}
-      >Terminate Game</button>
+      ></TerminateGameButton>
       {
         gemini1Location === gemini2Location ? 
         <Gemini12 position={position1} /> :
