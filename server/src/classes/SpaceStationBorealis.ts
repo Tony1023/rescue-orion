@@ -4,11 +4,11 @@ import MessageQueue from "./MessageQueue";
 
 export default class SpaceStationBorealis extends SpaceStation {
 
-  private messageQueue = new WeakMap<SpaceStation, MessageQueue>();
+  private messageQueue: MessageQueue;
 
   constructor(location: string, energyCells: number, lifeSupportPacks: number, resources: RescueResource[], messageQueue: MessageQueue) {
     super(location, energyCells, lifeSupportPacks, resources);
-    this.messageQueue.set(this, messageQueue);
+    this.messageQueue = messageQueue;
   }
 
   canPickUp(r: RescueResource): boolean {

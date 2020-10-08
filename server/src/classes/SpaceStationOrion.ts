@@ -14,12 +14,13 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     [RescueResource.MedicalRepairTeam]: -1,
     [RescueResource.OxygenRepairTeam]: -1,
   };
-  private messageQueue = new WeakMap<SpaceStation, MessageQueue>();
+  // Does this cause circular reference?
+  private messageQueue: MessageQueue;
 
   constructor(location: string, energyCells: number, lifeSupportPacks: number, resources: RescueResource[], messageQueue: MessageQueue, scientistCount: number) {
     super(location, energyCells, lifeSupportPacks, resources);
     this.scientistCount = scientistCount;
-    this.messageQueue.set(this, messageQueue);
+    this.messageQueue = messageQueue;
   }
 
   dropOffTo(r: RescueResource): void {
@@ -41,11 +42,10 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
       return;
     }
 
-    const messageQueue = this.messageQueue.get(this);
     switch (this.day) {
       case 6:
         if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
-          messageQueue.pushMessage({
+          this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'Oh no! It appears you were too late.' }, 
@@ -58,7 +58,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
       case 21:
         if (this.rescueResources.indexOf(RescueResource.OxygenRepairTeam) === -1) {
           if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
-            messageQueue.pushMessage({
+            this.messageQueue.pushMessage({
               title: 'Incident at Orion',
               paragraphs: [
                 { text: 'Oh no! It appears you were too late.' }, 
@@ -67,7 +67,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
               ]
             });
           } else {
-            messageQueue.pushMessage({
+            this.messageQueue.pushMessage({
               title: 'Incident at Orion',
               paragraphs: [
                 { text: 'Oh no! It appears you were too late.' }, 
@@ -80,7 +80,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
         break;
       case 23:
         if (this.rescueResources.indexOf(RescueResource.WaterRepairTeam) === -1) {
-          messageQueue.pushMessage({
+          this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'Oh no! It appears you were too late.' }, 
@@ -92,7 +92,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
         break;
       case 24:
         if (this.rescueResources.indexOf(RescueResource.FoodRepairTeam) === -1) {
-          messageQueue.pushMessage({
+          this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'I just got an update from Orion.' }, 
@@ -104,7 +104,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
         break;
       case 25:
         if (this.rescueResources.indexOf(RescueResource.MedicalRepairTeam) === -1) {
-          messageQueue.pushMessage({
+          this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'I just got an update from Orion.' }, 
