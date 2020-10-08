@@ -58,22 +58,31 @@ const ActionButton = styled.div`
 `;
 
 const ConfirmMoveButton = styled(ActionButton)`
-  background-image: ${(props: { noMove: Boolean }) => !props.noMove ? `url(${process.env.PUBLIC_URL}/confirm_move.png)`: `url(${process.env.PUBLIC_URL}/confirm_move_hover.png)`};
+  background-image: url(${`${process.env.PUBLIC_URL}/confirm_move.png`});
   top: 15px;
   left: 30px;
   cursor: ${(props: { noMove: Boolean }) => !props.noMove ? 'cursor': `not-allowed`};
   :hover {
-    background-image: url(${`${process.env.PUBLIC_URL}/confirm_move_hover.png`});
+    background-image: ${(props: { noMove: Boolean }) => props.noMove ? `url(${process.env.PUBLIC_URL}/confirm_move.png)`: `url(${process.env.PUBLIC_URL}/confirm_move_hover.png)`};
   }
 `;
 
 const MoveResourceButton = styled(ActionButton)`
-  background-image: ${(props: { disabled: Boolean }) => !props.disabled ? `url(${process.env.PUBLIC_URL}/move_resources.png)`: `url(${process.env.PUBLIC_URL}/move_resources_hover.png)`};
+  background-image: url(${`${process.env.PUBLIC_URL}/move_resources.png`});
   top: 580px;
   left: 100px;
   cursor: ${(props: { disabled: Boolean }) => !props.disabled ? 'cursor': `not-allowed`};
   :hover {
-    background-image: url(${`${process.env.PUBLIC_URL}/move_resources_hover.png`});
+    background-image: ${(props: { disabled: Boolean }) => !props.disabled ? `url(${process.env.PUBLIC_URL}/move_resources_hover.png)`: `url(${process.env.PUBLIC_URL}/move_resources.png)`};
+  }
+`;
+
+const TerminateGameButton = styled(ActionButton)`
+  background-image: url(${`${process.env.PUBLIC_URL}/pickup.png`});
+  top: 55px;
+  left: 30px;
+  :hover {
+    background-image: url(${`${process.env.PUBLIC_URL}/pickup_hover.png`});
   }
 `;
 
@@ -136,9 +145,9 @@ export default function() {
           }
         }}
       ></MoveResourceButton>
-      <button
+      <TerminateGameButton 
         onClick={() => setGameOver(true)}
-      >Terminate Game</button>
+      ></TerminateGameButton>
       {
         gemini1Location === gemini2Location ? 
         <Gemini12 position={position1} /> :
