@@ -28,23 +28,18 @@ module.exports = (router: express.Router, wss: WebSocket.Server) => {
             } else {
               game = new Game();
               game.load();
+              game.startGame();
               rooms[payload.room] = game;
             }
-            console.log(game.toGameState());
-            ws.send(JSON.stringify({
-              type: '@GameUpdate',
-              payload: game.toGameState(),
-            }))
+            game.socket = ws;
+            game.sendUpdate();
           }
           break;
         
         default:
           if (type.startsWith('@GameAction/')) {
-            const newState = applyAction(game, message);
-            ws.send(JSON.stringify({
-              type: '@GameUpdate',
-              payload: newState,
-            }));
+            applyAction(game, message);
+            game.sendUpdate();
           }
           break;
       }
@@ -53,7 +48,7 @@ module.exports = (router: express.Router, wss: WebSocket.Server) => {
 
 }
 
-function applyAction(game: Game, action: Types.GameAction): Types.GameState {
+function applyAction(game: Game, action: Types.GameAction) {
   switch (action.type) {
     case Types.MOVE_SPACESHIP: {
       game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
@@ -93,5 +88,4 @@ function applyAction(game: Game, action: Types.GameAction): Types.GameState {
     default:
       break;
   }
-  return game.toGameState();
 };

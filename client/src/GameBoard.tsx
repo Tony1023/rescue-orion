@@ -8,7 +8,6 @@ import * as IDs from './metadata/agent-ids';
 import { moveSpaceship } from './actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './metadata/types';
-import Timer from './Timer';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
@@ -166,9 +165,5 @@ export default function() {
       ></ResourcePanel>
 
     </GameBoard>
-    {
-      gameOver ?
-      <></> : <Timer />
-    }
   </>;
 }

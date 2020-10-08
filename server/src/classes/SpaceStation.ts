@@ -8,10 +8,10 @@ export default class SpaceStation implements ResourceCarrier {
   protected rescueResources: RescueResource[];
   private location: string;
 
-  constructor(location: string, energyCells: number, lifeSupportPacks: number, resources?: RescueResource[]) {
+  constructor(location: string, energyCells: number, lifeSupportPacks: number, resources: RescueResource[]) {
     this.energyCells = energyCells;
     this.lifeSupportPacks = lifeSupportPacks;
-    this.rescueResources = resources ?? [];
+    this.rescueResources = resources;
     this.location = location;
   }
 

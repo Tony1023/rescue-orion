@@ -15,6 +15,7 @@ export default () => {
       switch (message.type) {
         case '@GameUpdate':
           const newState = message.payload as GameState;
+          console.log(newState);
           setGameState(newState);
       }
     }
@@ -45,6 +46,4 @@ export default () => {
     <div>Loading</div>
   );
   
-  
-
 }

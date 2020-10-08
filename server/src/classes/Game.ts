@@ -1,4 +1,4 @@
-import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves } from '../metadata/types';
+import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus } from '../metadata/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -11,7 +11,9 @@ import SpaceStationBorealis from './SpaceStationBorealis';
 import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../metadata';
-import Websocket = require('ws');
+import MessageQueue from './MessageQueue';
+import WebSocket from 'ws';
+import { send } from 'process';
 
 function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   if (left.getLocation() !== right.getLocation()) {
@@ -19,15 +21,20 @@ function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   }
 }
 
-export default class Game {
+export default class Game implements MessageQueue {
 
-  private time = 0;
+  private day = 0;
   private messages: Message[] = [];
   private agents: { [id: string]: TimeVaryingAgent } = {};
   private carriers: { [id: string]: ResourceCarrier } = {};
   private spaceships: { [id: string]: Spaceship } = {};
   private spaceStations: { [id: string]: SpaceStation } = {};
-  socket: Websocket;
+  private gameDuration = 0;
+  private movedSinceStart = false;
+  private lastMove = 0;
+  private gameStatus = GameStatus.NotStarted;
+  private timeTickSeconds: NodeJS.Timeout;
+  socket: WebSocket;
 
   load(): void {
     const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplacementCells]);
@@ -40,7 +47,7 @@ export default class Game {
     this.agents[IDs.GEMINI_2] = gemini_2;
     this.carriers[IDs.GEMINI_2] = gemini_2;
     
-    const andromeda = new SpaceStationAndromeda(spaceStationData[IDs.ANDROMEDA].location, 0, 0);
+    const andromeda = new SpaceStationAndromeda(spaceStationData[IDs.ANDROMEDA].location, 0, 0, []);
     this.spaceStations[IDs.ANDROMEDA] = andromeda;
     this.agents[IDs.ANDROMEDA] = andromeda;
     this.carriers[IDs.ANDROMEDA] = andromeda;
@@ -49,7 +56,7 @@ export default class Game {
     this.spaceStations[IDs.AQUARIUS] = aquarius;
     this.carriers[IDs.AQUARIUS] = aquarius;
 
-    const borealis = new SpaceStationBorealis(spaceStationData[IDs.BOREALIS].location, 50, 30, [RescueResource.OxygenRepairTeam]);
+    const borealis = new SpaceStationBorealis(spaceStationData[IDs.BOREALIS].location, 50, 30, [RescueResource.OxygenRepairTeam], this);
     this.spaceStations[IDs.BOREALIS] = borealis;
     this.carriers[IDs.BOREALIS] = borealis;
 
@@ -61,25 +68,46 @@ export default class Game {
     this.spaceStations[IDs.CASSIOPEIA] = cassiopeia;
     this.carriers[IDs.CASSIOPEIA] = cassiopeia;
 
-    const orion = new SpaceStationOrion(20, spaceStationData[IDs.ORION].location, 0, 0);
+    const orion = new SpaceStationOrion(spaceStationData[IDs.ORION].location, 0, 0, [], this, 20);
     this.spaceStations[IDs.ORION] = orion;
     this.agents[IDs.ORION] = orion;
     this.carriers[IDs.ORION] = orion;
 
-    const sagittarius = new SpaceStation(spaceStationData[IDs.SAGITTARIUS].location, 0, 0);
+    const sagittarius = new SpaceStation(spaceStationData[IDs.SAGITTARIUS].location, 0, 0, []);
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
     this.messages.push(spaceStationData[IDs.SAGITTARIUS].message);
   }
 
+  getGameStatus(): GameStatus {
+    return this.gameStatus;
+  }
+
+  startGame() {
+    this.gameStatus = GameStatus.Started;
+    this.timeTickSeconds = setInterval(() => {
+      ++this.gameDuration;
+      this.generateHints();
+      this.sendUpdate();
+    }, 1000);
+  }
+
+  finishGame() {
+    clearInterval(this.timeTickSeconds);
+    this.gameStatus = GameStatus.Finished;
+  }
+
   advanceTime(): void {
     // Invoking onDayUpdate at the end of day
     for (const id in this.agents) {
-      this.agents[id].onDayUpdate(this.time);
+      this.agents[id].onDayUpdate(this.day);
     }
-    this.generateOrionMessage();
-    ++this.time;
+    ++this.day;
+  }
+
+  pushMessage(m: Message) {
+    this.messages.push(m);
   }
 
   dumpMessages(): Message[] {
@@ -89,6 +117,8 @@ export default class Game {
   }
 
   moveSpaceships(moves: { [id: string]: string }): void {
+    this.movedSinceStart = true;
+    this.lastMove = this.gameDuration;
     for (const id in moves) {
       this.spaceships[id].addToPath(moves[id]);
       const spaceStation = locationData[moves[id]].location.spaceStationName;
@@ -123,6 +153,13 @@ export default class Game {
     asserTogether(sendingCarrier, receivingCarrier);
     sendingCarrier.pickUpFrom(type);
     receivingCarrier.dropOffTo(type);
+  }
+
+  sendUpdate() {
+    this.socket?.send(JSON.stringify({
+      type: '@GameUpdate',
+      payload: this.toGameState(),
+    }));
   }
 
   toGameState(): GameState {
@@ -174,88 +211,81 @@ export default class Game {
         },
       {}),
       messages: this.dumpMessages(),
-      time: this.time,
+      time: this.day,
       gameStats: {
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },
+      duration: this.gameDuration,
     };
   }
 
-  private generateOrionMessage() {
-    const orion = this.spaceStations[IDs.ORION];
-    switch (this.time) {
-      case 6:
-        if (orion.getRescueResources().indexOf(RescueResource.O2ReplacementCells) === -1) {
-          this.messages.push({
-            title: 'Incident at Orion',
-            paragraphs: [
-              { text: 'Oh no! It appears you were too late.' }, 
-              { text: 'The oxygen systems were not fixed in time and 1 scientist has passed away and taken their place amongst the stars!' },
-              { text: 'Hurry to fix this before total loss of life happens!' },
-            ]
-          });
-        }
-        break;
-      case 21:
-        if (orion.getRescueResources().indexOf(RescueResource.OxygenRepairTeam) === -1) {
-          if (orion.getRescueResources().indexOf(RescueResource.O2ReplacementCells) === -1) {
-            this.messages.push({
-              title: 'Incident at Orion',
-              paragraphs: [
-                { text: 'Oh no! It appears you were too late.' }, 
-                { text: 'The oxygen systems were not permanently fixed in time and one scientist has passed away and taken their place amongst the stars!' },
-                { text: 'Hurry to fix this before total loss of life happens!' },
-              ]
-            });
-          } else {
-            this.messages.push({
-              title: 'Incident at Orion',
-              paragraphs: [
-                { text: 'Oh no! It appears you were too late.' }, 
-                { text: 'The oxygen systems were not permanently fixed in time and the worst has happened. All of the scientists on Space Station Orion have passed away and have taken their place amongst the stars!' },
-                { text: 'While we may not have successfully complete our mission, let’s have a discussion, where did we go wrong? What could we have done differently.' },
-              ]
-            });
-          }
-        }
-        break;
-      case 23:
-        if (orion.getRescueResources().indexOf(RescueResource.WaterRepairTeam) === -1) {
-          this.messages.push({
-            title: 'Incident at Orion',
-            paragraphs: [
-              { text: 'Oh no! It appears you were too late.' }, 
-              { text: 'Day 23 has passed and one scientist has passed away because the station is out of water!' },
-              { text: 'Hurry to fix this before total loss of life happens!' },
-            ]
-          });
-        }
-        break;
-      case 24:
-        if (orion.getRescueResources().indexOf(RescueResource.FoodRepairTeam) === -1) {
-          this.messages.push({
-            title: 'Incident at Orion',
-            paragraphs: [
-              { text: 'I just got an update from Orion.' }, 
-              { text: 'Day 24 has passed one scientist has passed away because the station ran out of food!' },
-              { text: 'Hurry to fix this or find the solution before total loss of life happens!' },
-            ]
-          });
-        }
-        break;
-      case 25:
-        if (orion.getRescueResources().indexOf(RescueResource.MedicalRepairTeam) === -1) {
-          this.messages.push({
-            title: 'Incident at Orion',
-            paragraphs: [
-              { text: 'I just got an update from Orion.' }, 
-              { text: 'Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!' },
-            ]
-          });
-        }
-      default:
-        break;
+  generateHints() {
+    if (this.gameDuration === 10 * 60 && !this.movedSinceStart) {
+      this.pushMessage({
+        title: 'Incoming relay from Ground Control',
+        paragraphs: [
+          { text: 'Analysis paralysis: s situation where a group is unable to move forward with a decision as a result of overanalyzing data or overthinking a problem' },
+          { text: 'The clock is ticking! You may want to consider making your first move so that you don’t run out of time!' },
+          { text: '-Ground Control' },
+        ],
+      });
+      return;
+    }
+    if (this.gameDuration - this.lastMove === 5 * 60) { // every 5 minutes?
+      this.pushMessage({
+        title: 'Incoming relay from Ground Control',
+        paragraphs: [
+          { text: 'Greetings crew, we’re getting readings that your ships have stayed in one spot for quite some time.' },
+          { text: 'If you are stuck on what to do next, you may request help from your Space Commander. Alternatively, you may wish to visit a space station to see if they have any intel for you that could help you decide what to do next.' },
+          { text: 'Remember to watch the clock to see your remaining time!' },
+          { text: '-Ground Control' },
+        ],
+      });
+    }
+
+    if (this.gameDuration === 2 * 60) {
+      this.pushMessage({
+        title: 'Incoming relay from Ground Control',
+        paragraphs: [
+          { text: 'We hope this message finds you out in space already. We wanted to remind you of a few key reminders for your mission:' },
+          { text: 'Remember that other space stations have received critical information on Orion’s status', number: 1 },
+          { text: 'Don\'t forget that Orion will run out of oxygen on Day 6', number: 2 },
+          { text: 'Recue related resources (similar to the oxygen replacement cells on board your ship) cannot be picked up or dropped off when traveling through Time Portals', number: 3 },
+          { text: '-Ground Control' },
+        ],
+      });
+    } else if (this.gameDuration === 8 * 60) {
+      this.pushMessage({
+        title: 'Incoming relay from the Space Commander',
+        paragraphs: [
+          { text: 'Greetings, crews!' },
+          { text: 'This is a friendly reminder that there is intel regarding the location and quantity of various Energy Cells and Life Support Packs available at different space stations in one of your crew member’s documents!' },
+          { text: 'Sometimes in all of the excitement, we forget that it is there!' },
+          { text: 'Things don’t look to good at Orion right now. I must get back to work trying to re-establish communications with them!' },
+          { text: '-Space Commander' },
+        ],
+      });
+    } else if (this.gameDuration === 35 * 60) {
+      this.pushMessage({
+        title: 'Incoming relay from Ground Control',
+        paragraphs: [
+          { text: 'You are halfway through your mission time. Be sure to keep an eye on the clock to make sure you have enough time to Rescue Orion!' },
+          { text: 'We are all counting on you!' },
+          { text: '-Ground Control' },
+        ],
+      });
+    } else if (this.gameDuration === 65 * 60) {
+      this.pushMessage({
+        title: 'Urgent relay from Ground Control',
+        paragraphs: [
+          { text: 'Only 10 minutes remain for you to Rescue Orion and return to Sagittarius by Day 30!' },
+          { text: 'When time is up, your ship will power down and you will be beamed into the main room to report back to the Space Commander.' },
+          { text: 'We eagerly await your safe arrival!' },
+          { text: 'Things don’t look to good at Orion right now. I must get back to work trying to re-establish communications with them!' },
+          { text: '-Ground Control' },
+        ],
+      });
     }
   }
 };

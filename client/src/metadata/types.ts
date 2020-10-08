@@ -66,7 +66,13 @@ export interface Message {
   sideNote?: string,
   technology?: string,
   title: string,
-}
+};
+
+export enum GameStatus {
+  NotStarted,
+  Started,
+  Finished,
+};
 
 export interface GameState {
   spaceships: {
@@ -83,7 +89,8 @@ export interface GameState {
     dropOffTimes: {
       [resource: string]: number
     }
-  }
+  },
+  duration: number,
 };
 
 export interface Transfer {

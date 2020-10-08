@@ -1,11 +1,12 @@
 import SpaceStation from "./SpaceStation"
 import { RescueResource } from "./RescueResource";
 import TimeVaryingAgent from "./TimeVaryingAgent";
+import MessageQueue from "./MessageQueue";
 
 export default class SpaceStationOrion extends SpaceStation implements TimeVaryingAgent {
 
   private scientistCount: number = 20;
-  private time: number = 0;
+  private day: number = 0;
   private dropOffTimes: { [resource: string]: number} = {
     [RescueResource.O2ReplacementCells]: -1,
     [RescueResource.FoodRepairTeam]: -1,
@@ -13,15 +14,17 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     [RescueResource.MedicalRepairTeam]: -1,
     [RescueResource.OxygenRepairTeam]: -1,
   };
+  private messageQueue = new WeakMap<SpaceStation, MessageQueue>();
 
-  constructor(scientistCount: number, location: string, energyCells: number, lifeSupportPacks: number, resources?: RescueResource[]) {
+  constructor(location: string, energyCells: number, lifeSupportPacks: number, resources: RescueResource[], messageQueue: MessageQueue, scientistCount: number) {
     super(location, energyCells, lifeSupportPacks, resources);
     this.scientistCount = scientistCount;
+    this.messageQueue.set(this, messageQueue);
   }
 
   dropOffTo(r: RescueResource): void {
     super.dropOffTo(r);
-    this.dropOffTimes[r] = this.time + 1;
+    this.dropOffTimes[r] = this.day + 1;
   }
 
   getDropOffTimes(): { [resource: string]: number } {
@@ -33,9 +36,84 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
   }
 
   onDayUpdate(day: number): void {
-    this.time = day;
+    this.day = day;
     if(this.scientistCount<=0){
       return;
+    }
+
+    const messageQueue = this.messageQueue.get(this);
+    switch (this.day) {
+      case 0:
+        if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
+          messageQueue.pushMessage({
+            title: 'Incident at Orion',
+            paragraphs: [
+              { text: 'Oh no! It appears you were too late.' }, 
+              { text: 'The oxygen systems were not fixed in time and 1 scientist has passed away and taken their place amongst the stars!' },
+              { text: 'Hurry to fix this before total loss of life happens!' },
+            ]
+          });
+        }
+        break;
+      case 21:
+        if (this.rescueResources.indexOf(RescueResource.OxygenRepairTeam) === -1) {
+          if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
+            messageQueue.pushMessage({
+              title: 'Incident at Orion',
+              paragraphs: [
+                { text: 'Oh no! It appears you were too late.' }, 
+                { text: 'The oxygen systems were not permanently fixed in time and one scientist has passed away and taken their place amongst the stars!' },
+                { text: 'Hurry to fix this before total loss of life happens!' },
+              ]
+            });
+          } else {
+            messageQueue.pushMessage({
+              title: 'Incident at Orion',
+              paragraphs: [
+                { text: 'Oh no! It appears you were too late.' }, 
+                { text: 'The oxygen systems were not permanently fixed in time and the worst has happened. All of the scientists on Space Station Orion have passed away and have taken their place amongst the stars!' },
+                { text: 'While we may not have successfully complete our mission, let’s have a discussion, where did we go wrong? What could we have done differently.' },
+              ]
+            });
+          }
+        }
+        break;
+      case 23:
+        if (this.rescueResources.indexOf(RescueResource.WaterRepairTeam) === -1) {
+          messageQueue.pushMessage({
+            title: 'Incident at Orion',
+            paragraphs: [
+              { text: 'Oh no! It appears you were too late.' }, 
+              { text: 'Day 23 has passed and one scientist has passed away because the station is out of water!' },
+              { text: 'Hurry to fix this before total loss of life happens!' },
+            ]
+          });
+        }
+        break;
+      case 24:
+        if (this.rescueResources.indexOf(RescueResource.FoodRepairTeam) === -1) {
+          messageQueue.pushMessage({
+            title: 'Incident at Orion',
+            paragraphs: [
+              { text: 'I just got an update from Orion.' }, 
+              { text: 'Day 24 has passed one scientist has passed away because the station ran out of food!' },
+              { text: 'Hurry to fix this or find the solution before total loss of life happens!' },
+            ]
+          });
+        }
+        break;
+      case 25:
+        if (this.rescueResources.indexOf(RescueResource.MedicalRepairTeam) === -1) {
+          messageQueue.pushMessage({
+            title: 'Incident at Orion',
+            paragraphs: [
+              { text: 'I just got an update from Orion.' }, 
+              { text: 'Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!' },
+            ]
+          });
+        }
+      default:
+        break;
     }
 
     //Oxygen Related
