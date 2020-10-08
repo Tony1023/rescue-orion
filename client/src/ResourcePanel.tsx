@@ -2,46 +2,48 @@ import React from 'react';
 import styled from 'styled-components';
 import { PlainSpaceship } from "./metadata/types";
 
-const GEMINI1_LEFT_OFFSET = 38;
-const GEMINI2_LEFT_OFFSET = 175;
-const ENERGY_OFFSET = 170;
-const LIFE_SUPPORT_OFFSET = 300;
-const RESOURCE_OFFSET = 400;
+const ENERGY_OFFSET = 45;
+const LIFE_SUPPORT_OFFSET = 168;
+const GEMINI1_RESOURCE_OFFSET = 265;
+const GEMINI2_RESOURCE_OFFSET = 492;
+const GEMINI_TOP_OFFSET = 205;
+const GEMINI2_TOP_OFFSET = 435;
 
 const Number = styled.div`
   display: inline-block;
   position: absolute;
   color: white;
-  font-size: 40px;
+  font-size: 25px;
   font-weight: bold;
   text-align: center;
-  width: 130px;
+  width: 120px;
 `;
 const Gemini1Energy = styled(Number)`
-  top: ${ENERGY_OFFSET}px;
-  left: ${GEMINI1_LEFT_OFFSET}px;
+  top: ${GEMINI_TOP_OFFSET}px;
+  left: ${ENERGY_OFFSET}px;
 `;
 const Gemini2Energy = styled(Number)`
-  top: ${ENERGY_OFFSET}px;
-  left: ${GEMINI2_LEFT_OFFSET}px;
+  top: ${GEMINI2_TOP_OFFSET}px;
+  left: ${ENERGY_OFFSET}px;
 `;
 const Gemini1LifeSupport = styled(Number)`
-  top: ${LIFE_SUPPORT_OFFSET}px;
-  left: ${GEMINI1_LEFT_OFFSET}px;
+  top: ${GEMINI_TOP_OFFSET}px;
+  left: ${LIFE_SUPPORT_OFFSET}px;
 `;
 const Gemini2LifeSupport = styled(Number)`
-  top: ${LIFE_SUPPORT_OFFSET}px;
-  left: ${GEMINI2_LEFT_OFFSET}px;
+  top: ${GEMINI2_TOP_OFFSET}px;
+  left: ${LIFE_SUPPORT_OFFSET}px;
 `;
 const Time = styled(Number)`
-  top: 550px;
-  left: 100px;
+  top: 20px;
+  left: 178px;
+  font-size: 40px;
 `
 
 const Resource = styled.div`
   position: absolute;
-  width: 130px;
-  height: 90px;
+  width: 240px;
+  height: 62px;
   text-align: center;
   color: white;
   font-weight: bold;
@@ -54,12 +56,12 @@ const Resource = styled.div`
   }
 `;
 const Gemini1Resource = styled(Resource)`
-  top: ${RESOURCE_OFFSET}px;
-  left: ${GEMINI1_LEFT_OFFSET}px;
+  top: ${GEMINI1_RESOURCE_OFFSET}px;
+  left: ${ENERGY_OFFSET}px;
 `;
 const Gemini2Resource = styled(Resource)`
-  top: ${RESOURCE_OFFSET}px;
-  left: ${GEMINI2_LEFT_OFFSET}px;
+  top: ${GEMINI2_RESOURCE_OFFSET}px;
+  left: ${ENERGY_OFFSET}px;
 `;
 
 interface Props {
