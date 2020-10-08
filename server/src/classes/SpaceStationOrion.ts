@@ -43,7 +43,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
 
     const messageQueue = this.messageQueue.get(this);
     switch (this.day) {
-      case 0:
+      case 6:
         if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
           messageQueue.pushMessage({
             title: 'Incident at Orion',
