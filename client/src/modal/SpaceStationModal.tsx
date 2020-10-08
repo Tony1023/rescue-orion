@@ -1,20 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../redux-hook-adapters';
 import {
   BaseModalTextBackground,
   Modal,
   ModalBackground,
   DismissButton,
 } from './modal';
-import { GameState } from '../store/types';
+import { GameState } from '../metadata/types';
 import * as IDs from '../metadata/agent-ids';
 import {
   pickUpSupplyResource,
   pickUpRescueResource,
   dropOffRescueResource
-} from '../store/actions';
-import { Message } from '../store/types';
+} from '../actions';
+import { Message } from '../metadata/types';
 import Triangle from './TriangleButton';
 
 const StationName = styled.div`

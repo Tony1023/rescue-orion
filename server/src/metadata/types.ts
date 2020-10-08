@@ -1,5 +1,43 @@
-import { SpaceshipNextMoves } from "../classes/Game";
-import { RescueResource } from "../classes/RescueResource";
+export enum LocationType {
+  BeaconStar,
+  HyperGate,
+  TimePortal,
+};
+
+export type PixelPosition = {
+  left: number,
+  top: number,
+}
+
+export default interface Location {
+  id: string,
+  type: LocationType,
+  spaceStationName?: string,
+};
+
+export type LocationMetadata = { [id: string]: {
+  location: Location,
+  neighbors: string[],
+  pixelPosition: { left: number, top: number }
+}};
+
+export type SpaceStationMetadata = { [id: string]: {
+  location: string,
+  message: Message,
+}}
+
+export interface SpaceshipNextMoves {
+  [location: string]: { [id: string]: boolean }
+};
+
+export enum RescueResource {
+  O2ReplacementCells = 'O2 Replacement Cells',
+  FoodRepairTeam = 'Food Repair Team',
+  WaterRepairTeam = 'Water Repair Team',
+  MedicalRepairTeam = 'Medical Repair Team',
+  OxygenRepairTeam = 'Oxygen Repair Team',
+  AITechnology = 'AI Technology',
+};
 
 export interface PlainSpaceship {
   location: string,
@@ -28,7 +66,13 @@ export interface Message {
   sideNote?: string,
   technology?: string,
   title: string,
-}
+};
+
+export enum GameStatus {
+  NotStarted,
+  Started,
+  Finished,
+};
 
 export interface GameState {
   spaceships: {
@@ -45,7 +89,8 @@ export interface GameState {
     dropOffTimes: {
       [resource: string]: number
     }
-  }
+  },
+  duration: number,
 };
 
 export interface Transfer {

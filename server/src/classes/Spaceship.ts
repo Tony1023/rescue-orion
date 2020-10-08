@@ -2,7 +2,7 @@ import TimeVaryingAgent from "./TimeVaryingAgent";
 import ResourceCarrier from "./ResourceCarrier";
 import { RescueResource } from "./RescueResource";
 import { locationData } from '../metadata';
-import { LocationType } from './Location';
+import { LocationType } from '../metadata/types';
 import * as IDs from '../metadata/agent-ids';
 
 export default abstract class Spaceship implements ResourceCarrier, TimeVaryingAgent{
@@ -81,7 +81,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
       throw Error('Supplies run out.');
     }
   }
-  
+
   addToPath(location: string): void {
     this.path.push(location);
     this.updateIfTravelingThruTimePortals();
@@ -136,13 +136,13 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
   generateReachableNeighbors(): string[] {
 
     function normalNextMovesFrom(location: string) {
-      let nextMoves = locationData[location].neighbors;
+      const nextMoves = locationData[location].neighbors;
       nextMoves.push(location);
       return nextMoves;
     }
 
     function timePortalNextMovesFrom(timePortal: string) {
-      let nextMoves: string[] = [];
+      const nextMoves: string[] = [];
       locationData[timePortal].neighbors.forEach((neighbor: string) => {
         if (locationData[neighbor].location.type === LocationType.TimePortal) {
           nextMoves.push(neighbor);
@@ -158,7 +158,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
       return normalNextMovesFrom(current);
     }
     return (
-      this.isTravelingThruTimePortals ? 
+      this.isTravelingThruTimePortals ?
       timePortalNextMovesFrom(current) : normalNextMovesFrom(current)
     );
   }

@@ -1,12 +1,54 @@
-import * as Types from './types';
-
+import express from 'express';
+import WebSocket from 'ws';
 import Game from '../classes/Game';
+import * as Types from '../metadata/types';
 
-let game = new Game();
-game.load();
+let rooms: {
+  [room: string]: Game
+} = {};
 
-export default function reduce(state = game.toGameState(), action: Types.GameAction): Types.GameState {
-  console.log(action);
+module.exports = (router: express.Router, wss: WebSocket.Server) => {
+
+  wss.on('connection', (ws) => {
+    let game: Game;
+    ws.on('message', (json) => {
+      const message = JSON.parse(json.toString());
+      console.log(message);
+      const type = message.type;
+      const payload = message.payload;
+      if (!(type && payload)) {
+        ws.close();
+        return;
+      }
+      switch (message.type) {
+        case '@Auth':
+          if (payload.password === 'asdf') {
+            if (rooms[payload.room]) {
+              game = rooms[payload.room];
+            } else {
+              game = new Game();
+              game.load();
+              game.startGame();
+              rooms[payload.room] = game;
+            }
+            game.socket = ws;
+            game.sendUpdate();
+          }
+          break;
+        
+        default:
+          if (type.startsWith('@GameAction/')) {
+            applyAction(game, message);
+            game.sendUpdate();
+          }
+          break;
+      }
+    });
+  });
+
+}
+
+function applyAction(game: Game, action: Types.GameAction) {
   switch (action.type) {
     case Types.MOVE_SPACESHIP: {
       game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
@@ -42,17 +84,8 @@ export default function reduce(state = game.toGameState(), action: Types.GameAct
     case Types.TRANSFER_RESCUE_RESOURCE: {
       const transfer = (action as Types.TransferRescueResourceAction).payload;
       game.transferRescueResource(transfer.from, transfer.to, transfer.type);
-      break;
-    }
-    case Types.ENQUEUE_MESSAGES: {
-      let messages = (action as Types.EnqueueMessagesAction).payload;
-      messages.concat(game.dumpMessages());
-      let newState = {...state};
-      newState.messages = messages;
-      return newState;
     }
     default:
-      return state;
+      break;
   }
-  return game.toGameState();
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { PixelPosition } from './classes/Location';
+import { PixelPosition } from './metadata/types';
 import * as IDs from './metadata/agent-ids';
 import locationData from './metadata/location-data';
 
