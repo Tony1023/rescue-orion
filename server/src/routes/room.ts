@@ -1,11 +1,59 @@
-import * as Types from './types';
-
+import express from 'express';
+import WebSocket from 'ws';
 import Game from '../classes/Game';
+import * as Types from '../types';
 
-let game = new Game();
-game.load();
+let rooms: {
+  [room: string]: Game
+} = {};
 
-export default function reduce(state = game.toGameState(), action: Types.GameAction): Types.GameState {
+module.exports = (app: express.Express, wss: WebSocket.Server) => {
+
+  wss.on('connection', (ws) => {
+    let game: Game;
+    ws.on('message', (json) => {
+      const message = JSON.parse(json.toString());
+      console.log(message);
+      const type = message.type;
+      const payload = message.payload;
+      if (!(type && payload)) {
+        ws.close();
+        return;
+      }
+      switch (message.type) {
+        case '@Auth':
+          if (payload.password === 'asdf') {
+            if (rooms[payload.room]) {
+              game = rooms[payload.room];
+            } else {
+              game = new Game();
+              game.load();
+              rooms[payload.room] = game;
+            }
+            console.log(game.toGameState());
+            ws.send(JSON.stringify({
+              type: '@GameUpdate',
+              payload: game.toGameState(),
+            }))
+          }
+          break;
+        
+        default:
+          if (type.startsWith('@GameAction/')) {
+            const newState = applyAction(game, message);
+            ws.send(JSON.stringify({
+              type: '@GameUpdate',
+              payload: newState,
+            }));
+          }
+          break;
+      }
+    });
+  });
+
+}
+
+function applyAction(game: Game, action: Types.GameAction): Types.GameState {
   switch (action.type) {
     case Types.MOVE_SPACESHIP: {
       game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
@@ -41,17 +89,9 @@ export default function reduce(state = game.toGameState(), action: Types.GameAct
     case Types.TRANSFER_RESCUE_RESOURCE: {
       const transfer = (action as Types.TransferRescueResourceAction).payload;
       game.transferRescueResource(transfer.from, transfer.to, transfer.type);
-      break;
-    }
-    case Types.ENQUEUE_MESSAGES: {
-      let messages = (action as Types.EnqueueMessagesAction).payload;
-      messages.concat(game.dumpMessages());
-      let newState = {...state};
-      newState.messages = messages;
-      return newState;
     }
     default:
-      return state;
+      break;
   }
   return game.toGameState();
 };

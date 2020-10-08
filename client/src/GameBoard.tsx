@@ -1,18 +1,18 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import ButtonGroup from './ButtonGroup';
 import SpaceStation from './SpaceStation'
 import { GameState, Message } from './store/types';
 import styled from 'styled-components';
 import { locationData, spaceStationData } from './metadata';
 import * as IDs from './metadata/agent-ids';
-import * as Actions from './store/actions';
+import { moveSpaceship } from './store/actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from './classes/Location';
 import Timer from './Timer';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
+import { useSelector, useDispatch } from './redux-hook-adapters';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -89,9 +89,9 @@ export default function() {
 
   return <>
     <GameBoard>
-      <button 
+      <button
         onClick={() => {
-          dispatch(Actions.moveSpaceship({
+          dispatch(moveSpaceship({
             gemini_1: `${gemini1NextMove}`,
             gemini_2: `${gemini2NextMove}`
           }))

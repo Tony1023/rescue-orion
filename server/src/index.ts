@@ -1,13 +1,16 @@
-import express from 'express';
-const app = express();
-const port = 8080; // default port to listen
+import Express from 'express';
+import http from 'http';
 
-// define a route handler for the default home page
-app.get( "/", ( req, res ) => {
-    res.send( "Hello world!" );
-} );
+const app = Express();
 
-// start the Express server
-app.listen( port, () => {
-  console.log( `server started at http://localhost:${ port }` );
+app.get("/", (req, res) => {
+  res.send( "Hello world!" );
 });
+
+const server = http.createServer(app);
+
+server.listen(9000, () => {
+  console.log(`server started at http://localhost:9000`);
+});
+
+require('./routes')(app, server);

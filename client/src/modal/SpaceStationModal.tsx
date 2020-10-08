@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../redux-hook-adapters';
 import {
   BaseModalTextBackground,
   Modal,

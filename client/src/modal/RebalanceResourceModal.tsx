@@ -4,9 +4,10 @@ import React, {
   Dispatch,
   SetStateAction,
   useState,
+  useContext,
 } from 'react';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../redux-hook-adapters';
 
 import {
   BaseModalTextBackground,
@@ -22,6 +23,7 @@ import {
   transferLifeSupportPacks,
 } from '../store/actions';
 import Triangle from './TriangleButton';
+import GameContext from '../GameContext';
 
 const Gemini = styled.img`
   width: 120px;

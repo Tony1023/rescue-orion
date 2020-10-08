@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../redux-hook-adapters';
 import styled from 'styled-components';
 import { GameState } from '../store/types';
 import * as IDs from '../metadata/agent-ids';

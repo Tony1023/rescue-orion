@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from './redux-hook-adapters';
 import { enqueueMessages } from './store/actions';
 import { GameState } from './store/types';
 

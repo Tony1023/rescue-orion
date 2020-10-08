@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from './redux-hook-adapters';
 import styled from 'styled-components';
 import { PixelPosition } from './classes/Location';
 import locationData from './metadata/location-data';
