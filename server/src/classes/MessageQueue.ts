@@ -1,5 +1,5 @@
 import { Message } from "../metadata/types";
 
 export default interface MessageQueue {
-  pushMessage(m: Message);
+  pushMessage(m: Message): void;
 }

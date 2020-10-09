@@ -16,7 +16,7 @@ const metadata: SpaceStationMetadata = {
   },
   'aquarius': {
     location: 't3',
-    message: { 
+    message: {
       asset: 'Aquarius_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
       technology: "WATER REPAIR TEAM",

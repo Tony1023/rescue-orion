@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "prebuild": "rm -r dist/* && tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "prestart": "yarn run build",
     "start": "node .",

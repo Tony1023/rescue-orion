@@ -1,5 +1,6 @@
 import Express from 'express';
 import http from 'http';
+import routes from './routes';
 
 const app = Express();
 
@@ -13,4 +14,4 @@ server.listen(9000, () => {
   console.log(`server started at http://localhost:9000`);
 });
 
-require('./routes')(app, server);
+routes(app, server);

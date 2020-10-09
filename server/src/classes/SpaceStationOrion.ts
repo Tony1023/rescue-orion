@@ -47,7 +47,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
-              { text: 'Oh no! It appears you were too late.' }, 
+              { text: 'Oh no! It appears you were too late.' },
               { text: 'The oxygen systems were not fixed in time and 1 scientist has passed away and taken their place amongst the stars!' },
               { text: 'Hurry to fix this before total loss of life happens!' },
             ]
@@ -60,7 +60,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
             this.messageQueue.pushMessage({
               title: 'Incident at Orion',
               paragraphs: [
-                { text: 'Oh no! It appears you were too late.' }, 
+                { text: 'Oh no! It appears you were too late.' },
                 { text: 'The oxygen systems were not permanently fixed in time and one scientist has passed away and taken their place amongst the stars!' },
                 { text: 'Hurry to fix this before total loss of life happens!' },
               ]
@@ -69,7 +69,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
             this.messageQueue.pushMessage({
               title: 'Incident at Orion',
               paragraphs: [
-                { text: 'Oh no! It appears you were too late.' }, 
+                { text: 'Oh no! It appears you were too late.' },
                 { text: 'The oxygen systems were not permanently fixed in time and the worst has happened. All of the scientists on Space Station Orion have passed away and have taken their place amongst the stars!' },
                 { text: 'While we may not have successfully complete our mission, let’s have a discussion, where did we go wrong? What could we have done differently.' },
               ]
@@ -82,7 +82,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
-              { text: 'Oh no! It appears you were too late.' }, 
+              { text: 'Oh no! It appears you were too late.' },
               { text: 'Day 23 has passed and one scientist has passed away because the station is out of water!' },
               { text: 'Hurry to fix this before total loss of life happens!' },
             ]
@@ -94,7 +94,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
-              { text: 'I just got an update from Orion.' }, 
+              { text: 'I just got an update from Orion.' },
               { text: 'Day 24 has passed one scientist has passed away because the station ran out of food!' },
               { text: 'Hurry to fix this or find the solution before total loss of life happens!' },
             ]
@@ -106,7 +106,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           this.messageQueue.pushMessage({
             title: 'Incident at Orion',
             paragraphs: [
-              { text: 'I just got an update from Orion.' }, 
+              { text: 'I just got an update from Orion.' },
               { text: 'Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!' },
             ]
           });
@@ -115,7 +115,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
         break;
     }
 
-    //Oxygen Related
+    // Oxygen Related
     if (day >= 6 && day < 21) {
       if (!this.rescueResources.includes(RescueResource.O2ReplacementCells) && !this.rescueResources.includes(RescueResource.OxygenRepairTeam)) {
         --this.scientistCount;
@@ -128,39 +128,39 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
         --this.scientistCount;
       }
     }
-    
-    //Water Related
-    if(day>=23 && this.rescueResources.includes(RescueResource.WaterRepairTeam)==false){
+
+    // Water Related
+    if(day>=23 && !this.rescueResources.includes(RescueResource.WaterRepairTeam)){
       if(day>=30){
-        //All Scientist Die
+        // All Scientist Die
         this.scientistCount=0;
         return;
-        //Gameend
+        // Gameend
       }else{
-        //"I just got an update from Orion. Day 23 has passed and one scientist has passed away because the station is out of water!"
+        // "I just got an update from Orion. Day 23 has passed and one scientist has passed away because the station is out of water!"
         this.scientistCount--;
       }
     }
 
-    //Food Related
-    if(day>=24 && this.rescueResources.includes(RescueResource.FoodRepairTeam)==false){
+    // Food Related
+    if(day>=24 && !this.rescueResources.includes(RescueResource.FoodRepairTeam)){
       if(day>=30){
-        //All Scientist Die
+        // All Scientist Die
         this.scientistCount=0;
         return;
-        //Gameend
+        // Gameend
       }else{
-        //I just got an update from Orion. Day 24 has passed and one scientist has passed away because the station ran out of food!Hurry to fix this or find the solution before total loss of life happens!
+        // I just got an update from Orion. Day 24 has passed and one scientist has passed away because the station ran out of food!Hurry to fix this or find the solution before total loss of life happens!
         this.scientistCount--;
       }
     }
 
-    //Medical Related
-    if(day==25 && this.rescueResources.includes(RescueResource.MedicalRepairTeam)==false){
-      //I just got an update from Orion. Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!
+    // Medical Related
+    if(day === 25 && !this.rescueResources.includes(RescueResource.MedicalRepairTeam)){
+      // I just got an update from Orion. Day 25 has passed, and 3 scientists have been lost because the injuries that happened at the time of the damage were not treated in time!
       this.scientistCount-=3;
     }
-    
+
     if (this.scientistCount < 0) {
       this.scientistCount = 0;
     }

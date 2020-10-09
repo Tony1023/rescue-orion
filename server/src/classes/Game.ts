@@ -46,7 +46,7 @@ export default class Game implements MessageQueue {
     this.spaceships[IDs.GEMINI_2] = gemini_2;
     this.agents[IDs.GEMINI_2] = gemini_2;
     this.carriers[IDs.GEMINI_2] = gemini_2;
-    
+
     const andromeda = new SpaceStationAndromeda(spaceStationData[IDs.ANDROMEDA].location, 0, 0, []);
     this.spaceStations[IDs.ANDROMEDA] = andromeda;
     this.agents[IDs.ANDROMEDA] = andromeda;
@@ -166,7 +166,7 @@ export default class Game implements MessageQueue {
     const orion = this.spaceStations[IDs.ORION] as SpaceStationOrion;
     return {
       spaceships: Object.keys(this.spaceships).reduce((accumulator: {
-          [id: string]: PlainSpaceship 
+          [id: string]: PlainSpaceship
         }, id: string) => {
           const spaceship = this.spaceships[id];
           accumulator[id] = {

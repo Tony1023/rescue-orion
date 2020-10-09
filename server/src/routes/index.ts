@@ -1,14 +1,15 @@
 import express from 'express';
 import http from 'http';
 import WebSocket from 'ws';
+import room from './room';
 
-module.exports = (app: express.Express, server: http.Server) => {
+export default (app: express.Express, server: http.Server): void => {
 
   const wss = new WebSocket.Server({
-    server: server,
+    server,
     path: '/rooms',
   });
   const roomRouter = express.Router();
   app.use('/rooms', roomRouter);
-  require('./room')(roomRouter, wss);
-}
+  room(roomRouter, wss);
+};

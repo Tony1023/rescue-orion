@@ -3,11 +3,11 @@ import WebSocket from 'ws';
 import Game from '../classes/Game';
 import * as Types from '../metadata/types';
 
-let rooms: {
+const rooms: {
   [room: string]: Game
 } = {};
 
-module.exports = (router: express.Router, wss: WebSocket.Server) => {
+export default (router: express.Router, wss: WebSocket.Server) => {
 
   wss.on('connection', (ws) => {
     let game: Game;
@@ -35,7 +35,7 @@ module.exports = (router: express.Router, wss: WebSocket.Server) => {
             game.sendUpdate();
           }
           break;
-        
+
         default:
           if (type.startsWith('@GameAction/')) {
             applyAction(game, message);

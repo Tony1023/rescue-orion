@@ -5,7 +5,11 @@
   ],
   "jsRules": {},
   "rules": {
-    "no-console": false
+    "no-console": false,
+    "variable-name": false,
+    "class-name": false,
+    "forin": false,
+    "no-shadowed-variable": false
   },
   "rulesDirectory": []
 }
