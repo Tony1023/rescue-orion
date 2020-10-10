@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { GameState } from "./metadata/types";
 
 interface Context {
-  socket?: WebSocket,
+  socket?: SocketIOClient.Socket,
   gameState?: GameState,
 }
 

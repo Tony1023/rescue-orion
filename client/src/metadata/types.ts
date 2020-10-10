@@ -1,3 +1,8 @@
+export enum RoomSocketMessage {
+  StateUpdate = '@GameUpdate',
+  Action = '@GameAction',
+}
+
 export enum LocationType {
   BeaconStar,
   HyperGate,
