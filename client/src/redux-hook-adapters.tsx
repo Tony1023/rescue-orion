@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import GameContext from './GameContext';
+import GameContext from './game-context';
 import * as Types from './metadata/types';
 
 export function useSelector<TSelected = unknown>(

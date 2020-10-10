@@ -1,6 +1,6 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import GameBoard from './GameBoard';
-import SocketContext from './GameContext';
+import SocketContext from './game-context';
 import { GameState, RoomSocketMessage } from './metadata/types';
 import styled from 'styled-components';
 import SocketIOClient from 'socket.io-client';

@@ -76,7 +76,8 @@ export interface Message {
 export enum GameStatus {
   NotStarted,
   Started,
-  Finished,
+  MissionSucceeded,
+  MissionFailed,
 };
 
 export interface GameState {
@@ -95,6 +96,7 @@ export interface GameState {
       [resource: string]: number
     }
   },
+  status: GameStatus,
   duration: number,
 };
 

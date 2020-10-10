@@ -31,7 +31,7 @@ export default class Game implements MessageQueue {
   private gameDuration = 0;
   private movedSinceStart = false;
   private lastMove = 0;
-  private gameStatus = GameStatus.NotStarted;
+  private status = GameStatus.NotStarted;
   private timeTickSeconds: NodeJS.Timeout;
   socket: io.Socket;
 
@@ -79,12 +79,12 @@ export default class Game implements MessageQueue {
     this.messages.push(spaceStationData[IDs.SAGITTARIUS].message);
   }
 
-  getGameStatus(): GameStatus {
-    return this.gameStatus;
+  getStatus(): GameStatus {
+    return this.status;
   }
 
-  startGame() {
-    this.gameStatus = GameStatus.Started;
+  start() {
+    this.status = GameStatus.Started;
     this.timeTickSeconds = setInterval(() => {
       ++this.gameDuration;
       this.generateHints();
@@ -92,9 +92,14 @@ export default class Game implements MessageQueue {
     }, 1000);
   }
 
-  finishGame() {
+  completeMission() {
     clearInterval(this.timeTickSeconds);
-    this.gameStatus = GameStatus.Finished;
+    this.status = GameStatus.MissionSucceeded;
+  }
+
+  abortMission() {
+    clearInterval(this.timeTickSeconds);
+    this.status = GameStatus.MissionFailed;
   }
 
   advanceTime(): void {
@@ -213,6 +218,7 @@ export default class Game implements MessageQueue {
         dropOffTimes: orion.getDropOffTimes(),
       },
       duration: this.gameDuration,
+      status: this.status,
     };
   }
 

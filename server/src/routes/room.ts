@@ -23,6 +23,9 @@ export default (router: express.Router, wss: io.Server) => {
     }
   }).on('connection', (socket) => {
     const game = socket.handshake.query.game as Game;
+    if (game.getStatus() === Types.GameStatus.NotStarted) {
+      game.start();
+    }
     if (game.socket) { // kick the existing one off
       game.socket.disconnect();
     }

@@ -12,6 +12,7 @@ import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
 import { useSelector, useDispatch } from './redux-hook-adapters';
+import Clock from './Clock';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -203,6 +204,8 @@ export default function() {
         gemini2={gameState.spaceships[IDs.GEMINI_2]}
         time={gameState.time}
       ></ResourcePanel>
+
+      <Clock />
 
     </GameBoard>
   </>;

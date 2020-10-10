@@ -71,7 +71,7 @@ export default (props: {
               })
             }
           </Body>
-        </StyledModal>          
+        </StyledModal>
         {props.message?.technology?
           <StyledExtraModal>
             <Body>{props.message?.note}</Body>
