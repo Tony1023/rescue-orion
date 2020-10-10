@@ -1,49 +1,40 @@
 import express from 'express';
-import WebSocket from 'ws';
 import Game from '../classes/Game';
 import * as Types from '../metadata/types';
+import io from 'socket.io';
 
 const rooms: {
   [room: string]: Game
 } = {};
 
-export default (router: express.Router, wss: WebSocket.Server) => {
+export default (router: express.Router, wss: io.Server) => {
 
-  wss.on('connection', (ws) => {
-    let game: Game;
-    ws.on('message', (json) => {
+  wss.use((socket, next) => {
+    const query = socket.handshake.query;
+    if (query?.room && query?.lobby) {
+      // TODO: only check if room and lobby are correct
+      if (!rooms[query.room]) {
+        const game = new Game();
+        game.load();
+        game.startGame();
+        rooms[query.room] = game;
+      }
+      next();
+    }
+  }).on('connection', (socket) => {
+    const { lobby, room } = socket.handshake.query;
+    const game = rooms[room];
+    if (game.socket) { // kick the existing one off
+      game.socket.disconnect(true);
+    }
+    game.socket = socket;
+    game.sendUpdate();
+    socket.on(Types.RoomSocketMessage.Action, (json) => {
       const message = JSON.parse(json.toString());
-      console.log(message);
-      const type = message.type;
-      const payload = message.payload;
-      if (!(type && payload)) {
-        ws.close();
-        return;
-      }
-      switch (message.type) {
-        case '@Auth':
-          if (payload.password === 'asdf') {
-            if (rooms[payload.room]) {
-              game = rooms[payload.room];
-            } else {
-              game = new Game();
-              game.load();
-              game.startGame();
-              rooms[payload.room] = game;
-            }
-            game.socket = ws;
-            game.sendUpdate();
-          }
-          break;
-
-        default:
-          if (type.startsWith('@GameAction/')) {
-            applyAction(game, message);
-            game.sendUpdate();
-          }
-          break;
-      }
+      applyAction(game, message);
+      game.sendUpdate();
     });
+
   });
 
 }

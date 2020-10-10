@@ -1,4 +1,4 @@
-import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus } from '../metadata/types';
+import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus, RoomSocketMessage } from '../metadata/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -12,8 +12,7 @@ import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../metadata';
 import MessageQueue from './MessageQueue';
-import WebSocket from 'ws';
-import { send } from 'process';
+import io from 'socket.io';
 
 function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   if (left.getLocation() !== right.getLocation()) {
@@ -34,7 +33,7 @@ export default class Game implements MessageQueue {
   private lastMove = 0;
   private gameStatus = GameStatus.NotStarted;
   private timeTickSeconds: NodeJS.Timeout;
-  socket: WebSocket;
+  socket: io.Socket;
 
   load(): void {
     const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplacementCells]);
@@ -156,10 +155,7 @@ export default class Game implements MessageQueue {
   }
 
   sendUpdate() {
-    this.socket?.send(JSON.stringify({
-      type: '@GameUpdate',
-      payload: this.toGameState(),
-    }));
+    this.socket?.emit(RoomSocketMessage.StateUpdate, JSON.stringify(this.toGameState()));
   }
 
   toGameState(): GameState {
