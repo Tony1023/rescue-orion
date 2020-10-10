@@ -16,25 +16,29 @@ export default (router: express.Router, wss: io.Server) => {
       if (!rooms[query.room]) {
         const game = new Game();
         game.load();
-        game.startGame();
         rooms[query.room] = game;
       }
+      query.game = rooms[query.room];
       next();
     }
   }).on('connection', (socket) => {
-    const { lobby, room } = socket.handshake.query;
-    const game = rooms[room];
+    const game = socket.handshake.query.game as Game;
     if (game.socket) { // kick the existing one off
-      game.socket.disconnect(true);
+      game.socket.disconnect();
     }
     game.socket = socket;
     game.sendUpdate();
+
     socket.on(Types.RoomSocketMessage.Action, (json) => {
       const message = JSON.parse(json.toString());
       applyAction(game, message);
       game.sendUpdate();
+    })
+    
+    socket.on('disconnect', () => {
+      const { game } = socket.handshake.query;
+      game.socket = null;
     });
-
   });
 
 }

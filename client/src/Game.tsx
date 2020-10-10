@@ -28,19 +28,18 @@ export default () => {
       query: {
         room: 'JFF123',
         lobby: '1023',
-      }
+      },
+      reconnection: false,
     });
     setSocket(newSocket);
 
     newSocket.on(RoomSocketMessage.StateUpdate, (data: string) => {
       const message = JSON.parse(data);
       const newState = message as GameState;
-      console.log(newState);
       setGameState(newState);
     });
 
     newSocket.on('disconnect', () => {
-      console.log('here');
       setSocket(undefined);
     });
     
