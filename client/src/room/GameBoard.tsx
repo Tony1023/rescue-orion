@@ -1,13 +1,13 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import ButtonGroup from './ButtonGroup';
 import SpaceStation from './SpaceStation'
-import { GameState, Message } from './metadata/types';
+import { GameState, Message } from '../metadata/types';
 import styled from 'styled-components';
-import { locationData, spaceStationData } from './metadata';
-import * as IDs from './metadata/agent-ids';
+import { locationData, spaceStationData } from '../metadata';
+import * as IDs from '../metadata/agent-ids';
 import { moveSpaceship } from './actions';
 import MessageModal from './modal/MessageModal';
-import { PixelPosition } from './metadata/types';
+import { PixelPosition } from '../metadata/types';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { PlainSpaceship } from "./metadata/types";
+import { PlainSpaceship } from '../metadata/types';
 
 const ENERGY_OFFSET = 45;
 const LIFE_SUPPORT_OFFSET = 168;

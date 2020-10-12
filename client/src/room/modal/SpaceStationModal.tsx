@@ -7,14 +7,14 @@ import {
   ModalBackground,
   DismissButton,
 } from './modal';
-import { GameState } from '../metadata/types';
-import * as IDs from '../metadata/agent-ids';
+import { GameState } from '../../metadata/types';
+import * as IDs from '../../metadata/agent-ids';
 import {
   pickUpSupplyResource,
   pickUpRescueResource,
   dropOffRescueResource
 } from '../actions';
-import { Message } from '../metadata/types';
+import { Message } from '../../metadata/types';
 import Triangle from './TriangleButton';
 
 const StationName = styled.div`

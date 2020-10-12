@@ -9,7 +9,7 @@ import {
   ModalBackground,
   DismissButton,
 } from './modal';
-import { Message } from '../metadata/types';
+import { Message } from '../../metadata/types';
 
 const Header = styled.div`
   height: 40px;

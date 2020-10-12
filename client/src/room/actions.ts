@@ -1,4 +1,4 @@
-import * as Types from './metadata/types';
+import * as Types from '../metadata/types';
 
 export function moveSpaceship(nextMoves: {
   [id: string]: string

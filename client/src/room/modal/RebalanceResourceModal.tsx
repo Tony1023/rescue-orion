@@ -14,8 +14,8 @@ import {
   ModalBackground,
   DismissButton,
 } from './modal';
-import { GameState } from '../metadata/types';
-import * as IDs from '../metadata/agent-ids';
+import { GameState } from '../../metadata/types';
+import * as IDs from '../../metadata/agent-ids';
 import {
   transferEnergyCells,
   transferRescueResource,
