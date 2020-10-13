@@ -9,7 +9,8 @@
     "variable-name": false,
     "class-name": false,
     "forin": false,
-    "no-shadowed-variable": false
+    "no-shadowed-variable": false,
+    "no-empty": false
   },
   "rulesDirectory": []
 }

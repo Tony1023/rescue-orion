@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import SocketIOClient from 'socket.io-client';
 import { Location } from 'history';
 import queryString from 'query-string';
+import axios from 'axios';
 
 const SocketError = styled.div`
   background-color: rgb(240, 240, 240);
@@ -24,12 +25,22 @@ export default (props: {
 }) => {
   const { lobby, room } = queryString.parse(props.location.search);
 
+  let lobbyCode: number | undefined;
+  if (lobby && typeof(lobby) === 'string') {
+    lobbyCode = parseInt(lobby);
+  }
+
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
   const [gameState, setGameState] = useState<GameState>();
 
-  useEffect(() => {
-    if (!lobby || !room) {
-      return;
+  async function setup() {
+    try {
+      await axios.post('http://localhost:9000/rooms', {
+        lobby: lobbyCode,
+        room: room,
+      });
+    } catch(err) {
+      console.log(err);
     }
 
     let newSocket = SocketIOClient('http://localhost:9000', {
@@ -54,8 +65,14 @@ export default (props: {
 
     newSocket.on('connect_error', () => {
       setSocket(undefined);
-    })
-    
+    });
+  }
+
+  useEffect(() => {
+    if (!lobbyCode || !room) {
+      return;
+    }
+    setup();
   }, [lobby, room]);
 
   return <>

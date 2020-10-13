@@ -1,9 +1,9 @@
 import TimeVaryingAgent from "./TimeVaryingAgent";
 import ResourceCarrier from "./ResourceCarrier";
 import { RescueResource } from "./RescueResource";
-import { locationData } from '../metadata';
-import { LocationType } from '../metadata/types';
-import * as IDs from '../metadata/agent-ids';
+import { locationData } from '../../metadata';
+import { LocationType } from '../../metadata/types';
+import * as IDs from '../../metadata/agent-ids';
 
 export default abstract class Spaceship implements ResourceCarrier, TimeVaryingAgent{
   energyCells: number;

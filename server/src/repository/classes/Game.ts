@@ -1,18 +1,17 @@
-import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus, RoomSocketMessage } from '../metadata/types';
+import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus, RoomSocketMessage } from '../../metadata/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
 import SpaceStation from './SpaceStation';
 import Gemini_1 from './Gemini_1';
-import * as IDs from '../metadata/agent-ids';
+import * as IDs from '../../metadata/agent-ids';
 import Gemini_2 from './Gemini_2';
 import SpaceStationAndromeda from './SpaceStationAndromeda';
 import SpaceStationBorealis from './SpaceStationBorealis';
 import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
-import { locationData, spaceStationData } from '../metadata';
+import { locationData, spaceStationData } from '../../metadata';
 import MessageQueue from './MessageQueue';
-import io from 'socket.io';
 
 function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   if (left.getLocation() !== right.getLocation()) {
@@ -31,9 +30,7 @@ export default class Game implements MessageQueue {
   private gameDuration = 0;
   private movedSinceStart = false;
   private lastMove = 0;
-  private status = GameStatus.NotStarted;
-  private timeTickSeconds: NodeJS.Timeout;
-  socket: io.Socket;
+  status = GameStatus.NotStarted;
 
   load(): void {
     const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplacementCells]);
@@ -77,29 +74,6 @@ export default class Game implements MessageQueue {
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
     this.messages.push(spaceStationData[IDs.SAGITTARIUS].message);
-  }
-
-  getStatus(): GameStatus {
-    return this.status;
-  }
-
-  start() {
-    this.status = GameStatus.Started;
-    this.timeTickSeconds = setInterval(() => {
-      ++this.gameDuration;
-      this.generateHints();
-      this.sendUpdate();
-    }, 1000);
-  }
-
-  completeMission() {
-    clearInterval(this.timeTickSeconds);
-    this.status = GameStatus.MissionSucceeded;
-  }
-
-  abortMission() {
-    clearInterval(this.timeTickSeconds);
-    this.status = GameStatus.MissionFailed;
   }
 
   advanceTime(): void {
@@ -157,10 +131,6 @@ export default class Game implements MessageQueue {
     asserTogether(sendingCarrier, receivingCarrier);
     sendingCarrier.pickUpFrom(type);
     receivingCarrier.dropOffTo(type);
-  }
-
-  sendUpdate() {
-    this.socket?.emit(RoomSocketMessage.StateUpdate, JSON.stringify(this.toGameState()));
   }
 
   toGameState(): GameState {
@@ -222,7 +192,8 @@ export default class Game implements MessageQueue {
     };
   }
 
-  generateHints() {
+  onTick(timeElapsed: number) {
+    this.gameDuration = timeElapsed;
     if (this.gameDuration === 10 * 60 && !this.movedSinceStart) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
