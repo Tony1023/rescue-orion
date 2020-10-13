@@ -31,6 +31,7 @@ class Room {
 
   destroy() {
     this.countDownClock.stop();
+    this.setSocket(null);
   }
 
   setSocket(socket: io.Socket) {
