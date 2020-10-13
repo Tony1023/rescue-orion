@@ -25,18 +25,13 @@ export default (props: {
 }) => {
   const { lobby, room } = queryString.parse(props.location.search);
 
-  let lobbyCode: number | undefined;
-  if (lobby && typeof(lobby) === 'string') {
-    lobbyCode = parseInt(lobby);
-  }
-
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
   const [gameState, setGameState] = useState<GameState>();
 
   async function setup() {
     try {
       await axios.post('http://localhost:9000/rooms', {
-        lobby: lobbyCode,
+        lobby: lobby,
         room: room,
       });
     } catch(err) {
@@ -69,7 +64,7 @@ export default (props: {
   }
 
   useEffect(() => {
-    if (!lobbyCode || !room) {
+    if (!lobby || !room) {
       return;
     }
     setup();

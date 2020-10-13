@@ -2,7 +2,7 @@ import express from 'express';
 import Room from '../repository/room';
 import * as Types from '../metadata/types';
 import io from 'socket.io';
-import repository from '../repository';
+import repository, { Lobby } from '../repository';
 
 const rooms: {
   [room: string]: Room
@@ -11,12 +11,13 @@ const rooms: {
 export default (router: express.Router, wss: io.Server) => {
 
   router.post('/', (req, res) => {
-    const lobbyCode = req.body.lobby;
-    const lobby = repository.lobbies[lobbyCode];
-    if (!lobby) {
-      res.status(404).send(`Lobby code ${lobbyCode} not found!`);
-      return;
+    const lobbyCode = parseInt(req.body.lobby);
+    let lobby = repository.lobbies[lobbyCode];
+    if (!isNaN(lobbyCode) && !lobby) {
+      res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
     }
+    lobby = new Lobby(lobbyCode, 'me');
+    repository.lobbies[lobbyCode] = lobby;
 
     const roomName = req.body.room;
     if (lobby.rooms[roomName]) {

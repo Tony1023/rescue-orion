@@ -10,7 +10,8 @@
     "class-name": false,
     "forin": false,
     "no-shadowed-variable": false,
-    "no-empty": false
+    "no-empty": false,
+    "radix": false
   },
   "rulesDirectory": []
 }
