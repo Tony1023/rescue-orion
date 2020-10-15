@@ -81,6 +81,21 @@ export default class Game implements MessageQueue {
     for (const id in this.agents) {
       this.agents[id].onDayUpdate(this.day);
     }
+    // check leftover resources on each spaceships
+    for(const id in this.spaceships) {
+      if(this.spaceships[id].energyCells <= 10 || this.spaceships[id].lifeSupportPacks <= 10) {
+        this.pushMessage({
+          title: 'Warning!',
+          paragraphs: [
+            { text: 'One of your ships is running low on Energy Cells or Life Support Packs.' },
+            { text: 'If your levels reach zero, your ship will become lost in space and your mission will automatically end.' },
+            { text: 'Please replenish your resources before it’s too late.' },
+            { text: '-Ground Control' },
+          ],
+        });
+        break;
+      }
+    }
     ++this.day;
   }
 
