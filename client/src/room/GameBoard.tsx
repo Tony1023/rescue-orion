@@ -59,7 +59,7 @@ const ActionButton = styled.div`
 
 const ConfirmMoveButton = styled(ActionButton)`
   background-image: url(${`${process.env.PUBLIC_URL}/confirm_move.png`});
-  top: 15px;
+  top: 10px;
   left: 30px;
   cursor: ${(props: { noMove: Boolean }) => !props.noMove ? 'cursor': `not-allowed`};
   :hover {
@@ -78,11 +78,11 @@ const MoveResourceButton = styled(ActionButton)`
 `;
 
 const TerminateGameButton = styled(ActionButton)`
-  background-image: url(${`${process.env.PUBLIC_URL}/pickup.png`});
+  background-image: url(${`${process.env.PUBLIC_URL}/abort_mission.png`});
   top: 55px;
   left: 30px;
   :hover {
-    background-image: url(${`${process.env.PUBLIC_URL}/pickup_hover.png`});
+    background-image: url(${`${process.env.PUBLIC_URL}/abort_mission_hover.png`});
   }
 `;
 
