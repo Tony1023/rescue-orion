@@ -11,6 +11,7 @@ import { PixelPosition } from '../metadata/types';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
+import ConfirmMoveModal from './modal/ConfirmMoveModal';
 import { useSelector, useDispatch } from './redux-hook-adapters';
 import Clock from './Clock';
 
@@ -96,6 +97,7 @@ export default function() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
@@ -129,12 +131,13 @@ export default function() {
       <ConfirmMoveButton  
         noMove={!selectedMove}
         onClick={() => {
-          if(selectedMove) {
-            dispatch(moveSpaceship({
-              gemini_1: `${gemini1NextMove}`,
-              gemini_2: `${gemini2NextMove}`
-            }))
-          }
+          setShowConfirmMoveModal(true);
+          // if(selectedMove) {
+          //   dispatch(moveSpaceship({
+          //     gemini_1: `${gemini1NextMove}`,
+          //     gemini_2: `${gemini2NextMove}`
+          //   }))
+          // }
         }}
         ></ConfirmMoveButton>
       <MoveResourceButton
@@ -197,6 +200,14 @@ export default function() {
       {
         gameOver ?
         <EndGameModal/> : <></>
+      }
+      {
+        showConfirmMoveModal ?
+        <ConfirmMoveModal
+          onClose={() => {
+            setShowConfirmMoveModal(false)
+          }}
+        /> : <></>
       }
 
       <ResourcePanel
