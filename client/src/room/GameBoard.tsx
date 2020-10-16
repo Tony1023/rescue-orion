@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import ButtonGroup from './ButtonGroup';
 import SpaceStation from './SpaceStation'
-import { GameState, Message } from '../metadata/types';
+import { GameState, GameStatus, Message } from '../metadata/types';
 import styled from 'styled-components';
 import { locationData, spaceStationData } from '../metadata';
 import * as IDs from '../metadata/agent-ids';
@@ -87,7 +87,6 @@ const TerminateGameButton = styled(ActionButton)`
 `;
 
 export default function() {
-
   const gameState = useSelector((state: GameState) => state);
   const dispatch = useDispatch();
 
@@ -95,7 +94,7 @@ export default function() {
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(gameState.status === GameStatus.MissionFailed);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
@@ -108,6 +107,10 @@ export default function() {
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
+
+  useEffect(() => {
+    setGameOver(gameState.status === GameStatus.MissionFailed)
+  }, [gameState.status])
 
   const selectedMove = gemini1NextMove && gemini2NextMove;
 
