@@ -198,6 +198,7 @@ export default function() {
       {
         showConfirmMoveModal ?
         <ConfirmMoveModal
+          day={gameState.time}
           gemini1={gameState.spaceships[IDs.GEMINI_1]}
           gemini1NextMove={gemini1NextMove}
           gemini2={gameState.spaceships[IDs.GEMINI_2]}

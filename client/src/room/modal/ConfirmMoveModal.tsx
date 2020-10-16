@@ -21,6 +21,8 @@ const Column = styled.div`
   width: 50%;
   display: inline-block;
   text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 const GeminiImage = styled.div`
@@ -32,7 +34,7 @@ const GeminiImage = styled.div`
 `;
 
 const Title = styled.div`
-  width: 80px;
+  width: 150px;
   margin: auto;
   font-size: 20px;
   font-weight: bold;
@@ -47,9 +49,11 @@ const Number = styled.div`
 const ActionButton = styled(StyledButton)`
   margin: auto;
   width: 150px;
+  text-transform: uppercase;
 `;
 
 export default (props: {
+  day: number,
   gemini1: PlainSpaceship,
   gemini2: PlainSpaceship,
   gemini1NextMove: string | undefined,
@@ -123,6 +127,7 @@ export default (props: {
             <Number>{props.gemini2.lifeSupportPacks + (travelTogether ? 0 : gemini2LifeSupportCost)}</Number>
           </Column>
         </Column>
+          <Title><span>Day {props.day}</span> <i className="fas fa-long-arrow-alt-right"></i> <span>Day {props.day + 1}</span></Title>
         <Column>
           <ActionButton onClick={() => {
             dispatch(moveSpaceship({
