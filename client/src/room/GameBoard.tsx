@@ -5,14 +5,13 @@ import { GameState, Message } from '../metadata/types';
 import styled from 'styled-components';
 import { locationData, spaceStationData } from '../metadata';
 import * as IDs from '../metadata/agent-ids';
-import { moveSpaceship } from './actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from '../metadata/types';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
 import ConfirmMoveModal from './modal/ConfirmMoveModal';
-import { useSelector, useDispatch } from './redux-hook-adapters';
+import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
 
 const GEMINI_LEFT_OFFSET = 45;
@@ -90,7 +89,6 @@ const TerminateGameButton = styled(ActionButton)`
 export default function() {
 
   const gameState = useSelector((state: GameState) => state);
-  const dispatch = useDispatch();
 
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
@@ -131,13 +129,9 @@ export default function() {
       <ConfirmMoveButton  
         noMove={!selectedMove}
         onClick={() => {
-          setShowConfirmMoveModal(true);
-          // if(selectedMove) {
-          //   dispatch(moveSpaceship({
-          //     gemini_1: `${gemini1NextMove}`,
-          //     gemini_2: `${gemini2NextMove}`
-          //   }))
-          // }
+          if(selectedMove) {
+            setShowConfirmMoveModal(true);
+          }
         }}
         ></ConfirmMoveButton>
       <MoveResourceButton

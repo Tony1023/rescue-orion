@@ -1,18 +1,16 @@
 import React from 'react';
-import { useSelector } from '../redux-hook-adapters';
+import { useDispatch } from '../redux-hook-adapters';
 import styled from 'styled-components';
-import { GameState, PlainSpaceship, LocationType } from '../../metadata/types';
+import { PlainSpaceship, LocationType } from '../../metadata/types';
 import { locationData } from '../../metadata';
-
+import { moveSpaceship } from '../actions';
 import {
   BaseModalTextBackground,
   Modal,
   ModalBackground,
+  StyledButton,
 } from './modal';
-import {
-  Header,
-  StyledDismissButton
-} from './MessageModal';
+import { Header } from './MessageModal';
 
 const StyledModal = styled(Modal)`
   padding: 30px;
@@ -46,13 +44,19 @@ const Number = styled.div`
   margin-top: 10px;
 `;
 
+const ActionButton = styled(StyledButton)`
+  margin: auto;
+  width: 150px;
+`;
+
 export default (props: {
   gemini1: PlainSpaceship,
   gemini2: PlainSpaceship,
   gemini1NextMove: string | undefined,
   gemini2NextMove: string | undefined,
-  onClose?: () => void,
+  onClose: () => void,
 }) => {
+  const dispatch = useDispatch();
   const travelTogether = props.gemini1.location === props.gemini2.location && props.gemini1NextMove == props.gemini2NextMove;
   const gemini1NextLocation = props.gemini1NextMove !== undefined? props.gemini1NextMove: props.gemini1.location;
   const gemini2NextLocation = props.gemini2NextMove !== undefined? props.gemini2NextMove: props.gemini2.location;
@@ -80,11 +84,10 @@ export default (props: {
   }
   const [gemini1EnergyCost, gemini1LifeSupportCost] = getResourceCost(gemini1NextLocation, props.gemini1.location);
   const [gemini2EnergyCost, gemini2LifeSupportCost] = getResourceCost(gemini2NextLocation, props.gemini2.location);
-
+  
   return <ModalBackground>
     <BaseModalTextBackground>
       <StyledModal>
-        <StyledDismissButton onClose={props.onClose} />
         <Header>
           Do you wish to confirm your move?
         </Header>
@@ -119,6 +122,18 @@ export default (props: {
             <i className="fas fa-long-arrow-alt-down"></i>
             <Number>{props.gemini2.lifeSupportPacks + (travelTogether ? 0 : gemini2LifeSupportCost)}</Number>
           </Column>
+        </Column>
+        <Column>
+          <ActionButton onClick={() => {
+            dispatch(moveSpaceship({
+              gemini_1: `${props.gemini1NextMove}`,
+              gemini_2: `${props.gemini2NextMove}`
+            }))
+            props.onClose();
+          }}>Confirm Move</ActionButton>
+        </Column>
+        <Column>
+          <ActionButton onClick={props.onClose}>Cancel Move</ActionButton>
         </Column>
       </StyledModal>
     </BaseModalTextBackground>
