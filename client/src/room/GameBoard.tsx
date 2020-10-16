@@ -204,6 +204,8 @@ export default function() {
       {
         showConfirmMoveModal ?
         <ConfirmMoveModal
+          gemini1={gameState.spaceships[IDs.GEMINI_1]}
+          gemini2={gameState.spaceships[IDs.GEMINI_2]}
           onClose={() => {
             setShowConfirmMoveModal(false)
           }}
