@@ -76,10 +76,6 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
         this.energyCells -= 10;
         this.lifeSupportPacks -= 30;
     }
-
-    // if (this.energyCells < 0 || this.lifeSupportPacks < 0) {
-    //   throw Error('Supplies run out.');
-    // }
   }
 
   addToPath(location: string): void {

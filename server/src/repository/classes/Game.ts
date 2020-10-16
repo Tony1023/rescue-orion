@@ -13,7 +13,7 @@ import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../../metadata';
 import MessageQueue from './MessageQueue';
 
-function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
+function assertTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   if (left.getLocation() !== right.getLocation()) {
     throw Error('The resource carriers must be at the same location to transfer resources between them.');
   }
@@ -139,25 +139,31 @@ export default class Game implements MessageQueue {
   transferEnergyCells(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    asserTogether(sendingCarrier, receivingCarrier);
+    assertTogether(sendingCarrier, receivingCarrier);
     const transferCount = count ?? sendingCarrier.energyCells;
     sendingCarrier.energyCells -= transferCount;
     receivingCarrier.energyCells += transferCount;
+    if(sendingCarrier.energyCells < 1) {
+      throw Error('Supplies run out.');
+    }
   }
 
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    asserTogether(sendingCarrier, receivingCarrier);
+    assertTogether(sendingCarrier, receivingCarrier);
     const transferCount = count ?? sendingCarrier.lifeSupportPacks;
     sendingCarrier.lifeSupportPacks -= transferCount;
     receivingCarrier.lifeSupportPacks += transferCount;
+    if(sendingCarrier.lifeSupportPacks < 1) {
+      throw Error('Supplies run out.');
+    }
   }
 
   transferRescueResource(from: string, to: string, type: RescueResource): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    asserTogether(sendingCarrier, receivingCarrier);
+    assertTogether(sendingCarrier, receivingCarrier);
     sendingCarrier.pickUpFrom(type);
     receivingCarrier.dropOffTo(type);
   }
