@@ -231,6 +231,7 @@ function Gemini1Panel(props: {
       <ResourceRightAlign key={i}>
           {resource}
           <RightPanelTriangle
+            disabled={gemini_1.isInTimePortal}
             onClick={() => {
               dispatch(dropOffRescueResource({
                 from: IDs.GEMINI_1,
@@ -264,6 +265,7 @@ function Gemini2Panel(props: {
       <ResourceRightAlign key={i}>
           {resource}
           <RightPanelTriangle
+            disabled={gemini_2.isInTimePortal}
             onClick={() => {
               dispatch(dropOffRescueResource({
                 from: IDs.GEMINI_2,

@@ -89,6 +89,7 @@ const TerminateGameButton = styled(ActionButton)`
 export default function() {
 
   const gameState = useSelector((state: GameState) => state);
+  console.log(gameState.spaceships);
 
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
@@ -111,12 +112,17 @@ export default function() {
 
   const selectedMove = gemini1NextMove && gemini2NextMove;
 
-  const gemini1CurrentLocation = gameState.spaceships[IDs.GEMINI_1].location;
-  const gemini2CurrentLocation = gameState.spaceships[IDs.GEMINI_2].location
+  const gemini_1 = gameState.spaceships[IDs.GEMINI_1];
+  const gemini_2 = gameState.spaceships[IDs.GEMINI_2];
+  const gemini1CurrentLocation = gemini_1.location;
+  const gemini2CurrentLocation = gemini_2.location
   const gemini1Location = gemini1NextMove ?? gemini1CurrentLocation;
   const gemini2Location = gemini2NextMove ?? gemini2CurrentLocation;
   const position1 = locationData[gemini1Location].pixelPosition;
   const position2 = locationData[gemini2Location].pixelPosition;
+
+  const canRebalanceResource = gemini1CurrentLocation === gemini2CurrentLocation &&
+    gemini_1.isInTimePortal === gemini_2.isInTimePortal;
 
   function popMessageModal() {
     const remainingMessages = messages.slice(0);
@@ -135,9 +141,9 @@ export default function() {
         }}
         ></ConfirmMoveButton>
       <MoveResourceButton
-        disabled={gemini1CurrentLocation !== gemini2CurrentLocation}
+        disabled={!canRebalanceResource}
         onClick={() => {
-          if(gemini1CurrentLocation === gemini2CurrentLocation) {
+          if (canRebalanceResource) {
             setShowRebalanceModal(true)
           }
         }}
