@@ -157,10 +157,12 @@ function StationPanel(props: {
               transform: 'translate(0, -50%)',
             }}
             onClick={() => {
-              dispatch(pickUpSupplyResource({
-                from: props.id,
-                to: supplyReceiverId,
-              }))
+              if (station.energyCells > 0) {
+                dispatch(pickUpSupplyResource({
+                  from: props.id,
+                  to: supplyReceiverId,
+                }));
+              }
             }}
             disabled={station.energyCells === 0}
           />
@@ -177,11 +179,13 @@ function StationPanel(props: {
               {resource}
               <LeftPanelTriangle
                 onClick={() => {
-                  dispatch(pickUpRescueResource({
-                    from: props.id,
-                    to: resourceReceiverId,
-                    type: resource,
-                  }));
+                  if (resourceReceiverId && !station.canPickUp[resource]) {
+                    dispatch(pickUpRescueResource({
+                      from: props.id,
+                      to: resourceReceiverId,
+                      type: resource,
+                    }));
+                  }
                 }}
                 disabled={!resourceReceiverId || !station.canPickUp[resource]}
               />
@@ -231,12 +235,15 @@ function Gemini1Panel(props: {
       <ResourceRightAlign key={i}>
           {resource}
           <RightPanelTriangle
+            disabled={gemini_1.isInTimePortal}
             onClick={() => {
-              dispatch(dropOffRescueResource({
-                from: IDs.GEMINI_1,
-                to: props.id,
-                type: resource,
-              }));
+              if (!gemini_1.isInTimePortal) {
+                dispatch(dropOffRescueResource({
+                  from: IDs.GEMINI_1,
+                  to: props.id,
+                  type: resource,
+                }));
+              }
             }}
           />
         </ResourceRightAlign>
@@ -264,12 +271,15 @@ function Gemini2Panel(props: {
       <ResourceRightAlign key={i}>
           {resource}
           <RightPanelTriangle
+            disabled={gemini_2.isInTimePortal}
             onClick={() => {
-              dispatch(dropOffRescueResource({
-                from: IDs.GEMINI_2,
-                to: props.id,
-                type: resource,
-              }));
+              if (!gemini_2.isInTimePortal) {
+                dispatch(dropOffRescueResource({
+                  from: IDs.GEMINI_2,
+                  to: props.id,
+                  type: resource,
+                }));
+              }
             }}
           />
         </ResourceRightAlign>
