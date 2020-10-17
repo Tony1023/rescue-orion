@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { PixelPosition } from '../metadata/types';
+import { PixelPosition, SpaceshipNextMoves } from '../metadata/types';
 import * as IDs from '../metadata/agent-ids';
 import locationData from '../metadata/location-data';
+import { MappedTypeNode } from 'typescript';
 
 const ButtonGroupBackground = styled.div`
   position: absolute;
@@ -51,7 +52,12 @@ const Gemini12Button = styled(NextMoveButton)`
 
 interface Props {
   id: string,
-  shipReachability: { [id: string]: boolean },
+  shipReachability: { [id: string]: {
+    cost: {
+      energyCells: number,
+      lifeSupportPacks: number,
+    }
+  }},
   gemini1NextMove: boolean,
   gemini2NextMove: boolean,
   setGemini1NextMove: (Gemini1NextMove: string) => void,

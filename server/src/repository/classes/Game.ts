@@ -152,11 +152,11 @@ export default class Game implements MessageQueue {
       {}),
       nextMoves: Object.keys(this.spaceships).reduce((accumulator: SpaceshipNextMoves, id: string) => {
         const reachableNeighbors = this.spaceships[id].generateReachableNeighbors();
-        reachableNeighbors.forEach((location: string) => {
-          if (!accumulator[location]) {
-            accumulator[location] = {};
+        reachableNeighbors.forEach((neighborCost) => {
+          if (!accumulator[neighborCost.location]) {
+            accumulator[neighborCost.location] = {};
           }
-          accumulator[location][id] = true;
+          accumulator[neighborCost.location][id] = { cost: neighborCost.cost };
         });
         return accumulator;
       }, {}),

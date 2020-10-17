@@ -32,7 +32,12 @@ export type SpaceStationMetadata = { [id: string]: {
 }}
 
 export interface SpaceshipNextMoves {
-  [location: string]: { [id: string]: boolean }
+  [location: string]: { [id: string]: {
+    cost: {
+      energyCells: number,
+      lifeSupportPacks: number,
+    }
+  }}
 };
 
 export enum RescueResource {

@@ -5,6 +5,45 @@ import { locationData } from '../../metadata';
 import { LocationType } from '../../metadata/types';
 import * as IDs from '../../metadata/agent-ids';
 
+interface NeighborCost {
+  location: string,
+  cost: {
+    energyCells: number,
+    lifeSupportPacks: number,
+  }
+};
+
+function computeSupplyConsumption(prev: string, curr: string): {
+  energyCells: number,
+  lifeSupportPacks: number,
+} {
+  // If different type of locations, then it must be a starway.
+  // If staying at the same location, then it's equivalent to staying staionary
+  if (locationData[curr].location.type !== locationData[prev].location.type || curr === prev) {
+    return {
+      energyCells: 1,
+      lifeSupportPacks: 1,
+    };
+  }
+  switch (locationData[curr].location.type) {
+    case LocationType.BeaconStar:
+      return {
+        energyCells: 1,
+        lifeSupportPacks: 1,
+      };
+    case LocationType.HyperGate:
+      return {
+        energyCells: 20,
+        lifeSupportPacks: 5,
+      };
+    case LocationType.TimePortal:
+      return {
+        energyCells: 10,
+        lifeSupportPacks: 30,
+      };
+  }
+}
+
 export default abstract class Spaceship implements ResourceCarrier, TimeVaryingAgent{
   energyCells: number;
   lifeSupportPacks: number;
@@ -53,29 +92,9 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
   onDayUpdate(_: number): void {
     const current = this.path[this.path.length - 1];
     const prev = this.path[this.path.length - 2];
-
-    // If different type of locations, then it must be a starway.
-    // If staying at the same location, then it's equivalent to staying staionary
-    if (locationData[current].location.type !== locationData[prev].location.type ||
-      current === prev) {
-      this.energyCells -= 1;
-      this.lifeSupportPacks -= 1;
-      return;
-    }
-
-    switch (locationData[current].location.type) {
-      case LocationType.BeaconStar:
-        this.energyCells -= 1;
-        this.lifeSupportPacks -= 1;
-        break;
-      case LocationType.HyperGate:
-        this.energyCells -= 20;
-        this.lifeSupportPacks -= 5;
-        break;
-      case LocationType.TimePortal:
-        this.energyCells -= 10;
-        this.lifeSupportPacks -= 30;
-    }
+    const consumption = computeSupplyConsumption(prev, current);
+    this.energyCells -= consumption.energyCells;
+    this.lifeSupportPacks -= consumption.lifeSupportPacks;
 
     if (this.energyCells < 0 || this.lifeSupportPacks < 0) {
       throw Error('Supplies run out.');
@@ -133,7 +152,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     this.isTravelingThruTimePortals = false;
   }
 
-  generateReachableNeighbors(): string[] {
+  generateReachableNeighbors(): NeighborCost[] {
 
     function normalNextMovesFrom(location: string) {
       const nextMoves = locationData[location].neighbors;
@@ -153,13 +172,22 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
 
     const current = this.path[this.path.length - 1];
 
+    let neighbors: string[];
+
     // On a beacon star or hyper gate, can go anywhere
     if (locationData[current].location.type !== LocationType.TimePortal) {
-      return normalNextMovesFrom(current);
+      neighbors = normalNextMovesFrom(current);
+    } else {
+      neighbors = this.isTravelingThruTimePortals ?
+        timePortalNextMovesFrom(current) : normalNextMovesFrom(current);
     }
-    return (
-      this.isTravelingThruTimePortals ?
-      timePortalNextMovesFrom(current) : normalNextMovesFrom(current)
-    );
+    return neighbors.reduce((accumulator: NeighborCost[], location: string) => {
+      const neighborCost = {
+        location: location,
+        cost: computeSupplyConsumption(current, location),
+      }
+      accumulator.push(neighborCost);
+      return accumulator;
+    }, []);
   }
 }

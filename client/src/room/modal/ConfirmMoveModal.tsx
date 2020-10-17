@@ -63,34 +63,15 @@ export default (props: {
   const day = gameState.time;
   const gemini1 = gameState.spaceships[IDs.GEMINI_1];
   const gemini2 = gameState.spaceships[IDs.GEMINI_2];
+  const nextMoves = gameState.nextMoves;
 
   const travelTogether = gemini1.location === gemini2.location && props.gemini1NextMove == props.gemini2NextMove;
 
-  const getResourceCost = (current: string, prev: string) => {
-    let energyCost, lifeSupportPacksCost;
-    energyCost = lifeSupportPacksCost = -1;
-    if (locationData[current].location.type !== locationData[prev].location.type ||
-      current === prev) {
-      return [energyCost, lifeSupportPacksCost];
-    }
-    switch (locationData[current].location.type) {
-      case LocationType.BeaconStar:
-        energyCost = -1;
-        lifeSupportPacksCost = -1;
-        break;
-      case LocationType.HyperGate:
-        energyCost = -20;
-        lifeSupportPacksCost = -5;
-        break;
-      case LocationType.TimePortal:
-        energyCost = -10;
-        lifeSupportPacksCost = -30;
-    }
-    return [energyCost, lifeSupportPacksCost];
-  }
-  const [gemini1EnergyCost, gemini1LifeSupportCost] = getResourceCost(props.gemini1NextMove, gemini1.location);
-  const [gemini2EnergyCost, gemini2LifeSupportCost] = getResourceCost(props.gemini2NextMove, gemini2.location);
-  
+  const costs = { 
+    gemini1: nextMoves[props.gemini1NextMove][IDs.GEMINI_1].cost,
+    gemini2: nextMoves[props.gemini2NextMove][IDs.GEMINI_2].cost,
+  };
+
   return <ModalBackground>
     <BaseModalTextBackground>
       <StyledModal>
@@ -104,13 +85,13 @@ export default (props: {
             <h4>Energy Cells</h4>
             <Number>{gemini1.energyCells}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini1.energyCells + gemini1EnergyCost}</Number>
+            <Number>{gemini1.energyCells - costs.gemini1.energyCells}</Number>
           </Column>
           <Column>
             <h4>Life Support Packs</h4>
             <Number>{gemini1.lifeSupportPacks}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini1.lifeSupportPacks + gemini1LifeSupportCost}</Number>
+            <Number>{gemini1.lifeSupportPacks - costs.gemini1.lifeSupportPacks}</Number>
           </Column>
         </Column>
         <Column>
@@ -120,13 +101,13 @@ export default (props: {
             <h4>Energy Cells</h4>
             <Number>{gemini2.energyCells}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini2.energyCells + (travelTogether ? 0 : gemini2EnergyCost)}</Number>
+            <Number>{gemini2.energyCells - (travelTogether ? 0 : costs.gemini2.energyCells)}</Number>
           </Column>
           <Column>
             <h4>Life Support Packs</h4>
             <Number>{gemini2.lifeSupportPacks}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini2.lifeSupportPacks + (travelTogether ? 0 : gemini2LifeSupportCost)}</Number>
+            <Number>{gemini2.lifeSupportPacks - (travelTogether ? 0 : costs.gemini2.lifeSupportPacks)}</Number>
           </Column>
         </Column>
           <Title><span>Day {day}</span> <i className="fas fa-long-arrow-alt-right"></i> <span>Day {day + 1}</span></Title>
