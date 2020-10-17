@@ -5,13 +5,13 @@ import { GameState, Message } from '../metadata/types';
 import styled from 'styled-components';
 import { locationData, spaceStationData } from '../metadata';
 import * as IDs from '../metadata/agent-ids';
-import { moveSpaceship } from './actions';
 import MessageModal from './modal/MessageModal';
 import { PixelPosition } from '../metadata/types';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
-import { useSelector, useDispatch } from './redux-hook-adapters';
+import ConfirmMoveModal from './modal/ConfirmMoveModal';
+import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
 
 const GEMINI_LEFT_OFFSET = 45;
@@ -89,13 +89,13 @@ const TerminateGameButton = styled(ActionButton)`
 export default function() {
 
   const gameState = useSelector((state: GameState) => state);
-  const dispatch = useDispatch();
 
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
@@ -130,10 +130,7 @@ export default function() {
         noMove={!selectedMove}
         onClick={() => {
           if(selectedMove) {
-            dispatch(moveSpaceship({
-              gemini_1: `${gemini1NextMove}`,
-              gemini_2: `${gemini2NextMove}`
-            }))
+            setShowConfirmMoveModal(true);
           }
         }}
         ></ConfirmMoveButton>
@@ -197,6 +194,16 @@ export default function() {
       {
         gameOver ?
         <EndGameModal/> : <></>
+      }
+      {
+        showConfirmMoveModal ?
+        <ConfirmMoveModal
+          gemini1NextMove={gemini1Location}
+          gemini2NextMove={gemini2Location}
+          onClose={() => {
+            setShowConfirmMoveModal(false)
+          }}
+        /> : <></>
       }
 
       <ResourcePanel
