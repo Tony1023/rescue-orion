@@ -198,11 +198,8 @@ export default function() {
       {
         showConfirmMoveModal ?
         <ConfirmMoveModal
-          day={gameState.time}
-          gemini1={gameState.spaceships[IDs.GEMINI_1]}
-          gemini1NextMove={gemini1NextMove}
-          gemini2={gameState.spaceships[IDs.GEMINI_2]}
-          gemini2NextMove={gemini2NextMove}
+          gemini1NextMove={gemini1Location}
+          gemini2NextMove={gemini2Location}
           onClose={() => {
             setShowConfirmMoveModal(false)
           }}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from '../redux-hook-adapters';
+import { useSelector, useDispatch } from '../redux-hook-adapters';
 import styled from 'styled-components';
 import { PlainSpaceship, LocationType } from '../../metadata/types';
 import { locationData } from '../../metadata';
@@ -11,6 +11,7 @@ import {
   StyledButton,
 } from './modal';
 import { Header } from './MessageModal';
+import * as IDs from '../../metadata/agent-ids';
 
 const StyledModal = styled(Modal)`
   padding: 30px;
@@ -53,17 +54,18 @@ const ActionButton = styled(StyledButton)`
 `;
 
 export default (props: {
-  day: number,
-  gemini1: PlainSpaceship,
-  gemini2: PlainSpaceship,
-  gemini1NextMove: string | undefined,
-  gemini2NextMove: string | undefined,
+  gemini1NextMove: string,
+  gemini2NextMove: string,
   onClose: () => void,
 }) => {
   const dispatch = useDispatch();
-  const travelTogether = props.gemini1.location === props.gemini2.location && props.gemini1NextMove == props.gemini2NextMove;
-  const gemini1NextLocation = props.gemini1NextMove !== undefined? props.gemini1NextMove: props.gemini1.location;
-  const gemini2NextLocation = props.gemini2NextMove !== undefined? props.gemini2NextMove: props.gemini2.location;
+  const gameState = useSelector((state) => state);
+  const day = gameState.time;
+  const gemini1 = gameState.spaceships[IDs.GEMINI_1];
+  const gemini2 = gameState.spaceships[IDs.GEMINI_2];
+
+  const travelTogether = gemini1.location === gemini2.location && props.gemini1NextMove == props.gemini2NextMove;
+
   const getResourceCost = (current: string, prev: string) => {
     let energyCost, lifeSupportPacksCost;
     energyCost = lifeSupportPacksCost = -1;
@@ -86,8 +88,8 @@ export default (props: {
     }
     return [energyCost, lifeSupportPacksCost];
   }
-  const [gemini1EnergyCost, gemini1LifeSupportCost] = getResourceCost(gemini1NextLocation, props.gemini1.location);
-  const [gemini2EnergyCost, gemini2LifeSupportCost] = getResourceCost(gemini2NextLocation, props.gemini2.location);
+  const [gemini1EnergyCost, gemini1LifeSupportCost] = getResourceCost(props.gemini1NextMove, gemini1.location);
+  const [gemini2EnergyCost, gemini2LifeSupportCost] = getResourceCost(props.gemini2NextMove, gemini2.location);
   
   return <ModalBackground>
     <BaseModalTextBackground>
@@ -100,15 +102,15 @@ export default (props: {
           <Title>Gemini 1</Title>
           <Column>
             <h4>Energy Cells</h4>
-            <Number>{props.gemini1.energyCells}</Number>
+            <Number>{gemini1.energyCells}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{props.gemini1.energyCells + gemini1EnergyCost}</Number>
+            <Number>{gemini1.energyCells + gemini1EnergyCost}</Number>
           </Column>
           <Column>
             <h4>Life Support Packs</h4>
-            <Number>{props.gemini1.lifeSupportPacks}</Number>
+            <Number>{gemini1.lifeSupportPacks}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{props.gemini1.lifeSupportPacks + gemini1LifeSupportCost}</Number>
+            <Number>{gemini1.lifeSupportPacks + gemini1LifeSupportCost}</Number>
           </Column>
         </Column>
         <Column>
@@ -116,18 +118,18 @@ export default (props: {
           <Title>Gemini 2</Title>
           <Column>
             <h4>Energy Cells</h4>
-            <Number>{props.gemini2.energyCells}</Number>
+            <Number>{gemini2.energyCells}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{props.gemini2.energyCells + (travelTogether ? 0 : gemini2EnergyCost)}</Number>
+            <Number>{gemini2.energyCells + (travelTogether ? 0 : gemini2EnergyCost)}</Number>
           </Column>
           <Column>
             <h4>Life Support Packs</h4>
-            <Number>{props.gemini2.lifeSupportPacks}</Number>
+            <Number>{gemini2.lifeSupportPacks}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{props.gemini2.lifeSupportPacks + (travelTogether ? 0 : gemini2LifeSupportCost)}</Number>
+            <Number>{gemini2.lifeSupportPacks + (travelTogether ? 0 : gemini2LifeSupportCost)}</Number>
           </Column>
         </Column>
-          <Title><span>Day {props.day}</span> <i className="fas fa-long-arrow-alt-right"></i> <span>Day {props.day + 1}</span></Title>
+          <Title><span>Day {day}</span> <i className="fas fa-long-arrow-alt-right"></i> <span>Day {day + 1}</span></Title>
         <Column>
           <ActionButton onClick={() => {
             dispatch(moveSpaceship({
