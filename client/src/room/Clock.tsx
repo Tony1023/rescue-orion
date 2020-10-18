@@ -28,7 +28,7 @@ function pad(n: number): string {
 }
 
 export default () => {
-  const durationInSeconds = useSelector((state) => state.duration);
+  const durationInSeconds = useSelector((state) => state.countDown);
   const minutes = Math.floor(durationInSeconds / 60);
   const seconds = durationInSeconds % 60;
   

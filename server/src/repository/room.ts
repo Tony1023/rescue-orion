@@ -2,35 +2,31 @@ import Game from './classes/Game';
 import io from 'socket.io';
 import { RoomSocketMessage } from '../metadata/types';
 import * as Types from '../metadata/types';
-import CountDownClock from './countdown-clock';
+import { spaceStationData } from '../metadata';
+import * as IDs from '../metadata/agent-ids';
+
 
 class Room {
-
+  
   constructor() {
     this.game.load();
-    this.countDownClock.onTick = () => {
-      this.game.onTick(this.countDownClock.getSecondsElapsed());
-      this.sendUpdate();
-    }
   }
 
   private game: Game = new Game();
   private socket: io.Socket = null;
-  private countDownClock = new CountDownClock(75 * 60);
-
+  
   sendUpdate() {
     this.socket?.emit(RoomSocketMessage.StateUpdate, JSON.stringify(this.game.toGameState()));
   }
-
+  
   startGameIfNot() {
     if (this.game.status === Types.GameStatus.NotStarted) {
       this.game.status = Types.GameStatus.Started;
-      this.countDownClock.start();
+      this.game.pushMessage(spaceStationData[IDs.SAGITTARIUS].message);
     }
   }
 
   destroy() {
-    this.countDownClock.stop();
     this.setSocket(null);
   }
 
@@ -43,6 +39,11 @@ class Room {
 
   onSocketDisconnect() {
     this.socket = null;
+  }
+
+  onTick(countDown: number, timeElapsed: number) {
+    this.game.onTick(countDown, timeElapsed);
+    this.sendUpdate();
   }
 
   applyGameAction(action: Types.GameAction) {

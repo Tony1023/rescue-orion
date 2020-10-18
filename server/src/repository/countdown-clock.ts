@@ -22,6 +22,7 @@ class CountDownClock {
   }
 
   start() {
+    clearInterval(this.interval);
     this.interval = setInterval(() => {
       --this.remainingTime;
       this.onTick();

@@ -6,14 +6,15 @@ import io from 'socket.io';
 
 export default (app: express.Express, server: http.Server): void => {
 
+  const lobbyWss = io().path('/lobbies').attach(server);
   const lobbyRouter = express.Router();
   app.use('/lobbies', lobbyRouter);
-  lobby(lobbyRouter);
+  lobby(lobbyRouter, lobbyWss);
 
-  const wss = io().path('/rooms').attach(server);
+  const roomWss = io().path('/rooms').attach(server);
   const roomRouter = express.Router();
   app.use('/rooms', roomRouter);
-  room(roomRouter, wss);
+  room(roomRouter, roomWss);
 
   /** Dev only stuff below, will be removed close to the end */
   const devWss = io().path('/dev').attach(server);
@@ -21,13 +22,17 @@ export default (app: express.Express, server: http.Server): void => {
 };
 
 
-import { Room } from '../repository';
+import { Lobby, Room } from '../repository';
 import * as Types from '../metadata/types';
 
 function devRoute(wss: io.Server) {
-  const room = new Room();
+  const lobby = new Lobby(12306, 'admin');
+  if (!lobby.isRoomNameTaken('room')) {
+    lobby.insertRoom('room');
+  }
+  const room = lobby.findRoom('room');
   wss.on('connection', (socket) => {
-    room.startGameIfNot();
+    lobby.startGames();
     room.setSocket(socket);
     room.sendUpdate();
 
