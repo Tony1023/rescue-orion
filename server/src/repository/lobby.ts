@@ -92,6 +92,7 @@ class Lobby {
     }, {})));
   }
 
+  // Streamed each second tick & new room joins & new admin joins
   private sendUpdate() {
     this.sockets.forEach((socket) =>
       socket.emit(LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
