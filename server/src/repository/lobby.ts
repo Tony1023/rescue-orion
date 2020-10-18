@@ -1,6 +1,8 @@
+import io from 'socket.io';
 import CountDownClock from './countdown-clock';
 import Room from './room';
 import repository from './index';
+import { LobbyState, LobbyUpdate } from '../metadata/types';
 
 export enum LobbyStatus {
   Waiting,
@@ -16,9 +18,13 @@ class Lobby {
     this.countDownClock.onTimeUp = () => {
       setTimeout(() => this.destroy(), 2 * 60 * 60);
     }
-    this.countDownClock.onTick = () => this.tickRooms();
+    this.countDownClock.onTick = () => {
+      this.tickRooms();
+      this.sendUpdate();
+    }
   }
 
+  private sockets: io.Socket[] = [];
   private rooms: { [name: string]: Room } = {};
   private code: number;
   private admin: string;
@@ -50,6 +56,7 @@ class Lobby {
     }
     room.onTick(this.countDownClock.getSecondsRemaining(), this.countDownClock.getSecondsElapsed());
     this.rooms[name] = room;
+    this.sendUpdate();
   }
 
   findRoom(name: string) {
@@ -67,10 +74,31 @@ class Lobby {
     this.countDownClock.stop();
     Object.values(this.rooms).forEach((room) => room.destroy());
     const index = repository.adminLobbies[this.admin]?.indexOf(this.code);
-    if (index) {
+    if (index >= 0) {
       repository.adminLobbies[this.admin]?.splice(index, 1);
     }
     delete repository.lobbies[this.code];
+  }
+
+  addSocket(socket: io.Socket) {
+    this.sockets.push(socket);
+    socket.on('disconnect', () => {
+      const index = this.sockets.indexOf(socket);
+      delete this.sockets[index];
+    });
+    socket.emit(LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
+      accumulator[name] = this.rooms[name].getGameState();
+      return accumulator;
+    }, {})));
+  }
+
+  private sendUpdate() {
+    this.sockets.forEach((socket) =>
+      socket.emit(LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
+        accumulator[name] = this.rooms[name].getGameState();
+        return accumulator;
+      }, {})))
+    );
   }
 }
 

@@ -26,6 +26,10 @@ class Room {
     }
   }
 
+  getGameState() {
+    return this.game.toGameState(false);
+  }
+
   destroy() {
     this.setSocketAndPushUpdate(null);
   }
