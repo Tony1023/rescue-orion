@@ -76,7 +76,8 @@ export default (props: {
     setup();
   }, [lobby, room]);
 
-  return <GlobalStyle>
+  return <>
+    <GlobalStyle />
     {
       socket ?
       <></>
@@ -100,5 +101,5 @@ export default (props: {
         <div>Loading</div>
       )
     }
-  </GlobalStyle>
+  </>
 }
