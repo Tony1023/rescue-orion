@@ -1,7 +1,8 @@
 import express from 'express';
+import io from 'socket.io';
 import repository from '../repository';
 
-export default (router: express.Router) => {
+export default (router: express.Router, wss: io.Server) => {
   router.delete('/', (req, res) => {
     const lobbyCode = parseInt(req.body.lobby);
     const lobby = repository.lobbies[lobbyCode];
@@ -12,4 +13,11 @@ export default (router: express.Router) => {
     lobby.destroy();
     res.status(200).send();
   });
+
+  wss.use((socket, next) => {
+
+  }).on('connection', (socket) => {
+    
+  });
+
 }

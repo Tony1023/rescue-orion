@@ -102,7 +102,7 @@ export interface GameState {
     }
   },
   status: GameStatus,
-  duration: number,
+  countDown: number,
 };
 
 export interface Transfer {
