@@ -143,9 +143,6 @@ export default class Game implements MessageQueue {
     const transferCount = count ?? sendingCarrier.energyCells;
     sendingCarrier.energyCells -= transferCount;
     receivingCarrier.energyCells += transferCount;
-    if(sendingCarrier.energyCells < 1) {
-      throw Error('Supplies run out.');
-    }
   }
 
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
