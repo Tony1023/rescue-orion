@@ -94,23 +94,18 @@ export default function() {
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
-  const [gameOver, setGameOver] = useState(gameState.status === GameStatus.MissionFailed);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
     setGemini2NextMove(undefined);
     if (gameState.time > 30) {
-      setGameOver(true);
+      // setGameOver(true);
     }
   }, [gameState.time]);
   
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
-
-  useEffect(() => {
-    setGameOver(gameState.status === GameStatus.MissionFailed)
-  }, [gameState.status])
 
   const selectedMove = gemini1NextMove && gemini2NextMove;
 
@@ -149,7 +144,10 @@ export default function() {
         }}
       ></MoveResourceButton>
       <TerminateGameButton 
-        onClick={() => setGameOver(true)}
+        onClick={
+          ()=>{}
+          // () => setGameOver(true)
+        }
       ></TerminateGameButton>
       {
         gemini1Location === gemini2Location ? 
@@ -198,7 +196,7 @@ export default function() {
         /> : <></>
       }
       {
-        gameOver ?
+        gameState.status === GameStatus.MissionFailed ?
         <EndGameModal/> : <></>
       }
 
