@@ -146,7 +146,7 @@ function verifyInput(max: number, input: string): number {
   const count = Number.parseInt(input);
   console.log(count, max);
   if (count === Number.NaN) { return -1; }
-  if (count > max) { return -1; }
+  if (count > max - 1) { return -1; }
   return count;
 }
 
