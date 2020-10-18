@@ -179,7 +179,7 @@ function StationPanel(props: {
               {resource}
               <LeftPanelTriangle
                 onClick={() => {
-                  if (resourceReceiverId && !station.canPickUp[resource]) {
+                  if (resourceReceiverId && station.canPickUp[resource]) {
                     dispatch(pickUpRescueResource({
                       from: props.id,
                       to: resourceReceiverId,
