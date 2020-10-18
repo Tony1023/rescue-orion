@@ -6,7 +6,10 @@ export enum RoomSocketMessage {
 export const LobbyUpdate = '@LobbyUpdate';
 
 export interface LobbyState {
-  [name: string]: GameState
+  countDown?: number,
+  updatedRooms: {
+    [name: string]: GameState
+  }
 };
 
 export enum LocationType {

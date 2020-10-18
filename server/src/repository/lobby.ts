@@ -87,18 +87,20 @@ class Lobby {
       delete this.sockets[index];
     });
     socket.emit(LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
-      accumulator[name] = this.rooms[name].getGameState();
+      accumulator.updatedRooms[name] = this.rooms[name].getGameState();
       return accumulator;
-    }, {})));
+    }, { countDown: this.countDownClock.getSecondsRemaining(), updatedRooms: {} })));
   }
 
   // Streamed each second tick & new room joins & new admin joins
   private sendUpdate() {
     this.sockets.forEach((socket) =>
       socket.emit(LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
-        accumulator[name] = this.rooms[name].getGameState();
+        if (this.rooms[name].isDirty()) {
+          accumulator.updatedRooms[name] = this.rooms[name].getGameState();
+        }
         return accumulator;
-      }, {})))
+      }, { countDown: this.countDownClock.getSecondsRemaining(), updatedRooms: {} })))
     );
   }
 }
