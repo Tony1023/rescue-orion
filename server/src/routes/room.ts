@@ -1,7 +1,7 @@
 import express from 'express';
 import * as Types from '../metadata/types';
 import io from 'socket.io';
-import repository, { Lobby, Room } from '../repository';
+import repository, { Lobby, Room, LobbyStatus } from '../repository';
 
 export default (router: express.Router, wss: io.Server) => {
 
@@ -16,11 +16,15 @@ export default (router: express.Router, wss: io.Server) => {
     repository.lobbies[lobbyCode] = lobby;
 
     const roomName = req.body.room;
-    if (lobby.rooms[roomName]) {
+    if (lobby.isRoomNameTaken(roomName)) {
       res.status(403).send(`Room name ${roomName} already taken.`);
       return;
     }
-    lobby.rooms[roomName] = new Room();
+    if (lobby.status === LobbyStatus.Finished) {
+      res.status(403).send('Lobby is no longer accepting players.');
+      return;
+    }
+    lobby.insertRoom(roomName);
     res.status(200).send();
   });
 
@@ -33,7 +37,7 @@ export default (router: express.Router, wss: io.Server) => {
       return;
     }
     const roomName = query?.room;
-    const room = lobby.rooms[roomName];
+    const room = lobby.findRoom(roomName);
     if (!roomName || !room) {
       next(new Error(`Room ${roomName} not found!`));
       return;
@@ -42,14 +46,11 @@ export default (router: express.Router, wss: io.Server) => {
     next();
   }).on('connection', (socket) => {
     const room = socket.handshake.query.room as Room;
-    room.startGameIfNot();
-    room.setSocket(socket);
-    room.sendUpdate();
+    room.setSocketAndPushUpdate(socket);
 
     socket.on(Types.RoomSocketMessage.Action, (json) => {
       const action = JSON.parse(json.toString());
       room.applyGameAction(action);
-      room.sendUpdate();
     })
 
     socket.on('disconnect', () => {

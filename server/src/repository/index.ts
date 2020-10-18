@@ -12,4 +12,4 @@ const repository: Repository = {
 
 export default repository;
 export { default as Room } from './room';
-export { default as Lobby } from './lobby';
+export { default as Lobby, LobbyStatus as LobbyStatus } from './lobby';

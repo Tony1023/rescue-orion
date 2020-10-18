@@ -11,7 +11,7 @@ import {
 } from './modal';
 import { Message } from '../../metadata/types';
 
-const Header = styled.div`
+export const Header = styled.div`
   height: 40px;
   line-height: 40px;
   font-weight: bold;
@@ -43,7 +43,7 @@ const StyledExtraModal = styled(ExtraModal)`
   padding: 30px;
 `;
 
-const StyledDismissButton = styled(DismissButton)`
+export const StyledDismissButton = styled(DismissButton)`
   display: flex;
   margin-left: auto;
 `;

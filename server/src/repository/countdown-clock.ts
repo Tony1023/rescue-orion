@@ -13,15 +13,13 @@ class CountDownClock {
   onTick = () => {};
   onTimeUp = () => {};
 
-  setRemainingTime(time: number) {
-    this.remainingTime = Math.floor(time);
-  }
-
   setCountDownTime(from: number) {
     this.countDownFrom = Math.floor(from);
+    this.remainingTime = Math.floor(from);
   }
 
   start() {
+    clearInterval(this.interval);
     this.interval = setInterval(() => {
       --this.remainingTime;
       this.onTick();

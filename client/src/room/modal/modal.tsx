@@ -46,7 +46,7 @@ export const ExtraModal = styled(BaseModal)`
   clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 1% calc(100% - 25px), 0 13%);
 `;
 
-const StyledButton = styled.div`
+export const StyledButton = styled.div`
   font-family: 'Roboto' sans-serif;
   background-color: rgb(0, 198, 170);
   cursor: pointer;

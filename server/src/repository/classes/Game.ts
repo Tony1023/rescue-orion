@@ -28,6 +28,7 @@ export default class Game implements MessageQueue {
   private spaceships: { [id: string]: Spaceship } = {};
   private spaceStations: { [id: string]: SpaceStation } = {};
   private gameDuration = 0;
+  private countDown = 0;
   private movedSinceStart = false;
   private lastMove = 0;
   status = GameStatus.NotStarted;
@@ -73,7 +74,6 @@ export default class Game implements MessageQueue {
     this.spaceStations[IDs.SAGITTARIUS] = sagittarius;
     this.carriers[IDs.SAGITTARIUS] = sagittarius;
     sagittarius.visited = true;
-    this.messages.push(spaceStationData[IDs.SAGITTARIUS].message);
   }
 
   advanceTime(): void {
@@ -181,11 +181,11 @@ export default class Game implements MessageQueue {
       {}),
       nextMoves: Object.keys(this.spaceships).reduce((accumulator: SpaceshipNextMoves, id: string) => {
         const reachableNeighbors = this.spaceships[id].generateReachableNeighbors();
-        reachableNeighbors.forEach((location: string) => {
-          if (!accumulator[location]) {
-            accumulator[location] = {};
+        reachableNeighbors.forEach((neighborCost) => {
+          if (!accumulator[neighborCost.location]) {
+            accumulator[neighborCost.location] = {};
           }
-          accumulator[location][id] = true;
+          accumulator[neighborCost.location][id] = { cost: neighborCost.cost };
         });
         return accumulator;
       }, {}),
@@ -216,12 +216,13 @@ export default class Game implements MessageQueue {
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },
-      duration: this.gameDuration,
+      countDown: this.countDown,
       status: this.status,
     };
   }
 
-  onTick(timeElapsed: number) {
+  onTick(countDown: number, timeElapsed: number) {
+    this.countDown = countDown;
     this.gameDuration = timeElapsed;
     if (this.gameDuration === 10 * 60 && !this.movedSinceStart) {
       this.pushMessage({
