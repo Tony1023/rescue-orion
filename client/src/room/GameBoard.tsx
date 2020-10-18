@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import ButtonGroup from './ButtonGroup';
 import SpaceStation from './SpaceStation'
-import { GameState, Message } from '../metadata/types';
+import { GameState, GameStatus, Message } from '../metadata/types';
 import styled from 'styled-components';
 import { locationData, spaceStationData } from '../metadata';
 import * as IDs from '../metadata/agent-ids';
@@ -87,7 +87,6 @@ const TerminateGameButton = styled(ActionButton)`
 `;
 
 export default function() {
-
   const gameState = useSelector((state: GameState) => state);
   console.log(gameState);
 
@@ -95,14 +94,13 @@ export default function() {
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
   const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
     setGemini2NextMove(undefined);
     if (gameState.time > 30) {
-      setGameOver(true);
+      // setGameOver(true);
     }
   }, [gameState.time]);
   
@@ -149,7 +147,10 @@ export default function() {
         }}
       ></MoveResourceButton>
       <TerminateGameButton 
-        onClick={() => setGameOver(true)}
+        onClick={
+          ()=>{}
+          // () => setGameOver(true)
+        }
       ></TerminateGameButton>
       {
         gemini1Location === gemini2Location ? 
@@ -198,7 +199,7 @@ export default function() {
         /> : <></>
       }
       {
-        gameOver ?
+        gameState.status === GameStatus.MissionFailed ?
         <EndGameModal/> : <></>
       }
       {

@@ -28,7 +28,7 @@ export default () => {
   const gemini_1 = state.spaceships[IDs.GEMINI_1];
   const gemini_2 = state.spaceships[IDs.GEMINI_2];
 
-  return <ModalBackground>
+  return <ModalBackground zIndex={1}>
     <BaseModalTextBackground>
       <StyledModal>
         <Title>End Game Stats</Title>

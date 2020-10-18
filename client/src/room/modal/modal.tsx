@@ -9,7 +9,7 @@ export const ModalBackground = styled.div`
   position: absolute;
   margin: 0 auto;
   background-color: rgba(10, 10, 10, 0.2);
-  z-index: 10;
+  z-index: ${(props: {zIndex?: Number|undefined }) => props.zIndex !== undefined ? `${props.zIndex}`: '10'};
 `;
 
 export const BaseModalBackground = styled.div`

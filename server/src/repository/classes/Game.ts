@@ -13,7 +13,7 @@ import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../../metadata';
 import MessageQueue from './MessageQueue';
 
-function asserTogether(left: ResourceCarrier, right: ResourceCarrier): void {
+function assertTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   if (left.getLocation() !== right.getLocation()) {
     throw Error('The resource carriers must be at the same location to transfer resources between them.');
   }
@@ -81,6 +81,35 @@ export default class Game implements MessageQueue {
     for (const id in this.agents) {
       this.agents[id].onDayUpdate(this.day);
     }
+    for (const id in this.spaceships) {
+      if(this.spaceships[id].energyCells <= 0 || this.spaceships[id].lifeSupportPacks <= 0) {
+        this.pushMessage({
+          title: 'Incoming Relay From Ground Control',
+          paragraphs: [
+            { text: 'Oh no! Your ship ran out of the resources required to keep your ship moving so you can carry out your mission! ' },
+            { text: 'Please send a distress call to the Space Commander and we will provide further instruction.' },
+            { text: '-Ground Control' },
+          ],
+        });
+        this.status = GameStatus.MissionFailed;
+        return;
+      }
+    }
+    // check leftover resources on each spaceships
+    for (const id in this.spaceships) {
+      if(this.spaceships[id].energyCells <= 10 || this.spaceships[id].lifeSupportPacks <= 10) {
+        this.pushMessage({
+          title: 'Warning!',
+          paragraphs: [
+            { text: 'One of your ships is running low on Energy Cells or Life Support Packs.' },
+            { text: 'If your levels reach zero, your ship will become lost in space and your mission will automatically end.' },
+            { text: 'Please replenish your resources before it’s too late.' },
+            { text: '-Ground Control' },
+          ],
+        });
+        break;
+      }
+    }
     ++this.day;
   }
 
@@ -110,7 +139,7 @@ export default class Game implements MessageQueue {
   transferEnergyCells(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    asserTogether(sendingCarrier, receivingCarrier);
+    assertTogether(sendingCarrier, receivingCarrier);
     const transferCount = count ?? sendingCarrier.energyCells;
     sendingCarrier.energyCells -= transferCount;
     receivingCarrier.energyCells += transferCount;
@@ -119,7 +148,7 @@ export default class Game implements MessageQueue {
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    asserTogether(sendingCarrier, receivingCarrier);
+    assertTogether(sendingCarrier, receivingCarrier);
     const transferCount = count ?? sendingCarrier.lifeSupportPacks;
     sendingCarrier.lifeSupportPacks -= transferCount;
     receivingCarrier.lifeSupportPacks += transferCount;
@@ -128,7 +157,7 @@ export default class Game implements MessageQueue {
   transferRescueResource(from: string, to: string, type: RescueResource): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    asserTogether(sendingCarrier, receivingCarrier);
+    assertTogether(sendingCarrier, receivingCarrier);
     sendingCarrier.pickUpFrom(type);
     receivingCarrier.dropOffTo(type);
   }
