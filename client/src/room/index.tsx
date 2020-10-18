@@ -2,11 +2,17 @@ import React, { useState, useEffect } from 'react';
 import GameBoard from './GameBoard';
 import SocketContext from './game-context';
 import { GameState, RoomSocketMessage } from '../metadata/types';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import SocketIOClient from 'socket.io-client';
 import { Location } from 'history';
 import queryString from 'query-string';
 import axios from 'axios';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: black;
+  }
+`;
 
 const SocketError = styled.div`
   background-color: rgb(240, 240, 240);
@@ -70,7 +76,7 @@ export default (props: {
     setup();
   }, [lobby, room]);
 
-  return <>
+  return <GlobalStyle>
     {
       socket ?
       <></>
@@ -94,5 +100,5 @@ export default (props: {
         <div>Loading</div>
       )
     }
-  </>
+  </GlobalStyle>
 }
