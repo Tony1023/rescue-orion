@@ -45,7 +45,7 @@ export default (props: {
     }
 
     let newSocket = SocketIOClient('http://localhost:9000', {
-      path: '/rooms',
+      path: '/rooms/socket',
       query: {
         lobby: lobby,
         room: room,

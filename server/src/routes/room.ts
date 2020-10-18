@@ -32,7 +32,6 @@ export default (router: express.Router, wss: io.Server) => {
     const query = socket.handshake.query;
     const lobbyCode = parseInt(query?.lobby);
     const lobby = repository.lobbies[lobbyCode];
-    lobby.startGames();
     if (isNaN(lobbyCode) || !lobby) {
       next(new Error(`Lobby code ${query?.lobby} not found!`));
       return;
@@ -47,13 +46,11 @@ export default (router: express.Router, wss: io.Server) => {
     next();
   }).on('connection', (socket) => {
     const room = socket.handshake.query.room as Room;
-    room.setSocket(socket);
-    room.sendUpdate();
+    room.setSocketAndPushUpdate(socket);
 
     socket.on(Types.RoomSocketMessage.Action, (json) => {
       const action = JSON.parse(json.toString());
       room.applyGameAction(action);
-      room.sendUpdate();
     })
 
     socket.on('disconnect', () => {
