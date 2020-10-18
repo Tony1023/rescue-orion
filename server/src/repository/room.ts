@@ -15,7 +15,7 @@ class Room {
   private game: Game = new Game();
   private socket: io.Socket = null;
   
-  sendUpdate() {
+  private sendUpdate() {
     this.socket?.emit(RoomSocketMessage.StateUpdate, JSON.stringify(this.game.toGameState()));
   }
   
@@ -27,14 +27,15 @@ class Room {
   }
 
   destroy() {
-    this.setSocket(null);
+    this.setSocketAndPushUpdate(null);
   }
 
-  setSocket(socket: io.Socket) {
+  setSocketAndPushUpdate(socket: io.Socket) {
     if (this.socket) {
       this.socket.disconnect();
     }
     this.socket = socket;
+    this.sendUpdate();
   }
 
   onSocketDisconnect() {
@@ -47,6 +48,7 @@ class Room {
   }
 
   applyGameAction(action: Types.GameAction) {
+    if (this.game.status !== Types.GameStatus.Started) { return; }
     switch (action.type) {
       case Types.MOVE_SPACESHIP: {
         this.game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
@@ -86,6 +88,7 @@ class Room {
       default:
         break;
     }
+    this.sendUpdate();
   };
 
 }

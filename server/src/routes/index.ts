@@ -6,12 +6,12 @@ import io from 'socket.io';
 
 export default (app: express.Express, server: http.Server): void => {
 
-  const lobbyWss = io().path('/lobbies').attach(server);
+  const lobbyWss = io().path('/lobbies/socket').attach(server);
   const lobbyRouter = express.Router();
   app.use('/lobbies', lobbyRouter);
   lobby(lobbyRouter, lobbyWss);
 
-  const roomWss = io().path('/rooms').attach(server);
+  const roomWss = io().path('/rooms/socket').attach(server);
   const roomRouter = express.Router();
   app.use('/rooms', roomRouter);
   room(roomRouter, roomWss);
@@ -33,13 +33,11 @@ function devRoute(wss: io.Server) {
   const room = lobby.findRoom('room');
   wss.on('connection', (socket) => {
     lobby.startGames();
-    room.setSocket(socket);
-    room.sendUpdate();
+    room.setSocketAndPushUpdate(socket);
 
     socket.on(Types.RoomSocketMessage.Action, (json) => {
       const action = JSON.parse(json.toString());
       room.applyGameAction(action);
-      room.sendUpdate();
     })
 
     socket.on('disconnect', () => {
