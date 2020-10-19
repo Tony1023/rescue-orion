@@ -2,7 +2,7 @@ import io from 'socket.io';
 import CountDownClock from './countdown-clock';
 import Room from './room';
 import repository from './index';
-import { LobbyState, LobbyUpdate } from '../metadata/types';
+import { LobbyState, SocketMessages } from '../metadata/types';
 
 export enum LobbyStatus {
   Waiting,
@@ -15,9 +15,9 @@ class Lobby {
   constructor(code: number, admin: string) {
     this.code = code;
     this.admin = admin;
-    this.countDownClock.onTimeUp = () => {
+    this.countDownClock.subscribeTimeUp(() => {
       setTimeout(() => this.destroy(), 2 * 60 * 60);
-    }
+    });
     this.countDownClock.subscribeTick(() => {
       this.sendUpdate();
     });
@@ -77,21 +77,21 @@ class Lobby {
       const index = this.sockets.indexOf(socket);
       delete this.sockets[index];
     });
-    socket.emit(LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
+    socket.emit(SocketMessages.LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
       accumulator.updatedRooms[name] = this.rooms[name].getGameState();
       return accumulator;
-    }, { countDown: this.countDownClock.getSecondsRemaining(), updatedRooms: {} })));
+    }, { gameDuration: this.countDownClock.getGameDuration(), updatedRooms: {} })));
   }
 
   // Streamed each second tick & new room joins & new admin joins
   private sendUpdate() {
     this.sockets.forEach((socket) =>
-      socket.emit(LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
+      socket.emit(SocketMessages.LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
         if (this.rooms[name].isDirty()) {
           accumulator.updatedRooms[name] = this.rooms[name].getGameState();
         }
         return accumulator;
-      }, { countDown: this.countDownClock.getSecondsRemaining(), updatedRooms: {} })))
+      }, { gameDuration: this.countDownClock.getGameDuration(), updatedRooms: {} })))
     );
   }
 }

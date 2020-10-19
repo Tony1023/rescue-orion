@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GameBoard from './GameBoard';
 import SocketContext from './game-context';
-import { GameState, RoomSocketMessage } from '../metadata/types';
+import { GameDuration, GameState, SocketMessages } from '../metadata/types';
 import styled, { createGlobalStyle } from 'styled-components';
 import SocketIOClient from 'socket.io-client';
 import { Location } from 'history';
@@ -33,6 +33,7 @@ export default (props: {
 
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
   const [gameState, setGameState] = useState<GameState>();
+  const [gameDuration, setGameDuration] = useState<GameDuration>();
 
   async function setup() {
     try {
@@ -54,10 +55,15 @@ export default (props: {
     });
     setSocket(newSocket);
 
-    newSocket.on(RoomSocketMessage.StateUpdate, (data: string) => {
+    newSocket.on(SocketMessages.StateUpdate, (data: string) => {
       const message = JSON.parse(data);
       const newState = message as GameState;
       setGameState(newState);
+    });
+
+    newSocket.on(SocketMessages.TimeUpdate, (data: string) => {
+      const d = JSON.parse(data) as GameDuration;
+      setGameDuration(d);
     });
 
     newSocket.on('disconnect', () => {
@@ -87,11 +93,12 @@ export default (props: {
       </SocketError>
     }  
     {
-      gameState ?
+      gameState && gameDuration ?
       (
         <SocketContext.Provider value={{
           socket: socket,
           gameState: gameState,
+          gameDuration: gameDuration,
         }}>
           <GameBoard />
         </SocketContext.Provider>
@@ -107,6 +114,7 @@ export default (props: {
 export function DevRoom() {
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
   const [gameState, setGameState] = useState<GameState>();
+  const [gameDuration, setGameDuration] = useState<GameDuration>();
 
   async function setup() {
     let newSocket = SocketIOClient('http://localhost:9000', {
@@ -115,10 +123,15 @@ export function DevRoom() {
     });
     setSocket(newSocket);
 
-    newSocket.on(RoomSocketMessage.StateUpdate, (data: string) => {
+    newSocket.on(SocketMessages.StateUpdate, (data: string) => {
       const message = JSON.parse(data);
       const newState = message as GameState;
       setGameState(newState);
+    });
+
+    newSocket.on(SocketMessages.TimeUpdate, (data: string) => {
+      const d = JSON.parse(data) as GameDuration;
+      setGameDuration(d);
     });
 
     newSocket.on('disconnect', () => {
@@ -145,11 +158,12 @@ export function DevRoom() {
       </SocketError>
     }  
     {
-      gameState ?
+      gameState && gameDuration ?
       (
         <SocketContext.Provider value={{
           socket: socket,
           gameState: gameState,
+          gameDuration: gameDuration,
         }}>
           <GameBoard />
         </SocketContext.Provider>

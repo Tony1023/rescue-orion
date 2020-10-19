@@ -1,6 +1,6 @@
 import Game from './classes/Game';
 import io from 'socket.io';
-import { RoomSocketMessage } from '../metadata/types';
+import { SocketMessages } from '../metadata/types';
 import * as Types from '../metadata/types';
 import { spaceStationData } from '../metadata';
 import * as IDs from '../metadata/agent-ids';
@@ -8,27 +8,34 @@ import CountDownClock from './countdown-clock';
 
 
 class Room {
-  
+
   constructor(countDownClock: CountDownClock) {
     this.game = new Game(countDownClock);
     this.game.load();
     countDownClock.subscribeTick(() => {
-      this.sendUpdate();
+      this.sendTimeUpdate();
     });
+    this.countDownClock = countDownClock;
   }
 
   private game;
   private socket: io.Socket = null;
   private dirty = true;
-  
-  private sendUpdate() {
-    this.socket?.emit(RoomSocketMessage.StateUpdate, JSON.stringify(this.game.toGameState()));
+  private countDownClock: CountDownClock;
+
+  private sendGameUpdate() {
+    this.socket?.emit(SocketMessages.StateUpdate, JSON.stringify(this.game.toGameState()));
   }
-  
+
+  private sendTimeUpdate() {
+    this.socket?.emit(SocketMessages.TimeUpdate, JSON.stringify(this.countDownClock.getGameDuration()));
+  }
+
   startGameIfNot() {
     if (this.game.status === Types.GameStatus.NotStarted) {
       this.game.status = Types.GameStatus.Started;
       this.game.pushMessage(spaceStationData[IDs.SAGITTARIUS].message);
+      this.sendGameUpdate();
     }
   }
 
@@ -45,7 +52,8 @@ class Room {
       this.socket.disconnect();
     }
     this.socket = socket;
-    this.sendUpdate();
+    this.sendGameUpdate();
+    this.sendTimeUpdate();
   }
 
   onSocketDisconnect() {
@@ -98,7 +106,7 @@ class Room {
       default:
         break;
     }
-    this.sendUpdate();
+    this.sendGameUpdate();
   };
 
 }

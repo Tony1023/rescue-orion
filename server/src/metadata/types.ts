@@ -1,12 +1,12 @@
-export enum RoomSocketMessage {
+export enum SocketMessages {
   StateUpdate = '@GameUpdate',
   Action = '@GameAction',
+  TimeUpdate = '@TimeUpdate',
+  LobbyUpdate = '@LobbyUpdate',
 }
 
-export const LobbyUpdate = '@LobbyUpdate';
-
 export interface LobbyState {
-  countDown?: number,
+  gameDuration?: GameDuration,
   updatedRooms: {
     [name: string]: GameState
   }
@@ -105,15 +105,19 @@ export interface GameState {
   messages: Message[],
   time: number,
   gameStats: {
+    // finishDuration?: number,
     scientistsRemaining: number,
     dropOffTimes: {
       [resource: string]: number
     }
   },
   status: GameStatus,
+};
+
+export interface GameDuration {
   countDown: number,
   duration: number,
-};
+}
 
 export interface Transfer {
   from: string,

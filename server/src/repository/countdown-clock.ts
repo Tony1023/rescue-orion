@@ -1,4 +1,4 @@
-
+import { GameDuration } from "../metadata/types";
 
 class CountDownClock {
 
@@ -10,7 +10,6 @@ class CountDownClock {
   private countDownFrom: number;
   private remainingTime: number;
   private interval: NodeJS.Timeout;
-  onTimeUp = () => {};
   private onTickSubscribers: (() => void)[] = [];
   private onTimeUpSubscribers: (() => void)[] = [];
 
@@ -35,7 +34,6 @@ class CountDownClock {
       this.onTickSubscribers.forEach((callback) => callback());
       if (this.remainingTime === 0) {
         this.stop();
-        this.onTimeUp();
         this.onTimeUpSubscribers.forEach((callback) => callback());
       }
     }, 1000);
@@ -52,6 +50,13 @@ class CountDownClock {
   // Difference between set count down and time remaining
   getSecondsElapsed() {
     return this.countDownFrom - this.remainingTime;
+  }
+
+  getGameDuration(): GameDuration {
+    return {
+      duration: this.countDownFrom - this.remainingTime,
+      countDown: this.remainingTime,
+    }
   }
 }
 

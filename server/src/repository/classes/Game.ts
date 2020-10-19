@@ -1,4 +1,4 @@
-import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus, RoomSocketMessage } from '../../metadata/types';
+import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus } from '../../metadata/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -223,8 +223,6 @@ export default class Game implements MessageQueue {
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },
-      countDown: this.countDownClock.getSecondsRemaining(),
-      duration: this.countDownClock.getSecondsElapsed(),
       status: this.status,
     };
   }
