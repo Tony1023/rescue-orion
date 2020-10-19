@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
-import { GameState, LobbyState, LobbyUpdate, RescueResource } from '../metadata/types';
+import { GameState, GameStatus, LobbyState, LobbyUpdate, RescueResource } from '../metadata/types';
 
 function pad(n: number): string {
   let digits = 0;
@@ -75,12 +75,13 @@ export default () => {
           <tbody>
             <tr>
               <th>Room Name</th>
-              <th>Oxygen Cells (day 6)</th>
-              <th>Oxygen Repairment (day 21)</th>
-              <th>Water Repairment (day 23)</th>
-              <th>Food Repairment (day 24)</th>
-              <th>Medical Repairement (day 25)</th>
+              <th>Oxygen Cells<br/>(day 6)</th>
+              <th>Oxygen Repairment<br/>(day 21)</th>
+              <th>Water Repairment<br/>(day 23)</th>
+              <th>Food Repairment<br/>(day 24)</th>
+              <th>Medical Repairement<br/>(day 25)</th>
               <th>Scientists Alive</th>
+              <th>Day Count</th>
               <th>Mission Time</th>
             </tr>
             {
@@ -100,7 +101,14 @@ export default () => {
                       {dropOffTimes[resource] >= 0 ? dropOffTimes[resource] : '-'}
                     </td>)
                   }
-                  <td>{room.gameStats.scientistsRemaining}/20</td>
+                  <td>
+                    {
+                      room.status === GameStatus.MissionFailed ?
+                      'Mission Failed':
+                      `${room.gameStats.scientistsRemaining}/20`
+                    }
+                  </td>
+                  <td>{room.time}</td>
                   <td>{formatTime(room.duration)}</td>
                 </tr>;
               })
