@@ -22,11 +22,6 @@ export default class Game implements MessageQueue {
         this.onTick(countDownClock.getSecondsRemaining(), countDownClock.getSecondsElapsed());
       }
     });
-    countDownClock.subscribeTimeUp(() => {
-      if (this.status === GameStatus.Started) {
-        this.status = GameStatus.MissionFailed;
-      }
-    });
     this.countDownClock = countDownClock;
   }
 
