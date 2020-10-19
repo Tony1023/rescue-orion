@@ -1,9 +1,10 @@
 import { createContext } from 'react';
-import { GameState } from '../metadata/types';
+import { GameDuration, GameState } from '../metadata/types';
 
 interface Context {
   socket?: SocketIOClient.Socket,
   gameState?: GameState,
+  gameDuration?: GameDuration,
 }
 
 const defaultValue: Context = {};

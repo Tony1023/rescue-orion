@@ -48,7 +48,7 @@ export default (router: express.Router, wss: io.Server) => {
     const room = socket.handshake.query.room as Room;
     room.setSocketAndPushUpdate(socket);
 
-    socket.on(Types.RoomSocketMessage.Action, (json) => {
+    socket.on(Types.SocketMessages.Action, (json) => {
       const action = JSON.parse(json.toString());
       room.applyGameAction(action);
     })

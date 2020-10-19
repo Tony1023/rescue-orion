@@ -180,7 +180,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     }
     return neighbors.reduce((accumulator: NeighborCost[], location: string) => {
       const neighborCost = {
-        location: location,
+        location,
         cost: computeSupplyConsumption(current, location),
       }
       accumulator.push(neighborCost);

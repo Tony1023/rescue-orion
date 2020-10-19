@@ -88,7 +88,6 @@ const TerminateGameButton = styled(ActionButton)`
 
 export default function() {
   const gameState = useSelector((state: GameState) => state);
-  console.log(gameState);
 
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();

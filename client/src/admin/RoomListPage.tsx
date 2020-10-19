@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
-import { GameState, GameStatus, LobbyState, LobbyUpdate, RescueResource } from '../metadata/types';
+import { GameState, GameStatus, LobbyState, SocketMessages, RescueResource, GameDuration } from '../metadata/types';
 
 function pad(n: number): string {
   let digits = 0;
@@ -27,7 +27,10 @@ export default () => {
   const { code } = useParams<{ code?: string }>();
 
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
-  const [countDown, setCountDown] = useState<number>(0);
+  const [gameDuration, setGameDuration] = useState<GameDuration>({
+    duration: 0,
+    countDown: 0,
+  });
   const [rooms, setRooms] = useState<{
     [name: string]: GameState
   }>({});
@@ -41,10 +44,10 @@ export default () => {
     });
     setSocket(newSocket);
 
-    newSocket.on(LobbyUpdate, (data: string) => {
+    newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
       const state = JSON.parse(data) as LobbyState;
-      if (state.countDown) {
-        setCountDown(state.countDown);
+      if (state.gameDuration) {
+        setGameDuration(state.gameDuration);
       }
       if (Object.keys(state.updatedRooms).length > 0) {
         const newRooms = {...rooms};
@@ -70,7 +73,7 @@ export default () => {
       socket ?
       <>
         <h1>Lobby {code}</h1>
-        <p>Time remaining: {formatTime(countDown)}</p>
+        <p>Time remaining: {formatTime(gameDuration.countDown)}</p>
         <table>
           <tbody>
             <tr>
@@ -109,7 +112,13 @@ export default () => {
                     }
                   </td>
                   <td>{room.time}</td>
-                  <td>{formatTime(room.duration)}</td>
+                  <td>
+                    {
+                      room.gameStats.winTime ?
+                      formatTime(room.gameStats.winTime) :
+                      formatTime(gameDuration.duration)
+                    }
+                  </td>
                 </tr>;
               })
             }
