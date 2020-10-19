@@ -94,7 +94,13 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     const prev = this.path[this.path.length - 2];
     const consumption = computeSupplyConsumption(prev, current);
     this.energyCells -= consumption.energyCells;
+    if (this.energyCells < 0) {
+      this.energyCells = 0;
+    }
     this.lifeSupportPacks -= consumption.lifeSupportPacks;
+    if (this.lifeSupportPacks < 0) {
+      this.lifeSupportPacks = 0;
+    }
   }
 
   addToPath(location: string): void {
