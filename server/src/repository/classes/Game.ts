@@ -12,6 +12,7 @@ import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../../metadata';
 import MessageQueue from './MessageQueue';
+import CountDownClock from '../countdown-clock';
 
 function assertTogether(left: ResourceCarrier, right: ResourceCarrier): void {
   if (left.getLocation() !== right.getLocation()) {
@@ -21,16 +22,22 @@ function assertTogether(left: ResourceCarrier, right: ResourceCarrier): void {
 
 export default class Game implements MessageQueue {
 
+  constructor(countDownClock: CountDownClock) {
+    countDownClock.subscribeTick(() => {
+      this.onTick(countDownClock.getSecondsRemaining(), countDownClock.getSecondsElapsed());
+    });
+    this.countDownClock = countDownClock;
+  }
+
   private day = 0;
   private messages: Message[] = [];
   private agents: { [id: string]: TimeVaryingAgent } = {};
   private carriers: { [id: string]: ResourceCarrier } = {};
   private spaceships: { [id: string]: Spaceship } = {};
   private spaceStations: { [id: string]: SpaceStation } = {};
-  private gameDuration = 0;
-  private countDown = 0;
   private movedSinceStart = false;
   private lastMove = 0;
+  private countDownClock: CountDownClock;
   status = GameStatus.NotStarted;
 
   load(): void {
@@ -125,7 +132,7 @@ export default class Game implements MessageQueue {
 
   moveSpaceships(moves: { [id: string]: string }): void {
     this.movedSinceStart = true;
-    this.lastMove = this.gameDuration;
+    this.lastMove = this.countDownClock.getSecondsElapsed();
     for (const id in moves) {
       this.spaceships[id].addToPath(moves[id]);
       const spaceStation = locationData[moves[id]].location.spaceStationName;
@@ -216,16 +223,14 @@ export default class Game implements MessageQueue {
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },
-      countDown: this.countDown,
-      duration: this.gameDuration,
+      countDown: this.countDownClock.getSecondsRemaining(),
+      duration: this.countDownClock.getSecondsElapsed(),
       status: this.status,
     };
   }
 
   onTick(countDown: number, timeElapsed: number) {
-    this.countDown = countDown;
-    this.gameDuration = timeElapsed;
-    if (this.gameDuration === 10 * 60 && !this.movedSinceStart) {
+    if (timeElapsed === 10 * 60 && !this.movedSinceStart) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -236,7 +241,7 @@ export default class Game implements MessageQueue {
       });
       return;
     }
-    if (this.gameDuration - this.lastMove === 5 * 60) { // every 5 minutes?
+    if (timeElapsed - this.lastMove === 5 * 60) { // every 5 minutes?
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -248,7 +253,7 @@ export default class Game implements MessageQueue {
       });
     }
 
-    if (this.gameDuration === 2 * 60) {
+    if (timeElapsed === 2 * 60) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -259,7 +264,7 @@ export default class Game implements MessageQueue {
           { text: '-Ground Control' },
         ],
       });
-    } else if (this.gameDuration === 8 * 60) {
+    } else if (timeElapsed === 8 * 60) {
       this.pushMessage({
         title: 'Incoming relay from the Space Commander',
         paragraphs: [
@@ -270,7 +275,7 @@ export default class Game implements MessageQueue {
           { text: '-Space Commander' },
         ],
       });
-    } else if (this.gameDuration === 35 * 60) {
+    } else if (timeElapsed === 35 * 60) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -279,7 +284,7 @@ export default class Game implements MessageQueue {
           { text: '-Ground Control' },
         ],
       });
-    } else if (this.gameDuration === 65 * 60) {
+    } else if (timeElapsed === 65 * 60) {
       this.pushMessage({
         title: 'Urgent relay from Ground Control',
         paragraphs: [

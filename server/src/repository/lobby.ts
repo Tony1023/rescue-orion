@@ -18,10 +18,9 @@ class Lobby {
     this.countDownClock.onTimeUp = () => {
       setTimeout(() => this.destroy(), 2 * 60 * 60);
     }
-    this.countDownClock.onTick = () => {
-      this.tickRooms();
+    this.countDownClock.subscribeTick(() => {
       this.sendUpdate();
-    }
+    });
   }
 
   private sockets: io.Socket[] = [];
@@ -30,12 +29,6 @@ class Lobby {
   private admin: string;
   private countDownClock = new CountDownClock(75 * 60);
   status = LobbyStatus.Waiting;
-
-  private tickRooms() {
-    Object.values(this.rooms).forEach((room) => 
-      room.onTick(this.countDownClock.getSecondsRemaining(), this.countDownClock.getSecondsElapsed())
-    );
-  }
 
   startGames() {
     if (this.status === LobbyStatus.Waiting) {
@@ -50,11 +43,10 @@ class Lobby {
   }
 
   insertRoom(name: string) {
-    const room = new Room();
+    const room = new Room(this.countDownClock);
     if (this.status === LobbyStatus.Started) {
       room.startGameIfNot();
     }
-    room.onTick(this.countDownClock.getSecondsRemaining(), this.countDownClock.getSecondsElapsed());
     this.rooms[name] = room;
     this.sendUpdate();
   }
@@ -66,7 +58,6 @@ class Lobby {
   setCountDown(from: number) {
     if (this.status === LobbyStatus.Waiting) {
       this.countDownClock.setCountDownTime(from);
-      this.tickRooms();
     }
   }
 

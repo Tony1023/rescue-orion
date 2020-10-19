@@ -10,10 +10,9 @@ class CountDownClock {
   private countDownFrom: number;
   private remainingTime: number;
   private interval: NodeJS.Timeout;
-  onTick = () => {};
   onTimeUp = () => {};
-  private onTickSubscribers: (() => void)[];
-  private onTimeUpSubscribers: (() => void)[];
+  private onTickSubscribers: (() => void)[] = [];
+  private onTimeUpSubscribers: (() => void)[] = [];
 
   subscribeTick(callback: () => void) {
     this.onTickSubscribers.push(callback);
@@ -26,13 +25,13 @@ class CountDownClock {
   setCountDownTime(from: number) {
     this.countDownFrom = Math.floor(from);
     this.remainingTime = Math.floor(from);
+    this.onTickSubscribers.forEach((callback) => callback());
   }
 
   start() {
     clearInterval(this.interval);
     this.interval = setInterval(() => {
       --this.remainingTime;
-      this.onTick();
       this.onTickSubscribers.forEach((callback) => callback());
       if (this.remainingTime === 0) {
         this.stop();

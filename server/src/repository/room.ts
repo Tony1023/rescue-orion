@@ -4,15 +4,20 @@ import { RoomSocketMessage } from '../metadata/types';
 import * as Types from '../metadata/types';
 import { spaceStationData } from '../metadata';
 import * as IDs from '../metadata/agent-ids';
+import CountDownClock from './countdown-clock';
 
 
 class Room {
   
-  constructor() {
+  constructor(countDownClock: CountDownClock) {
+    this.game = new Game(countDownClock);
     this.game.load();
+    countDownClock.subscribeTick(() => {
+      this.sendUpdate();
+    });
   }
 
-  private game: Game = new Game();
+  private game;
   private socket: io.Socket = null;
   private dirty = true;
   
@@ -45,11 +50,6 @@ class Room {
 
   onSocketDisconnect() {
     this.socket = null;
-  }
-
-  onTick(countDown: number, timeElapsed: number) {
-    this.game.onTick(countDown, timeElapsed);
-    this.sendUpdate();
   }
 
   isDirty() {
