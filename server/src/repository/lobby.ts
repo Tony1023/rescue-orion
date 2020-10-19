@@ -62,7 +62,6 @@ class Lobby {
   }
 
   destroy() {
-    this.countDownClock.stop();
     Object.values(this.rooms).forEach((room) => room.destroy());
     const index = repository.adminLobbies[this.admin]?.indexOf(this.code);
     if (index >= 0) {

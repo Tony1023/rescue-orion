@@ -20,11 +20,6 @@ class Room {
         }
       }
     });
-    countDownClock.subscribeTimeUp(() => {
-      if (this.game.status === Types.GameStatus.Started) {
-        this.game.status = Types.GameStatus.MissionFailed;
-      }
-    });
     this.countDownClock = countDownClock;
   }
 

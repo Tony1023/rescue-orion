@@ -22,6 +22,12 @@ export default class Game implements MessageQueue {
         this.onTick(countDownClock.getSecondsRemaining(), countDownClock.getSecondsElapsed());
       }
     });
+    countDownClock.subscribeTimeUp(() => {
+      if (this.status === GameStatus.Started) {
+        this.status = GameStatus.MissionFailed;
+        this.endTime = this.countDownClock.getSecondsElapsed();
+      }
+    });
     this.countDownClock = countDownClock;
   }
 
@@ -34,7 +40,7 @@ export default class Game implements MessageQueue {
   private movedSinceStart = false;
   private lastMove = 0;
   private countDownClock: CountDownClock;
-  private winTime: number;
+  private endTime: number;
   newMessage = false;
   status = GameStatus.NotStarted;
 
@@ -89,11 +95,12 @@ export default class Game implements MessageQueue {
     ++this.day;
     if (this.isWinState()) {
       this.status = GameStatus.MissionSucceeded;
-      this.winTime = this.countDownClock.getSecondsElapsed();
+      this.endTime = this.countDownClock.getSecondsElapsed();
       return;
     }
     if (this.day > 30) {
       this.status = GameStatus.MissionFailed;
+      this.endTime = this.countDownClock.getSecondsElapsed();
       return;
     }
     for (const id in this.spaceships) {
@@ -107,6 +114,7 @@ export default class Game implements MessageQueue {
           ],
         });
         this.status = GameStatus.MissionFailed;
+        this.endTime = this.countDownClock.getSecondsElapsed();
         return;
       }
     }
@@ -239,7 +247,7 @@ export default class Game implements MessageQueue {
       messages: dump ? this.dumpMessages(): this.messages,
       time: this.day,
       gameStats: {
-        winTime: this.winTime,
+        endTime: this.endTime,
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },

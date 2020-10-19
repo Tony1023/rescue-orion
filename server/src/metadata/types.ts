@@ -105,7 +105,7 @@ export interface GameState {
   messages: Message[],
   time: number,
   gameStats: {
-    winTime?: number,
+    endTime?: number,
     scientistsRemaining: number,
     dropOffTimes: {
       [resource: string]: number

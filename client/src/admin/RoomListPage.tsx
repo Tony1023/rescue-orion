@@ -114,8 +114,8 @@ export default () => {
                   <td>{room.time}</td>
                   <td>
                     {
-                      room.gameStats.winTime ?
-                      formatTime(room.gameStats.winTime) :
+                      room.gameStats.endTime ?
+                      formatTime(room.gameStats.endTime) :
                       formatTime(gameDuration.duration)
                     }
                   </td>
