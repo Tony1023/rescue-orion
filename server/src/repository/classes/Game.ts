@@ -13,12 +13,6 @@ import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../../metadata';
 import MessageQueue from './MessageQueue';
 
-function assertTogether(left: ResourceCarrier, right: ResourceCarrier): void {
-  if (left.getLocation() !== right.getLocation()) {
-    throw Error('The resource carriers must be at the same location to transfer resources between them.');
-  }
-}
-
 export default class Game implements MessageQueue {
 
   private day = 0;
@@ -139,7 +133,9 @@ export default class Game implements MessageQueue {
   transferEnergyCells(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    assertTogether(sendingCarrier, receivingCarrier);
+    if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
+      return;
+    }
     const transferCount = count ?? sendingCarrier.energyCells;
     sendingCarrier.energyCells -= transferCount;
     receivingCarrier.energyCells += transferCount;
@@ -148,7 +144,9 @@ export default class Game implements MessageQueue {
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    assertTogether(sendingCarrier, receivingCarrier);
+    if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
+      return;
+    }
     const transferCount = count ?? sendingCarrier.lifeSupportPacks;
     sendingCarrier.lifeSupportPacks -= transferCount;
     receivingCarrier.lifeSupportPacks += transferCount;
@@ -157,9 +155,15 @@ export default class Game implements MessageQueue {
   transferRescueResource(from: string, to: string, type: RescueResource): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    assertTogether(sendingCarrier, receivingCarrier);
-    sendingCarrier.pickUpFrom(type);
-    receivingCarrier.dropOffTo(type);
+    if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
+      return;
+    }
+    try {
+      sendingCarrier.pickUpFrom(type);
+      receivingCarrier.dropOffTo(type);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   toGameState(dump: boolean = true): GameState {

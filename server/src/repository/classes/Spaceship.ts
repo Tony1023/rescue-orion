@@ -94,17 +94,18 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     const prev = this.path[this.path.length - 2];
     const consumption = computeSupplyConsumption(prev, current);
     this.energyCells -= consumption.energyCells;
+    if (this.energyCells < 0) {
+      this.energyCells = 0;
+    }
     this.lifeSupportPacks -= consumption.lifeSupportPacks;
+    if (this.lifeSupportPacks < 0) {
+      this.lifeSupportPacks = 0;
+    }
   }
 
   addToPath(location: string): void {
     this.path.push(location);
     this.updateIfTravelingThruTimePortals();
-    if (this.isTravelingThruTimePortals) {
-      if (this.path[this.path.length - 1] === this.path[this.path.length - 2]) {
-        throw new Error('Not allowed to stay stationary when traveling thru time portals');
-      }
-    }
   }
 
   private updateIfTravelingThruTimePortals(): void {
