@@ -15,6 +15,9 @@ class Room {
     countDownClock.subscribeTick(() => {
       if (this.game.status === Types.GameStatus.NotStarted || this.game.status === Types.GameStatus.Started) {
         this.sendTimeUpdate();
+        if (this.game.newMessage) {
+          this.sendGameUpdate();
+        }
       }
     });
     this.countDownClock = countDownClock;

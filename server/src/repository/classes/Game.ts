@@ -46,6 +46,7 @@ export default class Game implements MessageQueue {
   private lastMove = 0;
   private countDownClock: CountDownClock;
   private winTime: number;
+  newMessage = false;
   status = GameStatus.NotStarted;
 
   load(): void {
@@ -139,9 +140,11 @@ export default class Game implements MessageQueue {
 
   pushMessage(m: Message) {
     this.messages.push(m);
+    this.newMessage = true;
   }
 
   dumpMessages(): Message[] {
+    this.newMessage = false;
     const messages = this.messages.slice(0);
     this.messages = [];
     return messages;
