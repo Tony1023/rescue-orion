@@ -5,3 +5,4 @@ export default () => {
     hey
   </div>;
 }
+export { default as RoomListPage } from './RoomListPage';

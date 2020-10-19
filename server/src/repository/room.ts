@@ -14,6 +14,7 @@ class Room {
 
   private game: Game = new Game();
   private socket: io.Socket = null;
+  private dirty = true;
   
   private sendUpdate() {
     this.socket?.emit(RoomSocketMessage.StateUpdate, JSON.stringify(this.game.toGameState()));
@@ -24,6 +25,10 @@ class Room {
       this.game.status = Types.GameStatus.Started;
       this.game.pushMessage(spaceStationData[IDs.SAGITTARIUS].message);
     }
+  }
+
+  getGameState() {
+    return this.game.toGameState(false);
   }
 
   destroy() {
@@ -47,8 +52,13 @@ class Room {
     this.sendUpdate();
   }
 
+  isDirty() {
+    return this.dirty;
+  }
+
   applyGameAction(action: Types.GameAction) {
     if (this.game.status !== Types.GameStatus.Started) { return; }
+    this.dirty = true;
     switch (action.type) {
       case Types.MOVE_SPACESHIP: {
         this.game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);

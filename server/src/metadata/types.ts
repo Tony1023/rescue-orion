@@ -3,6 +3,15 @@ export enum RoomSocketMessage {
   Action = '@GameAction',
 }
 
+export const LobbyUpdate = '@LobbyUpdate';
+
+export interface LobbyState {
+  countDown?: number,
+  updatedRooms: {
+    [name: string]: GameState
+  }
+};
+
 export enum LocationType {
   BeaconStar,
   HyperGate,
@@ -103,6 +112,7 @@ export interface GameState {
   },
   status: GameStatus,
   countDown: number,
+  duration: number,
 };
 
 export interface Transfer {

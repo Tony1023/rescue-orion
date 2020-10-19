@@ -162,7 +162,7 @@ export default class Game implements MessageQueue {
     receivingCarrier.dropOffTo(type);
   }
 
-  toGameState(): GameState {
+  toGameState(dump: boolean = true): GameState {
     const orion = this.spaceStations[IDs.ORION] as SpaceStationOrion;
     return {
       spaceships: Object.keys(this.spaceships).reduce((accumulator: {
@@ -210,13 +210,14 @@ export default class Game implements MessageQueue {
           return accumulator;
         },
       {}),
-      messages: this.dumpMessages(),
+      messages: dump ? this.dumpMessages(): this.messages,
       time: this.day,
       gameStats: {
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },
       countDown: this.countDown,
+      duration: this.gameDuration,
       status: this.status,
     };
   }
