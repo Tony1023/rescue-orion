@@ -1,14 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
-import { GameState, LobbyState, LobbyUpdate } from '../metadata/types';
-import room from '../room';
+import { GameState, LobbyState, LobbyUpdate, RescueResource } from '../metadata/types';
+
+function pad(n: number): string {
+  let digits = 0;
+  let copy = n;
+  while (copy > 0) {
+    copy = Math.floor(copy / 10);
+    ++digits;
+  }
+  if (digits < 2) {
+    return `0${n}`;
+  } else {
+    return `${n}`;
+  }
+}
+
+function formatTime(time: number) {
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${pad(minutes)}:${pad(seconds)}`;
+}
 
 export default () => {
   const { code } = useParams<{ code?: string }>();
 
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
-  const [countDown, setCountDown] = useState<number>();
+  const [countDown, setCountDown] = useState<number>(0);
   const [rooms, setRooms] = useState<{
     [name: string]: GameState
   }>({});
@@ -20,11 +39,13 @@ export default () => {
         lobby: code,
       }
     });
+    setSocket(newSocket);
 
     newSocket.on(LobbyUpdate, (data: string) => {
       const state = JSON.parse(data) as LobbyState;
-      console.log(state);
-      setCountDown(state.countDown);
+      if (state.countDown) {
+        setCountDown(state.countDown);
+      }
       if (Object.keys(state.updatedRooms).length > 0) {
         const newRooms = {...rooms};
         Object.keys(state.updatedRooms).forEach((name) => {
@@ -43,12 +64,52 @@ export default () => {
     })
   }, [code]);
 
+
   return <>
-    <div>
-      {countDown}
-    </div>
-    <pre>
-      {JSON.stringify(rooms, undefined, 2)}
-    </pre>
+    {
+      socket ?
+      <>
+        <h1>Lobby {code}</h1>
+        <p>Time remaining: {formatTime(countDown)}</p>
+        <table>
+          <tbody>
+            <tr>
+              <th>Room Name</th>
+              <th>Oxygen Cells (day 6)</th>
+              <th>Oxygen Repairment (day 21)</th>
+              <th>Water Repairment (day 23)</th>
+              <th>Food Repairment (day 24)</th>
+              <th>Medical Repairement (day 25)</th>
+              <th>Scientists Alive</th>
+              <th>Mission Time</th>
+            </tr>
+            {
+              Object.keys(rooms).map((name, index) => {
+                const room = rooms[name];
+                const dropOffTimes = room.gameStats.dropOffTimes;
+                return <tr key={index}>
+                  <td>{name}</td>
+                  {
+                    [
+                      RescueResource.O2ReplacementCells,
+                      RescueResource.OxygenRepairTeam,
+                      RescueResource.WaterRepairTeam,
+                      RescueResource.FoodRepairTeam,
+                      RescueResource.MedicalRepairTeam,
+                    ].map((resource, index) => <td key={index}>
+                      {dropOffTimes[resource] >= 0 ? dropOffTimes[resource] : '-'}
+                    </td>)
+                  }
+                  <td>{room.gameStats.scientistsRemaining}/20</td>
+                  <td>{formatTime(room.duration)}</td>
+                </tr>;
+              })
+            }
+          </tbody>
+        </table>
+      </> : <>
+        <h1>Lobby {code} does not exist.</h1>
+      </>
+    }
   </>
 }

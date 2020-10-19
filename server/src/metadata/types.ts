@@ -112,6 +112,7 @@ export interface GameState {
   },
   status: GameStatus,
   countDown: number,
+  duration: number,
 };
 
 export interface Transfer {

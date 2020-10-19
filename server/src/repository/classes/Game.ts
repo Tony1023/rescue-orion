@@ -188,6 +188,7 @@ export default class Game implements MessageQueue {
         dropOffTimes: orion.getDropOffTimes(),
       },
       countDown: this.countDown,
+      duration: this.gameDuration,
       status: this.status,
     };
   }
