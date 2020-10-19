@@ -54,8 +54,8 @@ class CountDownClock {
 
   getGameDuration(): GameDuration {
     return {
-      duration: this.countDownFrom - this.remainingTime,
-      countDown: this.remainingTime,
+      duration: this.getSecondsElapsed(),
+      countDown: this.getSecondsRemaining(),
     }
   }
 }

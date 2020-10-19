@@ -73,7 +73,7 @@ export default () => {
       socket ?
       <>
         <h1>Lobby {code}</h1>
-        <p>Time remaining: {formatTime(gameDuration.duration)}</p>
+        <p>Time remaining: {formatTime(gameDuration.countDown)}</p>
         <table>
           <tbody>
             <tr>
@@ -112,7 +112,13 @@ export default () => {
                     }
                   </td>
                   <td>{room.time}</td>
-                  <td>{formatTime(gameDuration.countDown)}</td>
+                  <td>
+                    {
+                      room.gameStats.winTime ?
+                      formatTime(room.gameStats.winTime) :
+                      formatTime(gameDuration.duration)
+                    }
+                  </td>
                 </tr>;
               })
             }

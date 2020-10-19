@@ -13,7 +13,9 @@ class Room {
     this.game = new Game(countDownClock);
     this.game.load();
     countDownClock.subscribeTick(() => {
-      this.sendTimeUpdate();
+      if (this.game.status === Types.GameStatus.NotStarted || this.game.status === Types.GameStatus.Started) {
+        this.sendTimeUpdate();
+      }
     });
     this.countDownClock = countDownClock;
   }
