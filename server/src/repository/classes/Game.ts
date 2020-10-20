@@ -24,8 +24,7 @@ export default class Game implements MessageQueue {
     });
     countDownClock.subscribeTimeUp(() => {
       if (this.status === GameStatus.Started) {
-        this.status = GameStatus.MissionFailed;
-        this.endTime = this.countDownClock.getSecondsElapsed();
+        this.endMission(false);
       }
     });
     this.countDownClock = countDownClock;
@@ -94,13 +93,11 @@ export default class Game implements MessageQueue {
     }
     ++this.day;
     if (this.isWinState()) {
-      this.status = GameStatus.MissionSucceeded;
-      this.endTime = this.countDownClock.getSecondsElapsed();
+      this.endMission(true);
       return;
     }
     if (this.day > 30) {
-      this.status = GameStatus.MissionFailed;
-      this.endTime = this.countDownClock.getSecondsElapsed();
+      this.endMission(false);
       return;
     }
     for (const id in this.spaceships) {
@@ -113,8 +110,7 @@ export default class Game implements MessageQueue {
             { text: '-Ground Control' },
           ],
         });
-        this.status = GameStatus.MissionFailed;
-        this.endTime = this.countDownClock.getSecondsElapsed();
+        this.endMission(false);
         return;
       }
     }
@@ -133,6 +129,11 @@ export default class Game implements MessageQueue {
         break;
       }
     }
+  }
+
+  endMission(success: boolean) {
+    this.status = success? GameStatus.MissionSucceeded : GameStatus.MissionFailed;
+    this.endTime = this.countDownClock.getSecondsElapsed();
   }
 
   pushMessage(m: Message) {

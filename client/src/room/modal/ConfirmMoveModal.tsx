@@ -1,8 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from '../redux-hook-adapters';
 import styled from 'styled-components';
-import { PlainSpaceship, LocationType } from '../../metadata/types';
-import { locationData } from '../../metadata';
 import { moveSpaceship } from '../actions';
 import {
   BaseModalTextBackground,

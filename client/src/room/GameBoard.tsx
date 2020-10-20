@@ -13,6 +13,7 @@ import EndGameModal from './modal/EndGameModal';
 import ConfirmMoveModal from './modal/ConfirmMoveModal';
 import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
+import AbortMissionModal from './modal/AbortMissionModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -94,6 +95,7 @@ export default function() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
   const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
+  const [showAbortMissionModal, setShowAbortMissionModal] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
@@ -146,10 +148,9 @@ export default function() {
         }}
       ></MoveResourceButton>
       <TerminateGameButton 
-        onClick={
-          ()=>{}
-          // () => setGameOver(true)
-        }
+        onClick={() => {
+          setShowAbortMissionModal(true);
+        }}
       ></TerminateGameButton>
       {
         gemini1Location === gemini2Location ? 
@@ -208,6 +209,14 @@ export default function() {
           gemini2NextMove={gemini2Location}
           onClose={() => {
             setShowConfirmMoveModal(false)
+          }}
+        /> : <></>
+      }
+      {
+        showAbortMissionModal ?
+        <AbortMissionModal
+          onClose={() => {
+            setShowAbortMissionModal(false);
           }}
         /> : <></>
       }

@@ -175,10 +175,9 @@ export interface TransferRescueResourceAction {
   payload: TransferWithResourceType,
 };
 
-export const ENQUEUE_MESSAGES = '@GameAction/enqueueMessages';
-export interface EnqueueMessagesAction {
+export const ABORT_MISSION = '@GameAction/abortMission';
+export interface AbortMissionAction {
   type: string,
-  payload: Message[],
 };
 
 export type GameAction = MoveSpaceshipAction
@@ -188,5 +187,5 @@ export type GameAction = MoveSpaceshipAction
   | TransferEnergyCellsAction
   | TransferLifeSupportPacksAction
   | TransferRescueResourceAction
-  | EnqueueMessagesAction
+  | AbortMissionAction
 ;
