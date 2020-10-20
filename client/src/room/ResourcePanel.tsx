@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { PlainSpaceship } from '../metadata/types';
 
-const ENERGY_OFFSET = 45;
+const ENERGY_OFFSET = 48;
 const LIFE_SUPPORT_OFFSET = 168;
 const GEMINI1_RESOURCE_OFFSET = 265;
 const GEMINI2_RESOURCE_OFFSET = 492;
@@ -49,7 +49,7 @@ const Resource = styled.div`
   font-weight: bold;
   overflow-wrap: normal;
   word-wrap: break-word;
-  font-size: 10px;
+  font-size: 11px;
   margin: 0px;
   > p {
     margin: 2px;
@@ -80,14 +80,24 @@ export default function(props: Props) {
       <Gemini1Resource>
         {
           props.gemini1.rescueResources.map((resource, i) => {
-          return <p key={i}>{resource}</p>
+            if(i % 2) {
+              return <p key={i} style={{float: "left"}}>{resource}</p>
+            }
+            else {
+              return <p key={i} style={{float: "right"}}>{resource}</p>
+            }
           })
         }
       </Gemini1Resource>
       <Gemini2Resource>
         {
           props.gemini2.rescueResources.map((resource, i) => {
-          return <p key={i}>{resource}</p>
+            if(i % 2) {
+              return <p key={i} style={{float: "left"}}>{resource}</p>
+            }
+            else {
+              return <p key={i} style={{float: "right"}}>{resource}</p>
+            }
           })
         }
       </Gemini2Resource>
