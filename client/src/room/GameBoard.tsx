@@ -14,6 +14,7 @@ import ConfirmMoveModal from './modal/ConfirmMoveModal';
 import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
 import AbortMissionModal from './modal/AbortMissionModal';
+import WaitModal from './modal/WaitModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -197,6 +198,10 @@ export default function() {
         <RebalanceResourceModal
           onClose={() => setShowRebalanceModal(false)}
         /> : <></>
+      }
+      {
+        gameState.status === GameStatus.NotStarted ?
+        <WaitModal /> : <></>
       }
       {
         gameState.status === GameStatus.MissionFailed ?
