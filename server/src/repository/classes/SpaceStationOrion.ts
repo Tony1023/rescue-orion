@@ -166,8 +166,21 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     }
   }
 
-
   getScientistCount(): number {
     return this.scientistCount;
+  }
+
+  checkDropOffResource(r: RescueResource): void {
+    if(r === RescueResource.O2ReplacementCells) {
+      this.messageQueue.pushMessage({
+        title: 'O2 REPLACEMENT CELLS DELIVERED',
+          paragraphs: [
+            { text: 'You’ve saved the day (for now)! The O2 replacement cells you have dropped off will only temporarily delay loss of life.' },
+            { text: 'You must find a permanent oxygen generation solution before Day 21!' },
+            { text: 'Please hurry!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
   }
 }
