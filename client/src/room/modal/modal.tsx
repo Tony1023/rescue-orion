@@ -46,6 +46,17 @@ export const ExtraModal = styled(BaseModal)`
   clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 1% calc(100% - 25px), 0 13%);
 `;
 
+export const Header = styled.div`
+  height: 40px;
+  line-height: 40px;
+  font-weight: bold;
+  font-size: 28px;
+  text-align: center;
+  color: #b62021;
+  font-family: 'Grandstander', cursive;
+  text-transform: uppercase;
+`;
+
 export const StyledButton = styled.div`
   font-family: 'Roboto' sans-serif;
   background-color: rgb(0, 198, 170);

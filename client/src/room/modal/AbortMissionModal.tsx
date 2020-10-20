@@ -4,8 +4,8 @@ import {
   Modal,
   ModalBackground,
   StyledButton,
+  Header,
 } from './modal';
-import { Header } from './MessageModal';
 import { useDispatch } from '../redux-hook-adapters';
 import { abortMission } from '../actions';
 import styled from 'styled-components';

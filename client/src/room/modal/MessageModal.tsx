@@ -8,19 +8,9 @@ import {
   Modal,
   ModalBackground,
   DismissButton,
+  Header,
 } from './modal';
 import { Message } from '../../metadata/types';
-
-export const Header = styled.div`
-  height: 40px;
-  line-height: 40px;
-  font-weight: bold;
-  font-size: 28px;
-  text-align: center;
-  color: #b62021;
-  font-family: 'Grandstander', cursive;
-  text-transform: uppercase;
-`;
 
 const Body = styled.div`
   font-family: 'Roboto' sans-serif;

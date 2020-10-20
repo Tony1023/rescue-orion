@@ -7,8 +7,8 @@ import {
   Modal,
   ModalBackground,
   StyledButton,
+  Header,
 } from './modal';
-import { Header } from './MessageModal';
 import * as IDs from '../../metadata/agent-ids';
 
 const StyledModal = styled(Modal)`
