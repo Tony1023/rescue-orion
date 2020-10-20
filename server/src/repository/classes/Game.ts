@@ -93,6 +93,15 @@ export default class Game implements MessageQueue {
     }
     ++this.day;
     if (this.isWinState()) {
+      this.messages.push({
+        title: 'Welcome back to Sagittarius!',
+          paragraphs: [
+            { text: 'We are so excited to hear the tales of your successful mission!' },
+            { text: 'When you are ready, please call in the Space Commander to come and congratulate you personally!' },
+            { text: 'Thank you for all you did to Rescue Orion!' },
+            { text: '-Ground Control' },
+          ],
+      })
       this.endMission(true);
       return;
     }
