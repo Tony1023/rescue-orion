@@ -182,5 +182,52 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           ],
       })
     }
+    else if(r === RescueResource.OxygenRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'OXYGEN REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'Take a deep breath!' },
+            { text: 'The Oxygen Repair Team has restored oxygen to Space Station Orion.' },
+            { text: 'Your brave heroics have ensured no scientists will be lost from oxygen loss!' },
+            { text: 'Great work, Gemini Crew!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    else if(r === RescueResource.WaterRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'WATER REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'Splashdown!' },
+            { text: 'The Water Repair Team has fixed the water purification systems.' },
+            { text: 'The scientists will now have enough water to keep them alive!' },
+            { text: 'Well done, Gemini Crew!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    else if(r === RescueResource.FoodRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'FOOD REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'That hit the spot!' },
+            { text: 'The Food Repair Team has fixed the food processing systems and the scientists now have enough food to ensure they don’t starve.' },
+            { text: 'There will surely be a feast in your crew’s honor when this is all over!' },
+            { text: 'Fantastic job, Gemini Crew' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    else if(r === RescueResource.MedicalRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'MEDICAL REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'Just what the doctor ordered!' },
+            { text: 'The Medical Repair Team has treated all of the injuries from the explosions, ensuring all the wounded scientists will survive.' },
+            { text: 'Bravo, Gemini Crew!!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
   }
 }
