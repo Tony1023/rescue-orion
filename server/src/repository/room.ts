@@ -103,6 +103,10 @@ class Room {
       case Types.TRANSFER_RESCUE_RESOURCE: {
         const transfer = (action as Types.TransferRescueResourceAction).payload;
         this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
+        break;
+      }
+      case Types.ABORT_MISSION: {
+        this.game.endMission(false);
       }
       default:
         break;

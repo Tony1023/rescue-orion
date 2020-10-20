@@ -56,6 +56,7 @@ export const StyledButton = styled.div`
   letter-spacing: 1px;
   font-weight: 500;
   width: 70px;
+  text-align: center;
 `;
 
 export function DismissButton(props: {
