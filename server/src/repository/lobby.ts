@@ -86,8 +86,9 @@ class Lobby {
   private sendUpdate() {
     this.sockets.forEach((socket) =>
       socket.emit(SocketMessages.LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
-        if (this.rooms[name].isDirty()) {
+        if (this.rooms[name].dirty) {
           accumulator.updatedRooms[name] = this.rooms[name].getGameState();
+          this.rooms[name].dirty = false;
         }
         return accumulator;
       }, { gameDuration: this.countDownClock.getGameDuration(), updatedRooms: {} })))

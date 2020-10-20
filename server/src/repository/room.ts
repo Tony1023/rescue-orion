@@ -25,8 +25,8 @@ class Room {
 
   private game;
   private socket: io.Socket = null;
-  private dirty = true;
   private countDownClock: CountDownClock;
+  dirty = true;
 
   private sendGameUpdate() {
     this.socket?.emit(SocketMessages.StateUpdate, JSON.stringify(this.game.toGameState()));
@@ -63,10 +63,6 @@ class Room {
 
   onSocketDisconnect() {
     this.socket = null;
-  }
-
-  isDirty() {
-    return this.dirty;
   }
 
   applyGameAction(action: Types.GameAction) {
