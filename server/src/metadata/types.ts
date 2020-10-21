@@ -63,7 +63,7 @@ export interface PlainSpaceship {
   energyCells: number,
   lifeSupportPacks: number,
   rescueResources: RescueResource[],
-  isInTimePortal: boolean,
+  timePortalRoute: string[],
 };
 
 export interface PlainSpaceStation {

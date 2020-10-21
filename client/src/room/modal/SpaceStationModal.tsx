@@ -111,12 +111,12 @@ function StationPanel(props: {
   let resourceReceiverId: string;
   if (gemini_1.location === station.location) {
     supplyReceiverId = IDs.GEMINI_1;
-    if (!gemini_1.isInTimePortal) {
+    if (gemini_1.timePortalRoute.length === 0) {
       resourceReceiverId = IDs.GEMINI_1;
     }
   } else if (gemini_2.location === station.location) {
     supplyReceiverId = IDs.GEMINI_2;
-    if (!gemini_2.isInTimePortal) {
+    if (gemini_2.timePortalRoute.length === 0) {
       resourceReceiverId = IDs.GEMINI_2;
     }
   }
@@ -235,9 +235,9 @@ function Gemini1Panel(props: {
       <ResourceRightAlign key={i}>
           {resource}
           <RightPanelTriangle
-            disabled={gemini_1.isInTimePortal}
+            disabled={gemini_1.timePortalRoute.length > 0}
             onClick={() => {
-              if (!gemini_1.isInTimePortal) {
+              if (gemini_1.timePortalRoute.length === 0) {
                 dispatch(dropOffRescueResource({
                   from: IDs.GEMINI_1,
                   to: props.id,
@@ -271,9 +271,9 @@ function Gemini2Panel(props: {
       <ResourceRightAlign key={i}>
           {resource}
           <RightPanelTriangle
-            disabled={gemini_2.isInTimePortal}
+            disabled={gemini_2.timePortalRoute.length > 0}
             onClick={() => {
-              if (!gemini_2.isInTimePortal) {
+              if (gemini_2.timePortalRoute.length === 0) {
                 dispatch(dropOffRescueResource({
                   from: IDs.GEMINI_2,
                   to: props.id,

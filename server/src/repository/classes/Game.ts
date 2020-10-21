@@ -218,7 +218,7 @@ export default class Game implements MessageQueue {
             lifeSupportPacks: spaceship.lifeSupportPacks,
             location: spaceship.getLocation(),
             rescueResources: spaceship.getRescueResources(),
-            isInTimePortal: spaceship.getIsTravelingThruTimePortals(),
+            timePortalRoute: spaceship.getTimePortalRoute(),
           };
           return accumulator;
         },
@@ -254,7 +254,7 @@ export default class Game implements MessageQueue {
           return accumulator;
         },
       {}),
-      messages: dump ? this.dumpMessages(): this.messages,
+      messages: dump ? this.dumpMessages(): this.messages.slice(0),
       time: this.day,
       gameStats: {
         endTime: this.endTime,
