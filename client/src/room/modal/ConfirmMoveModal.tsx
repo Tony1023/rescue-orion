@@ -85,7 +85,7 @@ export default (props: {
             <i className="fas fa-long-arrow-alt-down"></i>
             <Number>
               {
-                gemini1.energyCells - costs.gemini1.energyCells < 0 ?
+                gemini1.energyCells - costs.gemini1.energyCells <= 0 ?
                 <span style={{color: 'red'}}>0</span>
                 :
                 gemini1.energyCells - costs.gemini1.energyCells
@@ -98,7 +98,7 @@ export default (props: {
             <i className="fas fa-long-arrow-alt-down"></i>
             <Number>
               {
-                gemini1.lifeSupportPacks - costs.gemini1.lifeSupportPacks < 0 ?
+                gemini1.lifeSupportPacks - costs.gemini1.lifeSupportPacks <= 0 ?
                 <span style={{color: 'red'}}>0</span>
                 :
                 gemini1.lifeSupportPacks - costs.gemini1.lifeSupportPacks
@@ -115,7 +115,7 @@ export default (props: {
             <i className="fas fa-long-arrow-alt-down"></i>
             <Number>
               {
-                gemini2.energyCells - (travelTogether ? 0 : costs.gemini2.energyCells) < 0 ?
+                gemini2.energyCells - (travelTogether ? 0 : costs.gemini2.energyCells) <= 0 ?
                 <span style={{color: 'red'}}>0</span>
                 :
                 gemini2.energyCells - (travelTogether ? 0 : costs.gemini2.energyCells)
@@ -128,7 +128,7 @@ export default (props: {
             <i className="fas fa-long-arrow-alt-down"></i>
             <Number>
               {
-                gemini2.lifeSupportPacks - (travelTogether ? 0 : costs.gemini2.lifeSupportPacks) < 0 ?
+                gemini2.lifeSupportPacks - (travelTogether ? 0 : costs.gemini2.lifeSupportPacks) <= 0 ?
                 <span style={{color: 'red'}}>0</span>
                 :
                 gemini2.lifeSupportPacks - (travelTogether ? 0 : costs.gemini2.lifeSupportPacks)
