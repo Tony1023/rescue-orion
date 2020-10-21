@@ -74,7 +74,7 @@ class Lobby {
     this.sockets.push(socket);
     socket.on('disconnect', () => {
       const index = this.sockets.indexOf(socket);
-      delete this.sockets[index];
+      this.sockets.splice(index, 1);
     });
     socket.emit(SocketMessages.LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
       accumulator.updatedRooms[name] = this.rooms[name].getGameState();

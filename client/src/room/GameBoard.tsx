@@ -101,9 +101,6 @@ export default function() {
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
     setGemini2NextMove(undefined);
-    if (gameState.time > 30) {
-      // setGameOver(true);
-    }
   }, [gameState.time]);
   
   useEffect(() => {
@@ -122,7 +119,7 @@ export default function() {
   const position2 = locationData[gemini2Location].pixelPosition;
 
   const canRebalanceResource = gemini1CurrentLocation === gemini2CurrentLocation &&
-    gemini_1.isInTimePortal === gemini_2.isInTimePortal;
+    (gemini_1.timePortalRoute.length > 0) === (gemini_2.timePortalRoute.length > 0);
 
   function popMessageModal() {
     const remainingMessages = messages.slice(0);

@@ -49,7 +49,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
   lifeSupportPacks: number;
   protected rescueResources: RescueResource[] = [];
   protected path: string[] = [IDs.SAGITTARIUS];
-  private isTravelingThruTimePortals = false;
+  private timePortalRouteStack: string[] = [];
 
   constructor(energyCells: number, lifeSupportPacks: number, resources?: RescueResource[]) {
     this.energyCells = energyCells;
@@ -69,8 +69,8 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     return this.path.slice(0);
   }
 
-  getIsTravelingThruTimePortals(): boolean {
-    return this.isTravelingThruTimePortals;
+  getTimePortalRoute(): string[] {
+    return this.timePortalRouteStack.slice(0);
   }
 
   pickUpFrom(r: RescueResource): void {
@@ -104,49 +104,21 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
   }
 
   addToPath(location: string): void {
+    const prev = this.path[this.path.length - 1];
     this.path.push(location);
-    this.updateIfTravelingThruTimePortals();
-  }
 
-  private updateIfTravelingThruTimePortals(): void {
-    if (this.path.length <= 1) {
-      this.isTravelingThruTimePortals = false;
-      return;
-    }
-
-    const current = this.path[this.path.length - 1];
-    let entryIndex = null;
-    // To be at a time portal, there must be at least two in the location history
-    for (let i = this.path.length - 2; i >= 0; --i) {
-      const prev = this.path[i];
-      if (locationData[prev].location.type === LocationType.TimePortal) {
-        entryIndex = i;
+    // Moving thru time portals
+    if (locationData[location].location.type === LocationType.TimePortal &&
+        locationData[prev].location.type === LocationType.TimePortal) {
+      // Going back: pop off 
+      if (this.timePortalRouteStack[this.timePortalRouteStack.length - 1] === location) {
+        this.timePortalRouteStack.pop();
       } else {
-        break;
+        this.timePortalRouteStack.push(prev);
       }
+    } else {
+      this.timePortalRouteStack = [];
     }
-
-    // Is not travelling thru a time portal or
-    // Is exiting from t1
-    if (!entryIndex || current === 't1') {
-      this.isTravelingThruTimePortals = false;
-      return;
-    }
-    // Not at the entry point, then can only go to other time portals
-    if (this.path[entryIndex] !== current) {
-      this.isTravelingThruTimePortals = true;
-      return;
-    }
-
-    // At the entry point, see if it is a boomarange (palindrome) path
-    for (let endIndex = this.path.length - 1; endIndex >= entryIndex; --endIndex) {
-      if (this.path[entryIndex] !== this.path[endIndex]) {
-        this.isTravelingThruTimePortals = true;
-        return;
-      }
-      ++entryIndex;
-    }
-    this.isTravelingThruTimePortals = false;
   }
 
   generateReachableNeighbors(): NeighborCost[] {
@@ -175,7 +147,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     if (locationData[current].location.type !== LocationType.TimePortal) {
       neighbors = normalNextMovesFrom(current);
     } else {
-      neighbors = this.isTravelingThruTimePortals ?
+      neighbors = this.timePortalRouteStack.length > 0 && current !== 't1' ?
         timePortalNextMovesFrom(current) : normalNextMovesFrom(current);
     }
     return neighbors.reduce((accumulator: NeighborCost[], location: string) => {
