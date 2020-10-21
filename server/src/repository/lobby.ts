@@ -16,7 +16,7 @@ class Lobby {
     this.code = code;
     this.admin = admin;
     this.countDownClock.subscribeTimeUp(() => {
-      setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
+      global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
     });
     this.countDownClock.subscribeTick(() => {
       this.sendUpdate();
