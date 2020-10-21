@@ -29,7 +29,7 @@ class CountDownClock {
 
   start() {
     clearInterval(this.interval);
-    this.interval = setInterval(() => {
+    this.interval = global.setInterval(() => {
       --this.remainingTime;
       this.onTickSubscribers.forEach((callback) => callback());
       if (this.remainingTime === 0) {
