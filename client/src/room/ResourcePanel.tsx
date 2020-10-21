@@ -80,7 +80,7 @@ export default function(props: Props) {
       <Gemini1Resource>
         {
           props.gemini1.rescueResources.map((resource, i) => {
-            if(i % 2) {
+            if (i % 2 === 0) {
               return <p key={i} style={{float: "left"}}>{resource}</p>
             }
             else {
@@ -92,7 +92,7 @@ export default function(props: Props) {
       <Gemini2Resource>
         {
           props.gemini2.rescueResources.map((resource, i) => {
-            if(i % 2) {
+            if (i % 2 === 0) {
               return <p key={i} style={{float: "left"}}>{resource}</p>
             }
             else {
