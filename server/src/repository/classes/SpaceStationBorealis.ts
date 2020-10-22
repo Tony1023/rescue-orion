@@ -12,10 +12,12 @@ export default class SpaceStationBorealis extends SpaceStation {
   }
 
   canPickUp(r: RescueResource): boolean {
-    if(this.rescueResources.includes(RescueResource.AITechnology) && this.rescueResources.includes(RescueResource.OxygenRepairTeam)){
-      if(this.rescueResources.includes(r)){
-        return true;
-      }
+    if (r === RescueResource.AITechnology) {
+      return false;
+    }
+    if (r === RescueResource.OxygenRepairTeam &&
+      this.rescueResources.includes(RescueResource.AITechnology)){
+      return true;
     }
     return false;
   }
