@@ -1,7 +1,7 @@
 import express from 'express';
 import * as Types from '../metadata/types';
 import io from 'socket.io';
-import repository, { Lobby, Room, LobbyStatus } from '../repository';
+import repository, { Lobby, Room } from '../repository';
 
 export default (router: express.Router, wss: io.Server) => {
 
@@ -20,7 +20,7 @@ export default (router: express.Router, wss: io.Server) => {
       res.status(403).send(`Room name ${roomName} already taken.`);
       return;
     }
-    if (lobby.status === LobbyStatus.Finished) {
+    if (lobby.status === Types.LobbyStatus.Finished) {
       res.status(403).send('Lobby is no longer accepting players.');
       return;
     }

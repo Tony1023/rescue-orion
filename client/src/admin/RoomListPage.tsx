@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
-import { GameState, GameStatus, LobbyState, SocketMessages, RescueResource, GameDuration } from '../metadata/types';
+import { GameState, GameStatus, LobbyState, SocketMessages, RescueResource, GameDuration, LobbyStatus } from '../metadata/types';
 
 function pad(n: number): string {
   let digits = 0;
@@ -34,6 +34,7 @@ export default () => {
   const [rooms, setRooms] = useState<{
     [name: string]: GameState
   }>({});
+  const [status, setStaus] = useState<LobbyStatus>();
 
   useEffect(() => {
     const newSocket = SocketIOClient('http://localhost:9000', {
@@ -46,9 +47,8 @@ export default () => {
 
     newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
       const state = JSON.parse(data) as LobbyState;
-      if (state.gameDuration) {
-        setGameDuration(state.gameDuration);
-      }
+      setStaus(state.status);
+      setGameDuration(state.gameDuration);
       if (Object.keys(state.updatedRooms).length > 0) {
         const newRooms = {...rooms};
         Object.keys(state.updatedRooms).forEach((name) => {
@@ -73,7 +73,28 @@ export default () => {
       socket ?
       <>
         <h1>Lobby {code}</h1>
-        <p>Time remaining: {formatTime(gameDuration.countDown)}</p>
+        <p>
+          Lobby status: {status ?? 'Unknown'}
+          <button
+            onClick={() => {
+              if (status === LobbyStatus.Waiting) {
+                socket.emit(SocketMessages.StartLobby);
+              }
+            }}
+            disabled={status !== LobbyStatus.Waiting}
+          >Start Games</button>
+        </p>
+        <p>
+          Time remaining: 
+          {
+            status === LobbyStatus.Waiting ?
+            <>
+              <input type='text' />:<input type='text' />  
+            </>
+            :
+            formatTime(gameDuration.countDown)
+          }
+        </p>
         <table>
           <tbody>
             <tr>

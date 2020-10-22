@@ -1,6 +1,7 @@
 import express from 'express';
 import io from 'socket.io';
-import repository, { Lobby, LobbyStatus } from '../repository';
+import { LobbyStatus, SocketMessages } from '../metadata/types';
+import repository, { Lobby } from '../repository';
 
 export default (router: express.Router, wss: io.Server) => {
   router.delete('/', (req, res) => {
@@ -11,17 +12,6 @@ export default (router: express.Router, wss: io.Server) => {
       return;
     }
     lobby.destroy();
-    res.status(200).send();
-  });
-
-  router.put('/start/:code', (req, res) => {
-    const code = parseInt(req.params.code);
-    const lobby = repository.lobbies[code];
-    if (isNaN(code) || !lobby) {
-      res.status(404).send(`Lobby code ${req.params.code} not found.`);
-      return;
-    }
-    lobby.startGames();
     res.status(200).send();
   });
 
@@ -58,6 +48,10 @@ export default (router: express.Router, wss: io.Server) => {
   }).on('connection', (socket) => {
     const lobby = socket.handshake.query.lobbyObj as Lobby;
     lobby.addSocket(socket);
+
+    socket.on(SocketMessages.StartLobby, () => {
+      lobby.startGames();
+    })
   });
 
 }
