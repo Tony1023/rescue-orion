@@ -76,7 +76,7 @@ export default () => {
       setCountDownMinutes(0);
       return;
     }
-    if (value < 0 || value > 999) {
+    if (value < 1 || value > 999) {
       return;
     }
     setCountDownMinutes(value);
