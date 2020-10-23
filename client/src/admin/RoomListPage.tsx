@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
-import { GameState, GameStatus, LobbyState, SocketMessages, RescueResource, GameDuration } from '../metadata/types';
+import { GameState, GameStatus, LobbyState, SocketMessages, RescueResource, GameDuration, LobbyStatus } from '../metadata/types';
+import axios from 'axios';
 
 function pad(n: number): string {
   let digits = 0;
@@ -27,13 +28,13 @@ export default () => {
   const { code } = useParams<{ code?: string }>();
 
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
-  const [gameDuration, setGameDuration] = useState<GameDuration>({
-    duration: 0,
-    countDown: 0,
-  });
+  const [duration, setDuration] = useState(0);
+  const [countDownMinutes, setCountDownMinutes] = useState(0);
+  const [countDownSeconds, setCountDownSeconds] = useState(0);
   const [rooms, setRooms] = useState<{
     [name: string]: GameState
   }>({});
+  const [status, setStaus] = useState<LobbyStatus>();
 
   useEffect(() => {
     const newSocket = SocketIOClient('http://localhost:9000', {
@@ -46,9 +47,10 @@ export default () => {
 
     newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
       const state = JSON.parse(data) as LobbyState;
-      if (state.gameDuration) {
-        setGameDuration(state.gameDuration);
-      }
+      setStaus(state.status);
+      setDuration(state.gameDuration.duration);
+      setCountDownMinutes(Math.floor(state.gameDuration.countDown / 60));
+      setCountDownSeconds(state.gameDuration.countDown % 60);
       if (Object.keys(state.updatedRooms).length > 0) {
         const newRooms = {...rooms};
         Object.keys(state.updatedRooms).forEach((name) => {
@@ -64,16 +66,84 @@ export default () => {
 
     newSocket.on('connect_error', () => {
       setSocket(undefined);
-    })
+    });
+
   }, [code]);
 
+  function onMinutesChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = parseInt(e.target.value);
+    if (isNaN(value) || !Number.isInteger(value)) {
+      setCountDownMinutes(0);
+      return;
+    }
+    if (value < 0 || value > 999) {
+      return;
+    }
+    setCountDownMinutes(value);
+  }
+
+  function onSecondsChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = parseInt(e.target.value);
+    if (isNaN(value) || !Number.isInteger(value)) {
+      setCountDownSeconds(0);
+      return;
+    }
+    if (value < 0 || value >= 60) {
+      return;
+    }
+    setCountDownSeconds(value);
+  }
+
+  function startGames() {
+    axios.put(`http://localhost:9000/lobbies/start/${code}`).catch((err) => console.log(err));
+  }
+
+  function setGameCountDown() {
+    const countDownInSeconds = countDownMinutes * 60 + countDownSeconds;
+    axios.put(`http://localhost:9000/lobbies/${code}`, { countDown: countDownInSeconds })
+      .catch((err) => console.log(err));
+  }
 
   return <>
     {
       socket ?
       <>
         <h1>Lobby {code}</h1>
-        <p>Time remaining: {formatTime(gameDuration.countDown)}</p>
+        <p>
+          Lobby status: {status ?? 'Unknown'}
+          <button
+            onClick={startGames}
+            disabled={status !== LobbyStatus.Waiting}
+          >Start Games</button>
+        </p>
+        <p>
+          {'Time remaining: '}
+          <input
+            value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
+            onChange={onMinutesChange}
+            onFocus={(e) => e.target.select()}
+            disabled={status !== LobbyStatus.Waiting}
+            type='number'
+            min={0}
+            max={999}
+            step={1}
+          />
+          :
+          <input
+            value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
+            onChange={onSecondsChange}
+            onFocus={(e) => e.target.select()}
+            disabled={status !== LobbyStatus.Waiting}
+            type='number'
+            min={0}
+            max={59}
+            step={1}
+          />
+          <button
+            disabled={status !== LobbyStatus.Waiting}
+            onClick={setGameCountDown}
+          >Set</button>
+        </p>
         <table>
           <tbody>
             <tr>
@@ -116,7 +186,7 @@ export default () => {
                     {
                       room.gameStats.endTime ?
                       formatTime(room.gameStats.endTime) :
-                      formatTime(gameDuration.duration)
+                      formatTime(duration)
                     }
                   </td>
                 </tr>;

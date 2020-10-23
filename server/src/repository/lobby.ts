@@ -2,13 +2,7 @@ import io from 'socket.io';
 import CountDownClock from './countdown-clock';
 import Room from './room';
 import repository from './index';
-import { LobbyState, SocketMessages } from '../metadata/types';
-
-export enum LobbyStatus {
-  Waiting,
-  Started,
-  Finished,
-}
+import { LobbyState, SocketMessages, LobbyStatus } from '../metadata/types';
 
 class Lobby {
 
@@ -58,6 +52,7 @@ class Lobby {
   setCountDown(from: number) {
     if (this.status === LobbyStatus.Waiting) {
       this.countDownClock.setCountDownTime(from);
+      this.sendUpdate();
     }
   }
 
@@ -79,7 +74,11 @@ class Lobby {
     socket.emit(SocketMessages.LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
       accumulator.updatedRooms[name] = this.rooms[name].getGameState();
       return accumulator;
-    }, { gameDuration: this.countDownClock.getGameDuration(), updatedRooms: {} })));
+    }, {
+      status: this.status,
+      gameDuration: this.countDownClock.getGameDuration(),
+      updatedRooms: {},
+    })));
   }
 
   // Streamed each second tick & new room joins & new admin joins
@@ -91,7 +90,11 @@ class Lobby {
           this.rooms[name].dirty = false;
         }
         return accumulator;
-      }, { gameDuration: this.countDownClock.getGameDuration(), updatedRooms: {} })))
+      }, {
+        status: this.status,
+        gameDuration: this.countDownClock.getGameDuration(),
+        updatedRooms: {}
+      })))
     );
   }
 }

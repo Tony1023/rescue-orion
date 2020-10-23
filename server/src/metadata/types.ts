@@ -5,8 +5,15 @@ export enum SocketMessages {
   LobbyUpdate = '@LobbyUpdate',
 }
 
+export enum LobbyStatus {
+  Waiting = 'Waiting',
+  Started = 'In Progress',
+  Finished = 'Ended',
+}
+
 export interface LobbyState {
-  gameDuration?: GameDuration,
+  status: LobbyStatus,
+  gameDuration: GameDuration,
   updatedRooms: {
     [name: string]: GameState
   }

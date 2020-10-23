@@ -1,6 +1,7 @@
 import express from 'express';
 import io from 'socket.io';
-import repository, { Lobby, LobbyStatus } from '../repository';
+import { LobbyStatus, SocketMessages } from '../metadata/types';
+import repository, { Lobby } from '../repository';
 
 export default (router: express.Router, wss: io.Server) => {
   router.delete('/', (req, res) => {
@@ -50,7 +51,7 @@ export default (router: express.Router, wss: io.Server) => {
     const lobbyCode = parseInt(socket.handshake.query?.lobby);
     const lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {
-      next(new Error(`Lobby code ${socket.handshake.query?.lobby} not found!`));
+      socket.disconnect();
       return;
     }
     socket.handshake.query.lobbyObj = lobby;
