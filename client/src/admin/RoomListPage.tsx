@@ -64,7 +64,8 @@ export default () => {
 
     newSocket.on('connect_error', () => {
       setSocket(undefined);
-    })
+    });
+    
   }, [code]);
 
 
@@ -85,7 +86,7 @@ export default () => {
           >Start Games</button>
         </p>
         <p>
-          Time remaining: 
+          {'Time remaining: '}
           {
             status === LobbyStatus.Waiting ?
             <>

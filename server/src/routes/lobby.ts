@@ -40,7 +40,7 @@ export default (router: express.Router, wss: io.Server) => {
     const lobbyCode = parseInt(socket.handshake.query?.lobby);
     const lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {
-      next(new Error(`Lobby code ${socket.handshake.query?.lobby} not found!`));
+      socket.disconnect();
       return;
     }
     socket.handshake.query.lobbyObj = lobby;

@@ -33,13 +33,13 @@ export default (router: express.Router, wss: io.Server) => {
     const lobbyCode = parseInt(query?.lobby);
     const lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {
-      next(new Error(`Lobby code ${query?.lobby} not found!`));
+      socket.disconnect();
       return;
     }
     const roomName = query?.room;
     const room = lobby.findRoom(roomName);
     if (!roomName || !room) {
-      next(new Error(`Room ${roomName} not found!`));
+      socket.disconnect();
       return;
     }
     socket.handshake.query.room = room;
