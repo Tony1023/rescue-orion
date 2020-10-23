@@ -52,6 +52,7 @@ class Lobby {
   setCountDown(from: number) {
     if (this.status === LobbyStatus.Waiting) {
       this.countDownClock.setCountDownTime(from);
+      this.sendUpdate();
     }
   }
 

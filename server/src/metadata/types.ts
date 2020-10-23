@@ -3,7 +3,6 @@ export enum SocketMessages {
   Action = '@GameAction',
   TimeUpdate = '@TimeUpdate',
   LobbyUpdate = '@LobbyUpdate',
-  StartLobby = '@LobbyStart',
 }
 
 export enum LobbyStatus {
