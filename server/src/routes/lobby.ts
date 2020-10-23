@@ -35,7 +35,7 @@ export default (router: express.Router, wss: io.Server) => {
     }
     const { countDown } = req.body;
     const countDownInSeconds = parseInt(countDown);
-    if (isNaN(countDownInSeconds) || countDownInSeconds <= 0) {
+    if (isNaN(countDownInSeconds) || countDownInSeconds <= 0 || countDownInSeconds > 999 * 60) {
       res.status(403).send('Bad count down range.');
       return;
     }
