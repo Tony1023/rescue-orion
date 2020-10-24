@@ -36,6 +36,9 @@ export default () => {
   }>({});
   const [status, setStaus] = useState<LobbyStatus>();
 
+  const [startGameStatus, setStartGameStatus] = useState<string | boolean>(false);
+  const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
+
   useEffect(() => {
     const newSocket = SocketIOClient('http://localhost:9000', {
       path: '/lobbies/socket',
@@ -95,13 +98,22 @@ export default () => {
   }
 
   function startGames() {
-    axios.put(`http://localhost:9000/lobbies/start/${code}`).catch((err) => console.log(err));
+    axios.put(`http://localhost:9000/lobbies/start/${code}`)
+      .then(() => {
+        setStartGameStatus(true);
+        setTimeout(() => setStartGameStatus(false), 5000);
+      })
+      .catch((err) => setStartGameStatus(err));
   }
 
   function setGameCountDown() {
     const countDownInSeconds = countDownMinutes * 60 + countDownSeconds;
     axios.put(`http://localhost:9000/lobbies/${code}`, { countDown: countDownInSeconds })
-      .catch((err) => console.log(err));
+      .then(() => {
+        setConfigCountDownStatus(true);
+        setTimeout(() => setConfigCountDownStatus(false), 5000);
+      })
+      .catch((err) => setConfigCountDownStatus(err));
   }
 
   return <>
@@ -115,6 +127,15 @@ export default () => {
             onClick={startGames}
             disabled={status !== LobbyStatus.Waiting}
           >Start Games</button>
+          {
+            startGameStatus ?
+            (
+              typeof startGameStatus === 'string' ?
+              <span color={'red'}>{startGameStatus}</span> : <>&#10003;</>
+            )
+            :
+            <></>
+          }
         </p>
         <p>
           {'Time remaining: '}
@@ -143,6 +164,15 @@ export default () => {
             disabled={status !== LobbyStatus.Waiting}
             onClick={setGameCountDown}
           >Set</button>
+          {
+            configCountDownStatus ?
+            (
+              typeof configCountDownStatus === 'string' ?
+              <span color={'red'}>{configCountDownStatus}</span> : <>&#10003;</>
+            )
+            :
+            <></>
+          }
         </p>
         <table>
           <tbody>
