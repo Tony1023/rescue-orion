@@ -10,18 +10,21 @@ export default (router: express.Router, wss: io.Server) => {
     let lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {
       res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
-      // return;
-      lobby = new Lobby(lobbyCode, 'me');
+      return;
     }
     repository.lobbies[lobbyCode] = lobby;
 
     const roomName = req.body.room;
+    if (!roomName) {
+      res.status(400).send('Room name must not be empty.');
+      return;
+    }
     if (lobby.isRoomNameTaken(roomName)) {
       res.status(403).send(`Room name ${roomName} already taken.`);
       return;
     }
     if (lobby.status === Types.LobbyStatus.Finished) {
-      res.status(403).send('Lobby is no longer accepting players.');
+      res.status(404).send('Lobby is no longer accepting players.');
       return;
     }
     lobby.insertRoom(roomName);

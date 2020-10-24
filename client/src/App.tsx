@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Room, { DevRoom } from './room';
 import Admin, { RoomListPage } from './admin';
-import Lobby from './lobby';
+import Lobby from './join';
 
 export default () => {
 
