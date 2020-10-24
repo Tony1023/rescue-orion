@@ -61,13 +61,17 @@ interface Props {
   gemini2NextMove: boolean,
   setGemini1NextMove: (Gemini1NextMove: string) => void,
   setGemini2NextMove: (Gemini2NextMove: string) => void,
+  setShowTimePortalRoute: (showTimePortalRoute: boolean) => void,
 }
 
 export default function(props: Props) {
-
   const position = locationData[props.id].pixelPosition;
   return <>
-    <ButtonGroupBackground position={position}>
+    <ButtonGroupBackground 
+      onMouseEnter={() => {props.setShowTimePortalRoute(true)}} 
+      onMouseLeave={() => {props.setShowTimePortalRoute(false)}}
+      position={position}
+    >
       {
         props.shipReachability[IDs.GEMINI_1] ? 
         <Gemini1Button

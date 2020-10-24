@@ -100,6 +100,7 @@ export default function() {
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
   const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
   const [showAbortMissionModal, setShowAbortMissionModal] = useState(false);
+  const [showTimePortalRoute, setShowTimePortalRoute] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
@@ -165,7 +166,7 @@ export default function() {
         drawLineWithRoute(context, gemini_2.timePortalRoute, gemini_2.location, 'rgba(70,179,232,0.3)');
       }
     }
-  }, [gemini_1.timePortalRoute, gemini_2.timePortalRoute]) 
+  }, [gemini_1.timePortalRoute, gemini_2.timePortalRoute, showTimePortalRoute]) 
 
   return <>
     <GameBoard>
@@ -208,6 +209,7 @@ export default function() {
               gemini2NextMove={gemini2NextMove === location[0]}
               setGemini1NextMove={setGemini1NextMove}
               setGemini2NextMove={setGemini2NextMove}
+              setShowTimePortalRoute={setShowTimePortalRoute}
               shipReachability={location[1]}
             />
           );
@@ -269,11 +271,14 @@ export default function() {
         time={gameState.time}
       ></ResourcePanel>
 
-      <canvas id="canvas" 
-        ref={canvasRef}
-        width={GAME_BOARD_WIDTH}
-        height={GAME_BOARD_HEIGHT}  
-      />
+      {
+        showTimePortalRoute ? 
+        <canvas id="canvas" 
+          ref={canvasRef}
+          width={GAME_BOARD_WIDTH}
+          height={GAME_BOARD_HEIGHT}  
+        /> : <></>
+      }
 
       <Clock />
 
