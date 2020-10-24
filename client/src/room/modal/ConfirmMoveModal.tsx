@@ -63,7 +63,7 @@ export default (props: {
   const gemini2 = gameState.spaceships[IDs.GEMINI_2];
   const nextMoves = gameState.nextMoves;
 
-  const travelTogether = gemini1.location === gemini2.location && props.gemini1NextMove == props.gemini2NextMove;
+  const travelTogether = gemini1.location === gemini2.location && props.gemini1NextMove === props.gemini2NextMove;
 
   const costs = { 
     gemini1: nextMoves[props.gemini1NextMove][IDs.GEMINI_1].cost,

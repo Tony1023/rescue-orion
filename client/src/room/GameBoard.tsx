@@ -127,6 +127,10 @@ export default function() {
     setMessages(remainingMessages);
   }
 
+  useEffect(()=> {
+    console.log(gemini_1.timePortalRoute)
+  }, [gemini_1.timePortalRoute])
+
   return <>
     <GameBoard>
       <ConfirmMoveButton  

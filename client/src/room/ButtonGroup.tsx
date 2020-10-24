@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { PixelPosition, SpaceshipNextMoves } from '../metadata/types';
+import { PixelPosition } from '../metadata/types';
 import * as IDs from '../metadata/agent-ids';
 import locationData from '../metadata/location-data';
-import { MappedTypeNode } from 'typescript';
 
 const ButtonGroupBackground = styled.div`
   position: absolute;
