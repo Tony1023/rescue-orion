@@ -95,10 +95,10 @@ export interface Message {
 };
 
 export enum GameStatus {
-  NotStarted,
-  Started,
-  MissionSucceeded,
-  MissionFailed,
+  NotStarted = 'Waiting',
+  Started = 'Started',
+  MissionSucceeded = 'Mission Complete',
+  MissionFailed = 'Mission Failed',
 };
 
 export interface GameState {
