@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { PixelPosition, SpaceshipNextMoves } from '../metadata/types';
+import { PixelPosition } from '../metadata/types';
 import * as IDs from '../metadata/agent-ids';
 import locationData from '../metadata/location-data';
-import { MappedTypeNode } from 'typescript';
 
 const ButtonGroupBackground = styled.div`
   position: absolute;
@@ -62,13 +61,17 @@ interface Props {
   gemini2NextMove: boolean,
   setGemini1NextMove: (Gemini1NextMove: string) => void,
   setGemini2NextMove: (Gemini2NextMove: string) => void,
+  setShowTimePortalRoute: (showTimePortalRoute: boolean) => void,
 }
 
 export default function(props: Props) {
-
   const position = locationData[props.id].pixelPosition;
   return <>
-    <ButtonGroupBackground position={position}>
+    <ButtonGroupBackground 
+      onMouseEnter={() => {props.setShowTimePortalRoute(true)}} 
+      onMouseLeave={() => {props.setShowTimePortalRoute(false)}}
+      position={position}
+    >
       {
         props.shipReachability[IDs.GEMINI_1] ? 
         <Gemini1Button
