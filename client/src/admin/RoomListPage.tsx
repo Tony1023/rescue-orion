@@ -103,7 +103,9 @@ export default () => {
         setStartGameStatus(true);
         setTimeout(() => setStartGameStatus(false), 5000);
       })
-      .catch((err) => setStartGameStatus(err));
+      .catch(() => {
+        setStartGameStatus('Something went wrong...');
+      });
   }
 
   function setGameCountDown() {
@@ -113,7 +115,9 @@ export default () => {
         setConfigCountDownStatus(true);
         setTimeout(() => setConfigCountDownStatus(false), 5000);
       })
-      .catch((err) => setConfigCountDownStatus(err));
+      .catch(() => {
+        setConfigCountDownStatus('Something went wrong...');
+      });
   }
 
   return <>
