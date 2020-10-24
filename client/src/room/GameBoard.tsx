@@ -130,10 +130,6 @@ export default function() {
     setMessages(remainingMessages);
   }
   
-  useEffect(()=> {
-    console.log(gemini_1.timePortalRoute)
-  }, [gemini_1.timePortalRoute])
-  
   // draw a line
   const drawLine = (context: CanvasRenderingContext2D, start: PixelPosition, end: PixelPosition, color = 'rgba(252,196,9,0.3)') => {
     context.beginPath();
@@ -144,14 +140,14 @@ export default function() {
     context.stroke();
   }
 
-  const drawLineWithRoute = (context: CanvasRenderingContext2D, timePortalRoute: string[], color?: string) => {
+  const drawLineWithRoute = (context: CanvasRenderingContext2D, timePortalRoute: string[], currentLocation: string, color?: string) => {
     timePortalRoute.forEach((point, i) => {
       if(i >= 1) {
         drawLine(context, locationData[timePortalRoute[i-1]].pixelPosition, locationData[point].pixelPosition, color);
       }
     })
     if(timePortalRoute.length > 0) {
-      drawLine(context, locationData[timePortalRoute[timePortalRoute.length-1]].pixelPosition, locationData[gemini_1.location].pixelPosition, color);
+      drawLine(context, locationData[timePortalRoute[timePortalRoute.length-1]].pixelPosition, locationData[currentLocation].pixelPosition, color);
     }
   }
 
@@ -162,11 +158,11 @@ export default function() {
     if(context !== null) {
       context.clearRect(0, 0, GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT);
       if(travelTogether) {
-        drawLineWithRoute(context, gemini_1.timePortalRoute);
+        drawLineWithRoute(context, gemini_1.timePortalRoute, gemini_1.location);
       }
       else {
-        drawLineWithRoute(context, gemini_1.timePortalRoute);
-        drawLineWithRoute(context, gemini_2.timePortalRoute, 'rgba(70,179,232,0.3)');
+        drawLineWithRoute(context, gemini_1.timePortalRoute, gemini_1.location);
+        drawLineWithRoute(context, gemini_2.timePortalRoute, gemini_2.location, 'rgba(70,179,232,0.3)');
       }
     }
   }, [gemini_1.timePortalRoute, gemini_2.timePortalRoute]) 
