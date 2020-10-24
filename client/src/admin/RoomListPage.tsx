@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
-import { GameState, GameStatus, LobbyState, SocketMessages, RescueResource, GameDuration, LobbyStatus } from '../metadata/types';
+import {
+  GameState,
+  GameStatus,
+  LobbyState,
+  SocketMessages,
+  RescueResource,
+  LobbyStatus
+} from '../metadata/types';
 import axios from 'axios';
+import fileSave from 'file-saver';
+import { stringify } from 'query-string';
 
 function pad(n: number): string {
   let digits = 0;
@@ -120,6 +129,27 @@ export default () => {
       });
   }
 
+  function exportSnapshot() {
+    const lines = Object.keys(rooms).reduce((accumulator: string[], name: string) => {
+      const stats = rooms[name].gameStats;
+      const strings = [
+        name,
+        stats.dropOffTimes[RescueResource.O2ReplacementCells],
+        stats.dropOffTimes[RescueResource.OxygenRepairTeam],
+        stats.dropOffTimes[RescueResource.WaterRepairTeam],
+        stats.dropOffTimes[RescueResource.FoodRepairTeam],
+        stats.dropOffTimes[RescueResource.MedicalRepairTeam],
+        stats.scientistsRemaining,
+        stats.endTime ? formatTime(stats.endTime) : '',
+        rooms[name].status,
+      ];
+      accumulator.push(`${strings.join(',')}\n`);
+      return accumulator;
+    }, ['Name,O2-temp,Oxygen,Water,Food,Medical,Scientists,Day,Duration,Status\n']);
+    const blob = new Blob(lines, { type: 'text/plain;charset=utf-8', endings: 'native' });
+    fileSave.saveAs(blob, 'lobby-snapshot.csv');
+  }
+
   return <>
     {
       socket ?
@@ -178,15 +208,18 @@ export default () => {
             <></>
           }
         </p>
+        <p>
+          <button onClick={exportSnapshot}>Export lobby snapshot as csv file</button>
+        </p>
         <table>
           <tbody>
             <tr>
               <th>Room Name</th>
-              <th>Oxygen Cells<br/>(day 6)</th>
-              <th>Oxygen Repairment<br/>(day 21)</th>
-              <th>Water Repairment<br/>(day 23)</th>
-              <th>Food Repairment<br/>(day 24)</th>
-              <th>Medical Repairement<br/>(day 25)</th>
+              <th>O2-temp<br/>(day 6)</th>
+              <th>Oxygen<br/>(day 21)</th>
+              <th>Water<br/>(day 23)</th>
+              <th>Food<br/>(day 24)</th>
+              <th>Medical<br/>(day 25)</th>
               <th>Scientists Alive</th>
               <th>Day Count</th>
               <th>Mission Time</th>
