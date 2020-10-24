@@ -51,7 +51,6 @@ export default (props: {
         lobby: lobby,
         room: room,
       },
-      reconnection: false,
     });
     setSocket(newSocket);
 
