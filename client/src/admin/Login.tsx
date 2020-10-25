@@ -33,7 +33,7 @@ export default class extends React.Component<{}, {username: string, password:str
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.handleExtraSubmit = this.handleExtraSubmit.bind(this);
+    // this.handleExtraSubmit = this.handleExtraSubmit.bind(this);
   }
 
   handleUsernameChange(event: { target: { value: any; }; }){
@@ -43,8 +43,7 @@ export default class extends React.Component<{}, {username: string, password:str
     this.setState({password: event.target.value});
   }
 
-  async handleFormSubmit(event: { preventDefault: () => void; }){
-    alert('Trying to login: A username and password was ssubmitted: ' + this.state.username + " " + this.state.password);
+  async handleFormSubmit(){
     try {
       await axios.post('http://localhost:9000/admin/login', {
         username: this.state.username,
@@ -53,13 +52,11 @@ export default class extends React.Component<{}, {username: string, password:str
     } catch(err) {
       console.log(err);
     }
-    event.preventDefault();
   }
 
-  handleExtraSubmit(event: { preventDefault: () => void; }){
-    alert('Trying to register: A username and password was submitted: ' + this.state.username + " " + this.state.password);
-    event.preventDefault();
-  }
+  // handleExtraSubmit(event: { preventDefault: () => void; }){
+  //   event.preventDefault();
+  // }
 
   render(){
     return <>
