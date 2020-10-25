@@ -22,6 +22,7 @@ class Lobby {
   private code: number;
   private admin: string;
   private countDownClock = new CountDownClock(75 * 60);
+  readonly createTime = Date.now();
   status = LobbyStatus.Waiting;
 
   startGames() {
