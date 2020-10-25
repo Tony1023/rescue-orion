@@ -60,6 +60,7 @@ export default () => {
   const [duration, setDuration] = useState(0);
   const [countDownMinutes, setCountDownMinutes] = useState(0);
   const [countDownSeconds, setCountDownSeconds] = useState(0);
+  const [createTime, setCreateTime] = useState<string>();
   const [rooms, setRooms] = useState<{
     [name: string]: GameState
   }>({});
@@ -69,6 +70,13 @@ export default () => {
   const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
 
   useEffect(() => {
+    axios.get(`http://localhost:9000/lobbies/${code}`)
+      .then((res) => {
+        const date = new Date(res.data.createTime);
+        setCreateTime(date.toLocaleString());
+      })
+      .catch(() => {});
+
     const newSocket = SocketIOClient('http://localhost:9000', {
       path: '/lobbies/socket',
       query: {
@@ -167,7 +175,7 @@ export default () => {
       return accumulator;
     }, ['Name,O2-temp,Oxygen,Water,Food,Medical,Scientists,Day,Duration,Status\n']);
     const blob = new Blob(lines, { type: 'text/plain;charset=utf-8', endings: 'native' });
-    fileSave.saveAs(blob, 'lobby-snapshot.csv');
+    fileSave.saveAs(blob, `lobby_${code} at ${createTime}.csv`);
   }
 
   return <Wrapper>
@@ -177,6 +185,9 @@ export default () => {
         <Jumbotron>
           <Title>Lobby {code}</Title>
           <LobbyControls>
+            <p>
+              Time created: {createTime}
+            </p>
             <p>
               {'Lobby status: '}
               <Badge
