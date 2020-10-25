@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Room, { DevRoom } from './room';
-import Admin, { RoomListPage } from './admin';
+import Admin from './admin';
 import Lobby from './lobby';
 
 export default () => {
@@ -13,15 +13,6 @@ export default () => {
         component={Room}
       >
       </Route>
-      <Route
-        exact
-        path='/admin/lobbies'
-        component={Admin}
-      />
-      <Route
-        path='/admin/lobbies/:code'
-        component={RoomListPage}
-      />
       <Route
         path='/admin'
         component={Admin}
