@@ -37,6 +37,9 @@ export default class SpaceStation implements ResourceCarrier {
 
   dropOffTo(r: RescueResource): void {
     this.rescueResources.push(r);
+    this.checkDropOffResource(r);
   }
+
+  checkDropOffResource(r: RescueResource): void {}
 
 }

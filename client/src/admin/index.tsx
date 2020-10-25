@@ -1,5 +1,4 @@
 import React from 'react';
-import { GameState, RoomSocketMessage } from '../metadata/types';
 import styled, { createGlobalStyle } from 'styled-components';
 import SocketIOClient from 'socket.io-client';
 import { Location } from 'history';

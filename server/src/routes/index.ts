@@ -41,7 +41,7 @@ function devRoute(wss: io.Server) {
     lobby.startGames();
     room.setSocketAndPushUpdate(socket);
 
-    socket.on(Types.RoomSocketMessage.Action, (json) => {
+    socket.on(Types.SocketMessages.Action, (json) => {
       const action = JSON.parse(json.toString());
       room.applyGameAction(action);
     })

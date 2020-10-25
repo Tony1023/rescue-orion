@@ -1,16 +1,14 @@
 import React from 'react';
 import { useSelector, useDispatch } from '../redux-hook-adapters';
 import styled from 'styled-components';
-import { PlainSpaceship, LocationType } from '../../metadata/types';
-import { locationData } from '../../metadata';
 import { moveSpaceship } from '../actions';
 import {
   BaseModalTextBackground,
   Modal,
   ModalBackground,
   StyledButton,
+  Header,
 } from './modal';
-import { Header } from './MessageModal';
 import * as IDs from '../../metadata/agent-ids';
 
 const StyledModal = styled(Modal)`
@@ -65,7 +63,7 @@ export default (props: {
   const gemini2 = gameState.spaceships[IDs.GEMINI_2];
   const nextMoves = gameState.nextMoves;
 
-  const travelTogether = gemini1.location === gemini2.location && props.gemini1NextMove == props.gemini2NextMove;
+  const travelTogether = gemini1.location === gemini2.location && props.gemini1NextMove === props.gemini2NextMove;
 
   const costs = { 
     gemini1: nextMoves[props.gemini1NextMove][IDs.GEMINI_1].cost,
@@ -85,13 +83,27 @@ export default (props: {
             <h4>Energy Cells</h4>
             <Number>{gemini1.energyCells}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini1.energyCells - costs.gemini1.energyCells}</Number>
+            <Number>
+              {
+                gemini1.energyCells - costs.gemini1.energyCells <= 0 ?
+                <span style={{color: 'red'}}>0</span>
+                :
+                gemini1.energyCells - costs.gemini1.energyCells
+              }
+            </Number>
           </Column>
           <Column>
             <h4>Life Support Packs</h4>
             <Number>{gemini1.lifeSupportPacks}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini1.lifeSupportPacks - costs.gemini1.lifeSupportPacks}</Number>
+            <Number>
+              {
+                gemini1.lifeSupportPacks - costs.gemini1.lifeSupportPacks <= 0 ?
+                <span style={{color: 'red'}}>0</span>
+                :
+                gemini1.lifeSupportPacks - costs.gemini1.lifeSupportPacks
+              }
+            </Number>
           </Column>
         </Column>
         <Column>
@@ -101,13 +113,27 @@ export default (props: {
             <h4>Energy Cells</h4>
             <Number>{gemini2.energyCells}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini2.energyCells - (travelTogether ? 0 : costs.gemini2.energyCells)}</Number>
+            <Number>
+              {
+                gemini2.energyCells - (travelTogether ? 0 : costs.gemini2.energyCells) <= 0 ?
+                <span style={{color: 'red'}}>0</span>
+                :
+                gemini2.energyCells - (travelTogether ? 0 : costs.gemini2.energyCells)
+              }
+            </Number>
           </Column>
           <Column>
             <h4>Life Support Packs</h4>
             <Number>{gemini2.lifeSupportPacks}</Number>
             <i className="fas fa-long-arrow-alt-down"></i>
-            <Number>{gemini2.lifeSupportPacks - (travelTogether ? 0 : costs.gemini2.lifeSupportPacks)}</Number>
+            <Number>
+              {
+                gemini2.lifeSupportPacks - (travelTogether ? 0 : costs.gemini2.lifeSupportPacks) <= 0 ?
+                <span style={{color: 'red'}}>0</span>
+                :
+                gemini2.lifeSupportPacks - (travelTogether ? 0 : costs.gemini2.lifeSupportPacks)
+              }
+            </Number>
           </Column>
         </Column>
           <Title><span>Day {day}</span> <i className="fas fa-long-arrow-alt-right"></i> <span>Day {day + 1}</span></Title>

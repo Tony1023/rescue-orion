@@ -1,36 +1,38 @@
+import io from 'socket.io';
 import CountDownClock from './countdown-clock';
 import Room from './room';
 import repository from './index';
-
-export enum LobbyStatus {
-  Waiting,
-  Started,
-  Finished,
-}
+import { LobbyState, SocketMessages, LobbyStatus } from '../metadata/types';
 
 class Lobby {
 
   constructor(code: number, admin: string) {
     this.code = code;
     this.admin = admin;
-    this.countDownClock.onTimeUp = () => {
-      setTimeout(() => this.destroy(), 2 * 60 * 60);
-    }
-    this.countDownClock.onTick = () => this.tickRooms();
+    this.countDownClock.subscribeTimeUp(() => {
+      global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
+    });
+    this.countDownClock.subscribeTick(() => {
+      this.sendUpdate();
+    });
   }
 
+  private sockets: io.Socket[] = [];
   private rooms: { [name: string]: Room } = {};
   private code: number;
   private admin: string;
   private countDownClock = new CountDownClock(75 * 60);
   status = LobbyStatus.Waiting;
 
+<<<<<<< HEAD
   private tickRooms() {
     Object.values(this.rooms).forEach((room) =>
       room.onTick(this.countDownClock.getSecondsRemaining(), this.countDownClock.getSecondsElapsed())
     );
   }
 
+=======
+>>>>>>> master
   startGames() {
     if (this.status === LobbyStatus.Waiting) {
       this.status = LobbyStatus.Started;
@@ -44,12 +46,12 @@ class Lobby {
   }
 
   insertRoom(name: string) {
-    const room = new Room();
+    const room = new Room(this.countDownClock);
     if (this.status === LobbyStatus.Started) {
       room.startGameIfNot();
     }
-    room.onTick(this.countDownClock.getSecondsRemaining(), this.countDownClock.getSecondsElapsed());
     this.rooms[name] = room;
+    this.sendUpdate();
   }
 
   findRoom(name: string) {
@@ -59,18 +61,50 @@ class Lobby {
   setCountDown(from: number) {
     if (this.status === LobbyStatus.Waiting) {
       this.countDownClock.setCountDownTime(from);
-      this.tickRooms();
+      this.sendUpdate();
     }
   }
 
   destroy() {
-    this.countDownClock.stop();
     Object.values(this.rooms).forEach((room) => room.destroy());
     const index = repository.adminLobbies[this.admin]?.indexOf(this.code);
-    if (index) {
+    if (index >= 0) {
       repository.adminLobbies[this.admin]?.splice(index, 1);
     }
     delete repository.lobbies[this.code];
+  }
+
+  addSocket(socket: io.Socket) {
+    this.sockets.push(socket);
+    socket.on('disconnect', () => {
+      const index = this.sockets.indexOf(socket);
+      this.sockets.splice(index, 1);
+    });
+    socket.emit(SocketMessages.LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
+      accumulator.updatedRooms[name] = this.rooms[name].getGameState();
+      return accumulator;
+    }, {
+      status: this.status,
+      gameDuration: this.countDownClock.getGameDuration(),
+      updatedRooms: {},
+    })));
+  }
+
+  // Streamed each second tick & new room joins & new admin joins
+  private sendUpdate() {
+    this.sockets.forEach((socket) =>
+      socket.emit(SocketMessages.LobbyUpdate, JSON.stringify(Object.keys(this.rooms).reduce((accumulator: LobbyState, name: string) => {
+        if (this.rooms[name].dirty) {
+          accumulator.updatedRooms[name] = this.rooms[name].getGameState();
+          this.rooms[name].dirty = false;
+        }
+        return accumulator;
+      }, {
+        status: this.status,
+        gameDuration: this.countDownClock.getGameDuration(),
+        updatedRooms: {}
+      })))
+    );
   }
 }
 

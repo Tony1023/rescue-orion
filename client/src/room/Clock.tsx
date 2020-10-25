@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useSelector } from './redux-hook-adapters';
+import { useTime } from './redux-hook-adapters';
 
 const Clock = styled.div`
   position: absolute;
@@ -28,9 +28,9 @@ function pad(n: number): string {
 }
 
 export default () => {
-  const durationInSeconds = useSelector((state) => state.countDown);
-  const minutes = Math.floor(durationInSeconds / 60);
-  const seconds = durationInSeconds % 60;
+  const gameDuration = useTime();
+  const minutes = Math.floor(gameDuration.countDown / 60);
+  const seconds = gameDuration.countDown % 60;
   
   return <Clock>
     {pad(minutes)}:{pad(seconds)}

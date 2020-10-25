@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect, useRef } from 'react';
 import ButtonGroup from './ButtonGroup';
 import SpaceStation from './SpaceStation'
 import { GameState, GameStatus, Message } from '../metadata/types';
@@ -13,14 +13,18 @@ import EndGameModal from './modal/EndGameModal';
 import ConfirmMoveModal from './modal/ConfirmMoveModal';
 import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
+import AbortMissionModal from './modal/AbortMissionModal';
+import WaitModal from './modal/WaitModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
+const GAME_BOARD_WIDTH = 1440;
+const GAME_BOARD_HEIGHT = 810;
 
 const GameBoard = styled.div`
   background-image: url(${`${process.env.PUBLIC_URL}/game_map.jpg`});
-  height: 810px;
-  width: 1440px;
+  height: ${GAME_BOARD_HEIGHT}px;
+  width: ${GAME_BOARD_WIDTH}px;
   background-size: contain;
   position: relative;
   margin: 0 auto;
@@ -88,28 +92,27 @@ const TerminateGameButton = styled(ActionButton)`
 
 export default function() {
   const gameState = useSelector((state: GameState) => state);
-  console.log(gameState);
-
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
   const [gemini1NextMove, setGemini1NextMove] = useState<string | undefined>();
   const [gemini2NextMove, setGemini2NextMove] = useState<string | undefined>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRebalanceModal, setShowRebalanceModal] = useState(false);
   const [showConfirmMoveModal, setShowConfirmMoveModal] = useState(false);
+  const [showAbortMissionModal, setShowAbortMissionModal] = useState(false);
+  const [showTimePortalRoute, setShowTimePortalRoute] = useState(false);
 
   useLayoutEffect(() => {
     setGemini1NextMove(undefined);
     setGemini2NextMove(undefined);
-    if (gameState.time > 30) {
-      // setGameOver(true);
-    }
   }, [gameState.time]);
   
   useEffect(() => {
     setMessages(messages.concat(gameState.messages));
   }, [gameState.messages]);
-
+  
   const selectedMove = gemini1NextMove && gemini2NextMove;
-
+  
   const gemini_1 = gameState.spaceships[IDs.GEMINI_1];
   const gemini_2 = gameState.spaceships[IDs.GEMINI_2];
   const gemini1CurrentLocation = gemini_1.location;
@@ -120,13 +123,50 @@ export default function() {
   const position2 = locationData[gemini2Location].pixelPosition;
 
   const canRebalanceResource = gemini1CurrentLocation === gemini2CurrentLocation &&
-    gemini_1.isInTimePortal === gemini_2.isInTimePortal;
+  (gemini_1.timePortalRoute.length > 0) === (gemini_2.timePortalRoute.length > 0);
 
   function popMessageModal() {
     const remainingMessages = messages.slice(0);
     remainingMessages.pop();
     setMessages(remainingMessages);
   }
+  
+  // draw a line
+  const drawLine = (context: CanvasRenderingContext2D, start: PixelPosition, end: PixelPosition, color = 'rgba(252,196,9,0.3)') => {
+    context.beginPath();
+    context.moveTo(start.left, start.top);
+    context.lineTo(end.left, end.top);
+    context.strokeStyle = color;
+    context.lineWidth = 20;
+    context.stroke();
+  }
+
+  const drawLineWithRoute = (context: CanvasRenderingContext2D, timePortalRoute: string[], currentLocation: string, color?: string) => {
+    timePortalRoute.forEach((point, i) => {
+      if(i >= 1) {
+        drawLine(context, locationData[timePortalRoute[i-1]].pixelPosition, locationData[point].pixelPosition, color);
+      }
+    })
+    if(timePortalRoute.length > 0) {
+      drawLine(context, locationData[timePortalRoute[timePortalRoute.length-1]].pixelPosition, locationData[currentLocation].pixelPosition, color);
+    }
+  }
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas !== null ? canvas.getContext('2d'): null;
+    const travelTogether = gemini_1.location === gemini_2.location && gemini1NextMove === gemini2NextMove;
+    if(context !== null) {
+      context.clearRect(0, 0, GAME_BOARD_WIDTH, GAME_BOARD_HEIGHT);
+      if(travelTogether) {
+        drawLineWithRoute(context, gemini_1.timePortalRoute, gemini_1.location);
+      }
+      else {
+        drawLineWithRoute(context, gemini_1.timePortalRoute, gemini_1.location);
+        drawLineWithRoute(context, gemini_2.timePortalRoute, gemini_2.location, 'rgba(70,179,232,0.3)');
+      }
+    }
+  }, [gemini_1.timePortalRoute, gemini_2.timePortalRoute, showTimePortalRoute]) 
 
   return <>
     <GameBoard>
@@ -147,10 +187,9 @@ export default function() {
         }}
       ></MoveResourceButton>
       <TerminateGameButton 
-        onClick={
-          ()=>{}
-          // () => setGameOver(true)
-        }
+        onClick={() => {
+          setShowAbortMissionModal(true);
+        }}
       ></TerminateGameButton>
       {
         gemini1Location === gemini2Location ? 
@@ -170,6 +209,7 @@ export default function() {
               gemini2NextMove={gemini2NextMove === location[0]}
               setGemini1NextMove={setGemini1NextMove}
               setGemini2NextMove={setGemini2NextMove}
+              setShowTimePortalRoute={setShowTimePortalRoute}
               shipReachability={location[1]}
             />
           );
@@ -199,6 +239,10 @@ export default function() {
         /> : <></>
       }
       {
+        gameState.status === GameStatus.NotStarted ?
+        <WaitModal /> : <></>
+      }
+      {
         gameState.status === GameStatus.MissionFailed ?
         <EndGameModal/> : <></>
       }
@@ -212,12 +256,29 @@ export default function() {
           }}
         /> : <></>
       }
+      {
+        showAbortMissionModal ?
+        <AbortMissionModal
+          onClose={() => {
+            setShowAbortMissionModal(false);
+          }}
+        /> : <></>
+      }
 
       <ResourcePanel
         gemini1={gameState.spaceships[IDs.GEMINI_1]}
         gemini2={gameState.spaceships[IDs.GEMINI_2]}
         time={gameState.time}
       ></ResourcePanel>
+
+      {
+        showTimePortalRoute ? 
+        <canvas id="canvas" 
+          ref={canvasRef}
+          width={GAME_BOARD_WIDTH}
+          height={GAME_BOARD_HEIGHT}  
+        /> : <></>
+      }
 
       <Clock />
 

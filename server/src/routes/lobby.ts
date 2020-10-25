@@ -1,6 +1,7 @@
 import express from 'express';
 import io from 'socket.io';
-import repository, { LobbyStatus } from '../repository';
+import { LobbyStatus, SocketMessages } from '../metadata/types';
+import repository, { Lobby } from '../repository';
 
 export default (router: express.Router, wss: io.Server) => {
   router.delete('/', (req, res) => {
@@ -34,8 +35,8 @@ export default (router: express.Router, wss: io.Server) => {
     }
     const { countDown } = req.body;
     const countDownInSeconds = parseInt(countDown);
-    if (isNaN(countDownInSeconds) || countDownInSeconds <= 0) {
-      res.status(403).send('Bad count down range.');
+    if (isNaN(countDownInSeconds) || countDownInSeconds <= 0 || countDownInSeconds > 999 * 60) {
+      res.status(400).send('Bad count down range.');
       return;
     }
     if (lobby.status !== LobbyStatus.Waiting) {
@@ -47,9 +48,21 @@ export default (router: express.Router, wss: io.Server) => {
   });
 
   wss.use((socket, next) => {
-
+    const lobbyCode = parseInt(socket.handshake.query?.lobby);
+    const lobby = repository.lobbies[lobbyCode];
+    if (isNaN(lobbyCode) || !lobby) {
+      socket.disconnect();
+      return;
+    }
+    socket.handshake.query.lobbyObj = lobby;
+    next();
   }).on('connection', (socket) => {
+<<<<<<< HEAD
 
+=======
+    const lobby = socket.handshake.query.lobbyObj as Lobby;
+    lobby.addSocket(socket);
+>>>>>>> master
   });
 
 }

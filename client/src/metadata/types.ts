@@ -1,7 +1,23 @@
-export enum RoomSocketMessage {
+export enum SocketMessages {
   StateUpdate = '@GameUpdate',
   Action = '@GameAction',
+  TimeUpdate = '@TimeUpdate',
+  LobbyUpdate = '@LobbyUpdate',
 }
+
+export enum LobbyStatus {
+  Waiting = 'Waiting',
+  Started = 'In Progress',
+  Finished = 'Ended',
+}
+
+export interface LobbyState {
+  status: LobbyStatus,
+  gameDuration: GameDuration,
+  updatedRooms: {
+    [name: string]: GameState
+  }
+};
 
 export enum LocationType {
   BeaconStar,
@@ -54,7 +70,7 @@ export interface PlainSpaceship {
   energyCells: number,
   lifeSupportPacks: number,
   rescueResources: RescueResource[],
-  isInTimePortal: boolean,
+  timePortalRoute: string[],
 };
 
 export interface PlainSpaceStation {
@@ -79,10 +95,10 @@ export interface Message {
 };
 
 export enum GameStatus {
-  NotStarted,
-  Started,
-  MissionSucceeded,
-  MissionFailed,
+  NotStarted = 'Waiting',
+  Started = 'Started',
+  MissionSucceeded = 'Mission Complete',
+  MissionFailed = 'Mission Failed',
 };
 
 export interface GameState {
@@ -96,14 +112,19 @@ export interface GameState {
   messages: Message[],
   time: number,
   gameStats: {
+    endTime?: number,
     scientistsRemaining: number,
     dropOffTimes: {
       [resource: string]: number
     }
   },
   status: GameStatus,
-  countDown: number,
 };
+
+export interface GameDuration {
+  countDown: number,
+  duration: number,
+}
 
 export interface Transfer {
   from: string,
@@ -161,10 +182,9 @@ export interface TransferRescueResourceAction {
   payload: TransferWithResourceType,
 };
 
-export const ENQUEUE_MESSAGES = '@GameAction/enqueueMessages';
-export interface EnqueueMessagesAction {
+export const ABORT_MISSION = '@GameAction/abortMission';
+export interface AbortMissionAction {
   type: string,
-  payload: Message[],
 };
 
 export type GameAction = MoveSpaceshipAction
@@ -174,5 +194,5 @@ export type GameAction = MoveSpaceshipAction
   | TransferEnergyCellsAction
   | TransferLifeSupportPacksAction
   | TransferRescueResourceAction
-  | EnqueueMessagesAction
+  | AbortMissionAction
 ;

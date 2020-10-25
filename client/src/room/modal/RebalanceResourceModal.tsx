@@ -144,7 +144,6 @@ function handleInput(_: string, setStateFunction: Dispatch<SetStateAction<string
 function verifyInput(max: number, input: string): number {
   if (input.length === 0) { return 0; }
   const count = Number.parseInt(input);
-  console.log(count, max);
   if (count === Number.NaN) { return -1; }
   if (count > max - 1) { return -1; }
   return count;

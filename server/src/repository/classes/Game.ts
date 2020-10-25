@@ -1,4 +1,4 @@
-import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus, RoomSocketMessage } from '../../metadata/types';
+import { GameState, PlainSpaceship, PlainSpaceStation, Message, SpaceshipNextMoves, GameStatus } from '../../metadata/types';
 import TimeVaryingAgent from './TimeVaryingAgent';
 import ResourceCarrier from './ResourceCarrier';
 import Spaceship from './Spaceship';
@@ -12,14 +12,23 @@ import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../../metadata';
 import MessageQueue from './MessageQueue';
-
-function assertTogether(left: ResourceCarrier, right: ResourceCarrier): void {
-  if (left.getLocation() !== right.getLocation()) {
-    throw Error('The resource carriers must be at the same location to transfer resources between them.');
-  }
-}
+import CountDownClock from '../countdown-clock';
 
 export default class Game implements MessageQueue {
+
+  constructor(countDownClock: CountDownClock) {
+    countDownClock.subscribeTick(() => {
+      if (this.status === GameStatus.Started) {
+        this.onTick(countDownClock.getSecondsRemaining(), countDownClock.getSecondsElapsed());
+      }
+    });
+    countDownClock.subscribeTimeUp(() => {
+      if (this.status === GameStatus.Started) {
+        this.endMission(false);
+      }
+    });
+    this.countDownClock = countDownClock;
+  }
 
   private day = 0;
   private messages: Message[] = [];
@@ -27,10 +36,11 @@ export default class Game implements MessageQueue {
   private carriers: { [id: string]: ResourceCarrier } = {};
   private spaceships: { [id: string]: Spaceship } = {};
   private spaceStations: { [id: string]: SpaceStation } = {};
-  private gameDuration = 0;
-  private countDown = 0;
   private movedSinceStart = false;
   private lastMove = 0;
+  private countDownClock: CountDownClock;
+  private endTime: number;
+  newMessage = false;
   status = GameStatus.NotStarted;
 
   load(): void {
@@ -81,6 +91,24 @@ export default class Game implements MessageQueue {
     for (const id in this.agents) {
       this.agents[id].onDayUpdate(this.day);
     }
+    ++this.day;
+    if (this.isWinState()) {
+      this.messages.push({
+        title: 'Welcome back to Sagittarius!',
+          paragraphs: [
+            { text: 'We are so excited to hear the tales of your successful mission!' },
+            { text: 'When you are ready, please call in the Space Commander to come and congratulate you personally!' },
+            { text: 'Thank you for all you did to Rescue Orion!' },
+            { text: '-Ground Control' },
+          ],
+      })
+      this.endMission(true);
+      return;
+    }
+    if (this.day > 30) {
+      this.endMission(false);
+      return;
+    }
     for (const id in this.spaceships) {
       if(this.spaceships[id].energyCells <= 0 || this.spaceships[id].lifeSupportPacks <= 0) {
         this.pushMessage({
@@ -91,7 +119,7 @@ export default class Game implements MessageQueue {
             { text: '-Ground Control' },
           ],
         });
-        this.status = GameStatus.MissionFailed;
+        this.endMission(false);
         return;
       }
     }
@@ -110,14 +138,20 @@ export default class Game implements MessageQueue {
         break;
       }
     }
-    ++this.day;
+  }
+
+  endMission(success: boolean) {
+    this.status = success? GameStatus.MissionSucceeded : GameStatus.MissionFailed;
+    this.endTime = this.countDownClock.getSecondsElapsed();
   }
 
   pushMessage(m: Message) {
     this.messages.push(m);
+    this.newMessage = true;
   }
 
   dumpMessages(): Message[] {
+    this.newMessage = false;
     const messages = this.messages.slice(0);
     this.messages = [];
     return messages;
@@ -125,7 +159,7 @@ export default class Game implements MessageQueue {
 
   moveSpaceships(moves: { [id: string]: string }): void {
     this.movedSinceStart = true;
-    this.lastMove = this.gameDuration;
+    this.lastMove = this.countDownClock.getSecondsElapsed();
     for (const id in moves) {
       this.spaceships[id].addToPath(moves[id]);
       const spaceStation = locationData[moves[id]].location.spaceStationName;
@@ -139,7 +173,9 @@ export default class Game implements MessageQueue {
   transferEnergyCells(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    assertTogether(sendingCarrier, receivingCarrier);
+    if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
+      return;
+    }
     const transferCount = count ?? sendingCarrier.energyCells;
     sendingCarrier.energyCells -= transferCount;
     receivingCarrier.energyCells += transferCount;
@@ -148,7 +184,9 @@ export default class Game implements MessageQueue {
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    assertTogether(sendingCarrier, receivingCarrier);
+    if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
+      return;
+    }
     const transferCount = count ?? sendingCarrier.lifeSupportPacks;
     sendingCarrier.lifeSupportPacks -= transferCount;
     receivingCarrier.lifeSupportPacks += transferCount;
@@ -157,12 +195,18 @@ export default class Game implements MessageQueue {
   transferRescueResource(from: string, to: string, type: RescueResource): void {
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
-    assertTogether(sendingCarrier, receivingCarrier);
-    sendingCarrier.pickUpFrom(type);
-    receivingCarrier.dropOffTo(type);
+    if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
+      return;
+    }
+    try {
+      sendingCarrier.pickUpFrom(type);
+      receivingCarrier.dropOffTo(type);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  toGameState(): GameState {
+  toGameState(dump: boolean = true): GameState {
     const orion = this.spaceStations[IDs.ORION] as SpaceStationOrion;
     return {
       spaceships: Object.keys(this.spaceships).reduce((accumulator: {
@@ -174,7 +218,7 @@ export default class Game implements MessageQueue {
             lifeSupportPacks: spaceship.lifeSupportPacks,
             location: spaceship.getLocation(),
             rescueResources: spaceship.getRescueResources(),
-            isInTimePortal: spaceship.getIsTravelingThruTimePortals(),
+            timePortalRoute: spaceship.getTimePortalRoute(),
           };
           return accumulator;
         },
@@ -210,21 +254,19 @@ export default class Game implements MessageQueue {
           return accumulator;
         },
       {}),
-      messages: this.dumpMessages(),
+      messages: dump ? this.dumpMessages(): this.messages.slice(0),
       time: this.day,
       gameStats: {
+        endTime: this.endTime,
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },
-      countDown: this.countDown,
       status: this.status,
     };
   }
 
-  onTick(countDown: number, timeElapsed: number) {
-    this.countDown = countDown;
-    this.gameDuration = timeElapsed;
-    if (this.gameDuration === 10 * 60 && !this.movedSinceStart) {
+  private onTick(countDown: number, timeElapsed: number) {
+    if (timeElapsed === 10 * 60 && !this.movedSinceStart) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -235,7 +277,7 @@ export default class Game implements MessageQueue {
       });
       return;
     }
-    if (this.gameDuration - this.lastMove === 5 * 60) { // every 5 minutes?
+    if (timeElapsed - this.lastMove === 5 * 60) { // every 5 minutes?
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -247,7 +289,7 @@ export default class Game implements MessageQueue {
       });
     }
 
-    if (this.gameDuration === 2 * 60) {
+    if (timeElapsed === 2 * 60) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -258,7 +300,7 @@ export default class Game implements MessageQueue {
           { text: '-Ground Control' },
         ],
       });
-    } else if (this.gameDuration === 8 * 60) {
+    } else if (timeElapsed === 8 * 60) {
       this.pushMessage({
         title: 'Incoming relay from the Space Commander',
         paragraphs: [
@@ -269,7 +311,7 @@ export default class Game implements MessageQueue {
           { text: '-Space Commander' },
         ],
       });
-    } else if (this.gameDuration === 35 * 60) {
+    } else if (timeElapsed === countDown || timeElapsed + 1 === countDown) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -278,7 +320,7 @@ export default class Game implements MessageQueue {
           { text: '-Ground Control' },
         ],
       });
-    } else if (this.gameDuration === 65 * 60) {
+    } else if (countDown === 10 * 60) {
       this.pushMessage({
         title: 'Urgent relay from Ground Control',
         paragraphs: [
@@ -290,5 +332,33 @@ export default class Game implements MessageQueue {
         ],
       });
     }
+  }
+
+  private isWinState(): boolean {
+    const orion = this.spaceStations[IDs.ORION] as SpaceStationOrion;
+    const resources = orion.getRescueResources();
+    let everythingFixed = true;
+    [
+      // RescueResource.O2ReplacementCells,
+      RescueResource.OxygenRepairTeam,
+      RescueResource.WaterRepairTeam,
+      RescueResource.FoodRepairTeam,
+      RescueResource.MedicalRepairTeam,
+    ].forEach((resource) => {
+      if (resources.indexOf(resource) < 0) {
+        everythingFixed = false;
+      }
+    });
+    if (!everythingFixed) {
+      return false;
+    }
+
+    let returned = true;
+    Object.values(this.spaceships).forEach((spaceship) => {
+      if (spaceship.getLocation() !== spaceStationData[IDs.SAGITTARIUS].location) {
+        returned = false;
+      }
+    });
+    return returned;
   }
 };

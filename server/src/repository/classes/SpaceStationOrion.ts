@@ -166,8 +166,89 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     }
   }
 
-
   getScientistCount(): number {
     return this.scientistCount;
+  }
+
+  checkDropOffResource(r: RescueResource): void {
+    // drop off O2 replacement cells
+    if(r === RescueResource.O2ReplacementCells) {
+      this.messageQueue.pushMessage({
+        title: 'O2 REPLACEMENT CELLS DELIVERED',
+          paragraphs: [
+            { text: 'You’ve saved the day (for now)! The O2 replacement cells you have dropped off will only temporarily delay loss of life.' },
+            { text: 'You must find a permanent oxygen generation solution before Day 21!' },
+            { text: 'Please hurry!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    // drop off oxygen repair team
+    else if(r === RescueResource.OxygenRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'OXYGEN REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'Take a deep breath!' },
+            { text: 'The Oxygen Repair Team has restored oxygen to Space Station Orion.' },
+            { text: 'Your brave heroics have ensured no scientists will be lost from oxygen loss!' },
+            { text: 'Great work, Gemini Crew!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    // drop off water repair team
+    else if(r === RescueResource.WaterRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'WATER REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'Splashdown!' },
+            { text: 'The Water Repair Team has fixed the water purification systems.' },
+            { text: 'The scientists will now have enough water to keep them alive!' },
+            { text: 'Well done, Gemini Crew!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    // drop off food repair team
+    else if(r === RescueResource.FoodRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'FOOD REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'That hit the spot!' },
+            { text: 'The Food Repair Team has fixed the food processing systems and the scientists now have enough food to ensure they don’t starve.' },
+            { text: 'There will surely be a feast in your crew’s honor when this is all over!' },
+            { text: 'Fantastic job, Gemini Crew' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    // drop off medical repair team
+    else if(r === RescueResource.MedicalRepairTeam) {
+      this.messageQueue.pushMessage({
+        title: 'MEDICAL REPAIR TEAM DELIVERED',
+          paragraphs: [
+            { text: 'Just what the doctor ordered!' },
+            { text: 'The Medical Repair Team has treated all of the injuries from the explosions, ensuring all the wounded scientists will survive.' },
+            { text: 'Bravo, Gemini Crew!!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+    // check whether all resources are dropped
+    if(this.rescueResources.includes(RescueResource.OxygenRepairTeam) 
+    && this.rescueResources.includes(RescueResource.WaterRepairTeam)
+    && this.rescueResources.includes(RescueResource.FoodRepairTeam)
+    && this.rescueResources.includes(RescueResource.MedicalRepairTeam)) {
+      this.messageQueue.pushMessage({
+        title: 'INCOMING RELAY FROM GROUND CONTROL',
+          paragraphs: [
+            { text: 'Congratulations, Gemini Crew!' },
+            { text: 'You have successfully restored all systems at Space Station Orion and prevented all further loss of life! The entire galaxy is eternally in your debt!' },
+            { text: 'Now don’t forget the second part of your mission! The entire Gemini Space Confederation at Sagittarius is eagerly awaiting your arrival!' },
+            { text: 'Travel Safe!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
   }
 }
