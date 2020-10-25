@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Room, { DevRoom } from './room';
-import Admin, { RoomListPage } from './admin';
-import Lobby from './join';
+import Admin from './admin';
+import Join from './join';
 
 export default () => {
 
@@ -14,21 +14,12 @@ export default () => {
       >
       </Route>
       <Route
-        exact
-        path='/admin/lobbies'
-        component={Admin}
-      />
-      <Route
-        path='/admin/lobbies/:code'
-        component={RoomListPage}
-      />
-      <Route
         path='/admin'
         component={Admin}
       />
       <Route
-        path='/lobbies'
-        component={Lobby}
+        path='/join'
+        component={Join}
       />
       <Route
         path='/dev'
