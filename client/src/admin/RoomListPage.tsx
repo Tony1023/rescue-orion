@@ -140,8 +140,8 @@ export default () => {
         setStartGameStatus(true);
         setTimeout(() => setStartGameStatus(false), 5000);
       })
-      .catch(() => {
-        setStartGameStatus('Something went wrong...');
+      .catch((err) => {
+        setStartGameStatus(err.response.data);
       });
   }
 
@@ -152,8 +152,8 @@ export default () => {
         setConfigCountDownStatus(true);
         setTimeout(() => setConfigCountDownStatus(false), 5000);
       })
-      .catch(() => {
-        setConfigCountDownStatus('Something went wrong...');
+      .catch((err) => {
+        setConfigCountDownStatus(err.response.data);
       });
   }
 
@@ -205,7 +205,7 @@ export default () => {
                 startGameStatus ?
                 (
                   typeof startGameStatus === 'string' ?
-                  <span color={'red'}>{startGameStatus}</span> : <>&#10003;</>
+                  <span style={{ color: 'red' }}> {startGameStatus}</span> : <>&#10003;</>
                 )
                 :
                 <></>
@@ -245,7 +245,7 @@ export default () => {
                 configCountDownStatus ?
                 (
                   typeof configCountDownStatus === 'string' ?
-                  <span color={'red'}>{configCountDownStatus}</span> : <>&#10003;</>
+                  <span style={{ color: 'red' }}> {configCountDownStatus}</span> : <>&#10003;</>
                 )
                 :
                 <></>
