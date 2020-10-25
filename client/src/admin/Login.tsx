@@ -63,12 +63,6 @@ export default class extends React.Component<{}, {username: string, password:str
 
   render(){
     return <>
-      <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-        crossOrigin='anonymous'
-      />
       <div style={{ color: 'black' }}>
         <Col style={{borderColor:"black", borderWidth:10}}>
           <Form>
