@@ -2,6 +2,7 @@ import express from 'express';
 import io from 'socket.io';
 import csvParser from 'csv-parser';
 import fs from 'fs';
+import { cwd } from 'process';
 
 
 export default (router: express.Router) => {
@@ -12,7 +13,7 @@ export default (router: express.Router) => {
         
         //compare username, password with csv file
         const results: any[] = [];
-        fs.createReadStream(__dirname+'/credentials.csv')
+        fs.createReadStream(cwd() + '/credentials.csv')
         .pipe(csvParser())
         .on('data', (data) => {
             if(username === data.admin){
