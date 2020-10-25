@@ -11,7 +11,8 @@ import {
 } from '../metadata/types';
 import axios from 'axios';
 import fileSave from 'file-saver';
-import { stringify } from 'query-string';
+import { Jumbotron, Table, Button, Badge } from 'react-bootstrap';
+import styled from 'styled-components';
 
 function pad(n: number): string {
   let digits = 0;
@@ -32,6 +33,25 @@ function formatTime(time: number) {
   const seconds = time % 60;
   return `${pad(minutes)}:${pad(seconds)}`;
 }
+
+const Wrapper = styled.div`
+  max-width: 1024px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: rgb(248, 248, 248);
+  padding: 20px;
+`;
+
+const Title = styled.h1`
+  margin-bottom: 30px;
+  text-align: center;
+`
+
+const LobbyControls = styled.div`
+  min-width: 350px;
+  display: table;
+  margin: 0 auto;
+`;
 
 export default () => {
   const { code } = useParams<{ code?: string }>();
@@ -150,68 +170,84 @@ export default () => {
     fileSave.saveAs(blob, 'lobby-snapshot.csv');
   }
 
-  return <>
+  return <Wrapper>
     {
       socket ?
       <>
-        <h1>Lobby {code}</h1>
-        <p>
-          Lobby status: {status ?? 'Unknown'}
-          <button
-            onClick={startGames}
-            disabled={status !== LobbyStatus.Waiting}
-          >Start Games</button>
-          {
-            startGameStatus ?
-            (
-              typeof startGameStatus === 'string' ?
-              <span color={'red'}>{startGameStatus}</span> : <>&#10003;</>
-            )
-            :
-            <></>
-          }
-        </p>
-        <p>
-          {'Time remaining: '}
-          <input
-            value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
-            onChange={onMinutesChange}
-            onFocus={(e) => e.target.select()}
-            disabled={status !== LobbyStatus.Waiting}
-            type='number'
-            min={0}
-            max={999}
-            step={1}
-          />
-          :
-          <input
-            value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
-            onChange={onSecondsChange}
-            onFocus={(e) => e.target.select()}
-            disabled={status !== LobbyStatus.Waiting}
-            type='number'
-            min={0}
-            max={59}
-            step={1}
-          />
-          <button
-            disabled={status !== LobbyStatus.Waiting}
-            onClick={setGameCountDown}
-          >Set</button>
-          {
-            configCountDownStatus ?
-            (
-              typeof configCountDownStatus === 'string' ?
-              <span color={'red'}>{configCountDownStatus}</span> : <>&#10003;</>
-            )
-            :
-            <></>
-          }
-        </p>
-        <p>
-          <button onClick={exportSnapshot}>Export lobby snapshot as csv file</button>
-        </p>
-        <table>
+        <Jumbotron>
+          <Title>Lobby {code}</Title>
+          <LobbyControls>
+            <p>
+              {'Lobby status: '}
+              <Badge
+                style={{ fontSize: '16px' }}
+                variant='secondary'
+              >{status ?? 'Unknown'}</Badge>
+              {'  '}
+              <Button
+                variant='outline-success'
+                size='sm'
+                onClick={startGames}
+                disabled={status !== LobbyStatus.Waiting}
+              >Start Games</Button>
+              {
+                startGameStatus ?
+                (
+                  typeof startGameStatus === 'string' ?
+                  <span color={'red'}>{startGameStatus}</span> : <>&#10003;</>
+                )
+                :
+                <></>
+              }
+            </p>
+            <p>
+              {'Time remaining: '}
+              <input
+                value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
+                onChange={onMinutesChange}
+                onFocus={(e) => e.target.select()}
+                disabled={status !== LobbyStatus.Waiting}
+                type='number'
+                min={0}
+                max={999}
+                step={1}
+              />
+              :
+              <input
+                value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
+                onChange={onSecondsChange}
+                onFocus={(e) => e.target.select()}
+                disabled={status !== LobbyStatus.Waiting}
+                type='number'
+                min={0}
+                max={59}
+                step={1}
+              />
+              {'  '}
+              <Button
+                variant='outline-success'
+                size='sm'
+                onClick={setGameCountDown}
+                disabled={status !== LobbyStatus.Waiting}
+              >Set</Button>
+              {
+                configCountDownStatus ?
+                (
+                  typeof configCountDownStatus === 'string' ?
+                  <span color={'red'}>{configCountDownStatus}</span> : <>&#10003;</>
+                )
+                :
+                <></>
+              }
+            </p>
+          </LobbyControls>
+        </Jumbotron>
+        <Button
+          variant='outline-info'
+          style={{ marginBottom: '20px' }}
+          onClick={exportSnapshot}
+        >Export lobby snapshot as csv file</Button>
+        <Table striped bordered hover size='sm'>
           <tbody>
             <tr>
               <th>Room Name</th>
@@ -260,10 +296,10 @@ export default () => {
               })
             }
           </tbody>
-        </table>
-      </> : <>
-        <h1>Lobby {code} does not exist.</h1>
+        </Table>
       </>
+      :
+      <Jumbotron><Title>Lobby {code} does not exist.</Title></Jumbotron>
     }
-  </>
+  </Wrapper>
 }
