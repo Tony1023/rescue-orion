@@ -7,18 +7,18 @@ import * as IDs from '../metadata/agent-ids';
 
 
 class Room {
-  
+
   constructor() {
     this.game.load();
   }
 
   private game: Game = new Game();
   private socket: io.Socket = null;
-  
+
   private sendUpdate() {
     this.socket?.emit(RoomSocketMessage.StateUpdate, JSON.stringify(this.game.toGameState()));
   }
-  
+
   startGameIfNot() {
     if (this.game.status === Types.GameStatus.NotStarted) {
       this.game.status = Types.GameStatus.Started;

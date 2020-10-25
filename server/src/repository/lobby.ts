@@ -26,7 +26,7 @@ class Lobby {
   status = LobbyStatus.Waiting;
 
   private tickRooms() {
-    Object.values(this.rooms).forEach((room) => 
+    Object.values(this.rooms).forEach((room) =>
       room.onTick(this.countDownClock.getSecondsRemaining(), this.countDownClock.getSecondsElapsed())
     );
   }

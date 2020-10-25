@@ -49,7 +49,7 @@ export default (router: express.Router, wss: io.Server) => {
   wss.use((socket, next) => {
 
   }).on('connection', (socket) => {
-    
+
   });
 
 }
