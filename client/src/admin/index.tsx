@@ -1,9 +1,10 @@
 import React from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import SocketIOClient from 'socket.io-client';
-import { Location } from 'history';
-import queryString from 'query-string';
+import styled from 'styled-components';
 import axios from 'axios';
+import {
+  Col,
+  Button,
+} from 'react-bootstrap';
 
 const Form = styled.div`
   border-radius: 3px;
@@ -61,30 +62,29 @@ export default class extends React.Component<{}, {username: string, password:str
   }
 
   render(){
-    return (
+    return <>
+      <link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossOrigin='anonymous'
+      />
       <div style={{ color: 'black' }}>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"></link>
-        <div className="col-lg-12" style={{borderColor:"black", borderWidth:10}}>
+        <Col style={{borderColor:"black", borderWidth:10}}>
           <Form>
             <h1>Login to Rescue-Orion</h1>
-            <div className="form-group">
-              Username:
-              <input type="text" className="form-control" id="username" name="username" value={this.state.username} onChange={this.handleUsernameChange} required></input>
-            </div>
-            <div className="form-group">
-            </div>
-            <div className="form-group">
-              Password:
-              <input type="password" className="form-control" id="password" name="password" value={this.state.password} onChange={this.handlePasswordChange} required></input>
-            </div>
-            <button type="submit" className="btn btn-dark" onClick={this.handleFormSubmit}>Submit</button>
+            Username:
+            <input type="text" className="form-control" id="username" name="username" value={this.state.username} onChange={this.handleUsernameChange} required></input>
+            Password:
+            <input type="password" className="form-control" id="password" name="password" value={this.state.password} onChange={this.handlePasswordChange} required></input>
+            <Button variant='dark' onClick={this.handleFormSubmit}>Submit</Button>
           </Form>
           {/* <Extra>
               <button type="submit" className="btn btn-dark" onClick={this.handleExtraSubmit}>Register</button>
           </Extra> */}
-        </div>
+        </Col>
       </div>
-    );
+    </>;
   }
 }
 
