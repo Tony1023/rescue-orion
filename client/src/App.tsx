@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Room, { DevRoom } from './room';
 import Admin from './admin';
-import Lobby from './lobby';
+import Join from './join';
 
 export default () => {
 
@@ -18,8 +18,8 @@ export default () => {
         component={Admin}
       />
       <Route
-        path='/lobbies'
-        component={Lobby}
+        path='/join'
+        component={Join}
       />
       <Route
         path='/dev'
