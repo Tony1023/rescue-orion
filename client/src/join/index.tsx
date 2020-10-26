@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Jumbotron, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Jumbotron, InputGroup, FormControl, Button, Modal, ModalBody } from 'react-bootstrap';
 import styled, { createGlobalStyle } from 'styled-components';
 
 const Wrapper = styled(Jumbotron)`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  margin: 50px auto;
   width: 500px;
 `;
 
@@ -33,15 +30,24 @@ export default () => {
     axios.post('http://localhost:9000/rooms', {
       lobby: lobbyCode,
       room: roomName,
-    }).then(() => {
-      history.push(`/rooms?lobby=${lobbyCode}&room=${roomName}`);
-    }).catch((err) => {
-      if (err.status === 403) {
+    }).then(() => redirectToRoom())
+      .catch((err) => {
+      if (err.response.status === 403) {
         setShowReconnectModal(true);
       } else {
         setError(err.response.data);
       }
     });
+  }
+
+  function redirectToRoom() {
+    history.push(`/rooms?lobby=${lobbyCode}&room=${roomName}`);
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      joinRoom();
+    }
   }
 
   return <>
@@ -70,6 +76,7 @@ export default () => {
         <FormControl 
           value={lobbyCode}
           onChange={(e) => setLobbyCode(e.target.value)}
+          onKeyDown={onKeyDown}
         />
       </InputGroup>
       <InputGroup>
@@ -85,6 +92,7 @@ export default () => {
         <FormControl 
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
+          onKeyDown={onKeyDown}
         />
       </InputGroup>
       <p style={{ height: '20px', color: 'red' }}>
@@ -94,10 +102,27 @@ export default () => {
         onClick={joinRoom}
         block
       >Join</Button>
-      {
-        showReconnectModal ?
-        <div>Modal!</div> : <></>
-      }
+      <Modal
+        show={showReconnectModal}
+        onHide={() => setShowReconnectModal(false)}
+      >
+        <Modal.Header closeButton>
+          <h4>Room name {roomName} is taken</h4>
+        </Modal.Header>
+        <Modal.Body>
+          Are you trying to reconnect?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant='secondary'
+            onClick={() => setShowReconnectModal(false)}
+          >No, enter another name</Button>
+          <Button
+            variant='primary'
+            onClick={redirectToRoom}
+          >Yes, reconnect</Button>
+        </Modal.Footer>
+      </Modal>
     </Wrapper>
   </>;
 }
