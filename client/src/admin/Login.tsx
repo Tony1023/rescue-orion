@@ -33,6 +33,7 @@ export default class extends React.Component<{}, {username: string, password:str
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
     // this.handleExtraSubmit = this.handleExtraSubmit.bind(this);
   }
 
@@ -41,6 +42,12 @@ export default class extends React.Component<{}, {username: string, password:str
   }
   handlePasswordChange(event: { target: { value: any; }; }){
     this.setState({password: event.target.value});
+  }
+
+  onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      this.handleFormSubmit();
+    }
   }
 
   async handleFormSubmit(){
@@ -65,9 +72,21 @@ export default class extends React.Component<{}, {username: string, password:str
           <Form>
             <h1>Login to Rescue-Orion</h1>
             Username:
-            <input type="text" className="form-control" id="username" name="username" value={this.state.username} onChange={this.handleUsernameChange} required></input>
+            <input
+              type='text'
+              value={this.state.username}
+              onChange={this.handleUsernameChange}
+              onKeyDown={this.onKeyDown}
+              required
+            />
             Password:
-            <input type="password" className="form-control" id="password" name="password" value={this.state.password} onChange={this.handlePasswordChange} required></input>
+            <input
+              type="password"
+              value={this.state.password}
+              onChange={this.handlePasswordChange}
+              onKeyDown={this.onKeyDown}
+              required
+            />
             <Button variant='dark' onClick={this.handleFormSubmit}>Submit</Button>
           </Form>
           {/* <Extra>
