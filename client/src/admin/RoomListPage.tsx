@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
 import {
   GameState,
@@ -54,6 +54,7 @@ const LobbyControls = styled.div`
 `;
 
 export default () => {
+  const history = useHistory();
   const { code } = useParams<{ code?: string }>();
 
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
@@ -70,43 +71,51 @@ export default () => {
   const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:9000/lobbies/${code}`)
+    axios.get(`http://localhost:9000/lobbies/${code}`, {
+      headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
+    })
       .then((res) => {
         const date = new Date(res.data.createTime);
         setCreateTime(date.toLocaleString());
-      })
-      .catch(() => {});
 
-    const newSocket = SocketIOClient('http://localhost:9000', {
-      path: '/lobbies/socket',
-      query: {
-        lobby: code,
-      }
-    });
-    setSocket(newSocket);
-
-    newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
-      const state = JSON.parse(data) as LobbyState;
-      setStaus(state.status);
-      setDuration(state.gameDuration.duration);
-      setCountDownMinutes(Math.floor(state.gameDuration.countDown / 60));
-      setCountDownSeconds(state.gameDuration.countDown % 60);
-      if (Object.keys(state.updatedRooms).length > 0) {
-        const newRooms = {...rooms};
-        Object.keys(state.updatedRooms).forEach((name) => {
-          newRooms[name] = state.updatedRooms[name];
+        const newSocket = SocketIOClient('http://localhost:9000', {
+          path: '/lobbies/socket',
+          query: {
+            lobby: code,
+          }
         });
-        setRooms(newRooms);
-      }
-    });
+        setSocket(newSocket);
+    
+        newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
+          const state = JSON.parse(data) as LobbyState;
+          setStaus(state.status);
+          setDuration(state.gameDuration.duration);
+          setCountDownMinutes(Math.floor(state.gameDuration.countDown / 60));
+          setCountDownSeconds(state.gameDuration.countDown % 60);
+          if (Object.keys(state.updatedRooms).length > 0) {
+            const newRooms = {...rooms};
+            Object.keys(state.updatedRooms).forEach((name) => {
+              newRooms[name] = state.updatedRooms[name];
+            });
+            setRooms(newRooms);
+          }
+        });
+    
+        newSocket.on('disconnect', () => {
+          setSocket(undefined);
+        });
+    
+        newSocket.on('connect_error', () => {
+          setSocket(undefined);
+        });
 
-    newSocket.on('disconnect', () => {
-      setSocket(undefined);
-    });
-
-    newSocket.on('connect_error', () => {
-      setSocket(undefined);
-    });
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          alert('Your session has expired. Please log in again.');
+          history.push('/admin');
+        }
+      });
 
   }, [code]);
 
@@ -186,7 +195,7 @@ export default () => {
 
   return <Wrapper>
     {
-      socket ?
+      createTime && socket ?
       <>
         <Jumbotron>
           <Title>Lobby {code}</Title>

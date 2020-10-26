@@ -2,40 +2,8 @@ import express from 'express';
 import csvParser from 'csv-parser';
 import fs from 'fs';
 import { cwd } from 'process';
-
 import jwt from 'jsonwebtoken';
-import passport from 'passport';
-import passportJWT from 'passport-jwt';
-
-let ExtractJwt = passportJWT.ExtractJwt;
-
-let JwtStrategy = passportJWT.Strategy;
-let jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: 'skrskr',
-};
-
-const strategy = new JwtStrategy(jwtOptions, (jwtPayload, next) => {
-
-	let found = false;
-
-	fs.createReadStream(cwd() + '/credentials.csv')
-		.pipe(csvParser())
-		.on('data', (data) => {
-			if (jwtPayload.username === data.username) {
-				found = true;
-				next(null, data.username);
-			}
-		})
-		.on('end', () => {
-			if (!found) {
-				next(null, null);
-			}
-		});
-});
-
-passport.use(strategy);
-export { passport };
+import { jwtOptions } from '../auth';
 
 export default (router: express.Router) => {
 	router.post('/login', (req, res) => {
