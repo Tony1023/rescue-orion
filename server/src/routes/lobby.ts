@@ -1,9 +1,21 @@
 import express from 'express';
 import io from 'socket.io';
-import { LobbyStatus, SocketMessages } from '../metadata/types';
+import { LobbyStatus } from '../metadata/types';
 import repository, { Lobby } from '../repository';
 
 export default (router: express.Router, wss: io.Server) => {
+  router.get('/:code', (req, res) => {
+    const code = parseInt(req.params.code);
+    const lobby = repository.lobbies[code];
+    if (isNaN(code) || !lobby) {
+      res.status(404).send(`Lobby code ${req.params.code} not found.`);
+      return;
+    }
+    res.status(200).send({
+      createTime: lobby.createTime,
+    });
+  });
+
   router.delete('/', (req, res) => {
     const lobbyCode = parseInt(req.body.lobby);
     const lobby = repository.lobbies[lobbyCode];
