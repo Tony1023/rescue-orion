@@ -36,15 +36,6 @@ export default (props: {
   const [gameDuration, setGameDuration] = useState<GameDuration>();
 
   async function setup() {
-    try {
-      await axios.post('http://localhost:9000/rooms', {
-        lobby: lobby,
-        room: room,
-      });
-    } catch(err) {
-      console.log(err);
-    }
-
     let newSocket = SocketIOClient('http://localhost:9000', {
       path: '/rooms/socket',
       query: {

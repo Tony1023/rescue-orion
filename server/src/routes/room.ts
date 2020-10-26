@@ -10,9 +10,9 @@ export default (router: express.Router, wss: io.Server) => {
     let lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {
       res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
+      repository.lobbies[lobbyCode] = new Lobby(lobbyCode, 'admin');
       return;
     }
-    repository.lobbies[lobbyCode] = lobby;
 
     const roomName = req.body.room;
     if (!roomName) {
