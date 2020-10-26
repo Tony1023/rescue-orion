@@ -52,10 +52,11 @@ export default class extends React.Component<{}, {username: string, password:str
 
   async handleFormSubmit(){
     try {
-      await axios.post('http://localhost:9000/admin/login', {
+      const { data } = await axios.post('http://localhost:9000/admin/login', {
         username: this.state.username,
         password: this.state.password,
       });
+      console.log(data);
     } catch(err) {
       console.log(err);
     }
