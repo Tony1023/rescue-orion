@@ -110,6 +110,12 @@ export default () => {
 
   }, [code]);
 
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      setGameCountDown();
+    }
+  }
+
   function onMinutesChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = parseInt(e.target.value);
     if (isNaN(value) || !Number.isInteger(value)) {
@@ -222,6 +228,7 @@ export default () => {
                 min={0}
                 max={999}
                 step={1}
+                onKeyDown={onKeyDown}
               />
               :
               <input
@@ -233,6 +240,7 @@ export default () => {
                 min={0}
                 max={59}
                 step={1}
+                onKeyDown={onKeyDown}
               />
               {'  '}
               <Button
