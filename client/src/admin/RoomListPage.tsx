@@ -142,7 +142,9 @@ export default () => {
   }
 
   function startGames() {
-    client.put(`http://localhost:9000/lobbies/start/${code}`)
+    client.put(`http://localhost:9000/lobbies/start/${code}`, {}, {
+      headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
+    })
       .then(() => {
         setStartGameStatus(true);
         setTimeout(() => setStartGameStatus(false), 5000);
@@ -154,7 +156,11 @@ export default () => {
 
   function setGameCountDown() {
     const countDownInSeconds = countDownMinutes * 60 + countDownSeconds;
-    client.put(`http://localhost:9000/lobbies/${code}`, { countDown: countDownInSeconds })
+    client.put(`http://localhost:9000/lobbies/${code}`, { 
+        countDown: countDownInSeconds
+      }, {
+        headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
+    })
       .then(() => {
         setConfigCountDownStatus(true);
         setTimeout(() => setConfigCountDownStatus(false), 5000);
