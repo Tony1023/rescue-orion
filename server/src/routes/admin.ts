@@ -12,7 +12,6 @@ export default (router: express.Router) => {
 		let found = false;
 		
 		//compare username, password with csv file
-		console.log(cwd());
 		fs.createReadStream(cwd() + '/credentials.csv')
 		.pipe(csvParser())
 		.on('data', (data) => {

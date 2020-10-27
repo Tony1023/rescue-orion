@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
 import {
   GameState,
@@ -9,7 +9,7 @@ import {
   RescueResource,
   LobbyStatus
 } from '../metadata/types';
-import axios from 'axios';
+import client from '../axios-client';
 import fileSave from 'file-saver';
 import { Jumbotron, Table, Button, Badge } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -54,7 +54,6 @@ const LobbyControls = styled.div`
 `;
 
 export default () => {
-  const history = useHistory();
   const { code } = useParams<{ code?: string }>();
 
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
@@ -71,7 +70,7 @@ export default () => {
   const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:9000/lobbies/${code}`, {
+    client.get(`http://localhost:9000/lobbies/${code}`, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then((res) => {
@@ -108,13 +107,6 @@ export default () => {
         newSocket.on('connect_error', () => {
           setSocket(undefined);
         });
-
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          alert('Your session has expired. Please log in again.');
-          history.push('/admin');
-        }
       });
 
   }, [code]);
@@ -150,7 +142,7 @@ export default () => {
   }
 
   function startGames() {
-    axios.put(`http://localhost:9000/lobbies/start/${code}`)
+    client.put(`http://localhost:9000/lobbies/start/${code}`)
       .then(() => {
         setStartGameStatus(true);
         setTimeout(() => setStartGameStatus(false), 5000);
@@ -162,7 +154,7 @@ export default () => {
 
   function setGameCountDown() {
     const countDownInSeconds = countDownMinutes * 60 + countDownSeconds;
-    axios.put(`http://localhost:9000/lobbies/${code}`, { countDown: countDownInSeconds })
+    client.put(`http://localhost:9000/lobbies/${code}`, { countDown: countDownInSeconds })
       .then(() => {
         setConfigCountDownStatus(true);
         setTimeout(() => setConfigCountDownStatus(false), 5000);

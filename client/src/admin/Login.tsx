@@ -57,8 +57,8 @@ export default class extends React.Component<{}, {username: string, password:str
         password: this.state.password,
       });
       localStorage.setItem('token', data.token);
-    } catch(err) {
-      console.log(err);
+    } catch (err) {
+      console.log(err.response.data);
     }
   }
 
