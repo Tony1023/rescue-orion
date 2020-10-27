@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
-import { Jumbotron, InputGroup, FormControl, Button, Modal, ModalBody } from 'react-bootstrap';
+import client from '../axios-client';
+import { Jumbotron, InputGroup, FormControl, Button, Modal } from 'react-bootstrap';
 import styled, { createGlobalStyle } from 'styled-components';
 
 const Wrapper = styled(Jumbotron)`
@@ -27,7 +27,7 @@ export default () => {
       setError('Lobby code and room name must not be empty.');
       return;
     }
-    axios.post('http://localhost:9000/rooms', {
+    client.post('http://localhost:9000/rooms', {
       lobby: lobbyCode,
       room: roomName,
     }).then(() => redirectToRoom())
@@ -102,27 +102,27 @@ export default () => {
         onClick={joinRoom}
         block
       >Join</Button>
-      <Modal
-        show={showReconnectModal}
-        onHide={() => setShowReconnectModal(false)}
-      >
-        <Modal.Header closeButton>
-          <h4>Room name {roomName} is taken</h4>
-        </Modal.Header>
-        <Modal.Body>
-          Are you trying to reconnect?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant='secondary'
-            onClick={() => setShowReconnectModal(false)}
-          >No, enter another name</Button>
-          <Button
-            variant='primary'
-            onClick={redirectToRoom}
-          >Yes, reconnect</Button>
-        </Modal.Footer>
-      </Modal>
     </Wrapper>
+    <Modal
+      show={showReconnectModal}
+      onHide={() => setShowReconnectModal(false)}
+    >
+      <Modal.Header closeButton>
+        <h4>Room name {roomName} is taken</h4>
+      </Modal.Header>
+      <Modal.Body>
+        Are you trying to reconnect?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          variant='secondary'
+          onClick={() => setShowReconnectModal(false)}
+        >No, enter another name</Button>
+        <Button
+          variant='primary'
+          onClick={redirectToRoom}
+        >Yes, reconnect</Button>
+      </Modal.Footer>
+    </Modal>
   </>;
 }

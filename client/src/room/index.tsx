@@ -6,7 +6,6 @@ import styled, { createGlobalStyle } from 'styled-components';
 import SocketIOClient from 'socket.io-client';
 import { Location } from 'history';
 import queryString from 'query-string';
-import axios from 'axios';
 
 const GlobalStyle = createGlobalStyle`
   body {

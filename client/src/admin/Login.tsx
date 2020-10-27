@@ -1,40 +1,39 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import axios from 'axios';
 import {
-  Col,
+  Jumbotron,
+  InputGroup,
+  FormControl,
   Button,
 } from 'react-bootstrap';
 
-const Form = styled.div`
-  border-radius: 3px;
-  &>h1{
-    text-align: center;
-    background-color:rgba(164, 164, 164, 0);
-    border-radius: 3px;
-  }
-  &>h6{
-    text-align: center;
-    background-color:rgba(164, 164, 164, 0);
-    border-radius: 3px;
+const Global = createGlobalStyle`
+  html, body {
+    background-color: rgb(248, 248, 248) !important;
   }
 `;
 
-const Extra = styled.div`
-  float:right;
-	position: relative;
-	top:-38px;
+const Wrapper = styled(Jumbotron)`
+  margin: 50px auto;
+  width: 500px;
 `;
 
-export default class extends React.Component<{}, {username: string, password:string }> {
+export default class extends React.Component<{}, {
+  username: string,
+  password: string,
+  error?: string,
+}> {
   constructor(props:any){
     super(props);
-    this.state={username:'', password:''};
+    this.state = {
+      username:'',
+      password:'',
+    };
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
-    // this.handleExtraSubmit = this.handleExtraSubmit.bind(this);
   }
 
   handleUsernameChange(event: { target: { value: any; }; }){
@@ -50,50 +49,71 @@ export default class extends React.Component<{}, {username: string, password:str
     }
   }
 
-  async handleFormSubmit(){
+  async handleFormSubmit() {
+    if (!this.state.username || !this.state.password) {
+      this.setState({ error: 'Username and password must not be empty.'});
+      return;
+    }
     try {
-      await axios.post('http://localhost:9000/admin/login', {
+      const { data } = await axios.post('http://localhost:9000/admin/login', {
         username: this.state.username,
         password: this.state.password,
       });
-    } catch(err) {
-      console.log(err);
+      localStorage.setItem('token', data.token);
+    } catch (err) {
+      this.setState({ error: err.response.data });
     }
   }
 
-  // handleExtraSubmit(event: { preventDefault: () => void; }){
-  //   event.preventDefault();
-  // }
-
-  render(){
+  render() {
     return <>
-      <div style={{ color: 'black' }}>
-        <Col style={{borderColor:"black", borderWidth:10}}>
-          <Form>
-            <h1>Login to Rescue-Orion</h1>
-            Username:
-            <input
-              type='text'
-              value={this.state.username}
-              onChange={this.handleUsernameChange}
-              onKeyDown={this.onKeyDown}
-              required
-            />
-            Password:
-            <input
-              type="password"
-              value={this.state.password}
-              onChange={this.handlePasswordChange}
-              onKeyDown={this.onKeyDown}
-              required
-            />
-            <Button variant='dark' onClick={this.handleFormSubmit}>Submit</Button>
-          </Form>
-          {/* <Extra>
-              <button type="submit" className="btn btn-dark" onClick={this.handleExtraSubmit}>Register</button>
-          </Extra> */}
-        </Col>
-      </div>
+      <Global />
+      <Wrapper>
+        <h3 style={{
+          textAlign: 'center',
+          marginBottom: '40px',
+        }}>Sign In to Manage Rescue Orion</h3>
+        <InputGroup style={{ marginBottom: '10px' }}>
+          <InputGroup.Prepend>
+            <InputGroup.Text
+              style={{
+                width: '100px',
+                backgroundColor: 'rgb(73, 81, 87)',
+                color: 'white',
+              }}
+            >Username</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl 
+            value={this.state.username}
+            onChange={this.handleUsernameChange}
+            onKeyDown={this.onKeyDown}
+          />
+        </InputGroup>
+        <InputGroup>
+          <InputGroup.Prepend>
+            <InputGroup.Text
+              style={{
+                width: '100px',
+                backgroundColor: 'rgb(73, 81, 87)',
+                color: 'white',
+              }}
+            >Password</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            type="password"
+            value={this.state.password}
+            onChange={this.handlePasswordChange}
+            onKeyDown={this.onKeyDown}
+          />
+        </InputGroup>
+        <p style={{ height: '20px', color: 'red' }}>
+          {this.state.error}
+        </p>
+        <Button
+          onClick={this.handleFormSubmit}
+          block
+        >Sign In</Button>
+      </Wrapper>
     </>;
   }
 }

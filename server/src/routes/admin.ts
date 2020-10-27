@@ -1,9 +1,9 @@
 import express from 'express';
-import io from 'socket.io';
 import csvParser from 'csv-parser';
 import fs from 'fs';
 import { cwd } from 'process';
-
+import jwt from 'jsonwebtoken';
+import { jwtOptions } from '../auth';
 
 export default (router: express.Router) => {
 	router.post('/login', (req, res) => {
@@ -12,15 +12,16 @@ export default (router: express.Router) => {
 		let found = false;
 		
 		//compare username, password with csv file
-		console.log(cwd());
 		fs.createReadStream(cwd() + '/credentials.csv')
 		.pipe(csvParser())
 		.on('data', (data) => {
-			if(username === data.admin){
+			if(username === data.username){
 				found=true;
 				if(password === data.password){
-					//send a token
-					console.log('Login Successful');
+					let token = jwt.sign({
+						username: username,
+					}, jwtOptions.secretOrKey);
+					res.status(200).send({ token: token });
 				}else{
 					res.status(401).send('Wrong Password for user: ' + username);
 					console.log('Wrong Password for user: ' + username);
@@ -28,9 +29,9 @@ export default (router: express.Router) => {
 			}
 		})
 		.on('end', () => {
-			if(found==false){
-				res.status(401).send('Unauthorized username: '+ username);
-				console.log('Unauthorized username: '+ username);
+			if(!found){
+				res.status(401).send('Unauthorized user: '+ username);
+				console.log('Unauthorized user: '+ username);
 			}
 		});
 	});

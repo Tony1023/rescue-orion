@@ -9,9 +9,9 @@ import {
   RescueResource,
   LobbyStatus
 } from '../metadata/types';
-import axios from 'axios';
+import client from '../axios-client';
 import fileSave from 'file-saver';
-import { Jumbotron, Table, Button, Badge } from 'react-bootstrap';
+import { Jumbotron, Table, Button, Badge, Modal } from 'react-bootstrap';
 import styled from 'styled-components';
 
 function pad(n: number): string {
@@ -68,19 +68,25 @@ export default () => {
 
   const [startGameStatus, setStartGameStatus] = useState<string | boolean>(false);
   const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:9000/lobbies/${code}`)
+    client.get(`http://localhost:9000/lobbies/${code}`, {
+      headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
+    })
       .then((res) => {
         const date = new Date(res.data.createTime);
         setCreateTime(date.toLocaleString());
       })
-      .catch(() => {});
-
+      .catch(() => {
+        setCreateTime(undefined);
+      });
+    
     const newSocket = SocketIOClient('http://localhost:9000', {
       path: '/lobbies/socket',
       query: {
         lobby: code,
+        token: localStorage.getItem('token'),
       }
     });
     setSocket(newSocket);
@@ -107,7 +113,6 @@ export default () => {
     newSocket.on('connect_error', () => {
       setSocket(undefined);
     });
-
   }, [code]);
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -141,7 +146,9 @@ export default () => {
   }
 
   function startGames() {
-    axios.put(`http://localhost:9000/lobbies/start/${code}`)
+    client.put(`http://localhost:9000/lobbies/start/${code}`, {}, {
+      headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
+    })
       .then(() => {
         setStartGameStatus(true);
         setTimeout(() => setStartGameStatus(false), 5000);
@@ -153,7 +160,11 @@ export default () => {
 
   function setGameCountDown() {
     const countDownInSeconds = countDownMinutes * 60 + countDownSeconds;
-    axios.put(`http://localhost:9000/lobbies/${code}`, { countDown: countDownInSeconds })
+    client.put(`http://localhost:9000/lobbies/${code}`, { 
+        countDown: countDownInSeconds
+      }, {
+        headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
+    })
       .then(() => {
         setConfigCountDownStatus(true);
         setTimeout(() => setConfigCountDownStatus(false), 5000);
@@ -184,141 +195,166 @@ export default () => {
     fileSave.saveAs(blob, `lobby_${code} at ${createTime}.csv`);
   }
 
-  return <Wrapper>
-    {
-      socket ?
-      <>
-        <Jumbotron>
-          <Title>Lobby {code}</Title>
-          <LobbyControls>
-            <p>
-              Time created: {createTime}
-            </p>
-            <p>
-              {'Lobby status: '}
-              <Badge
-                style={{ fontSize: '16px' }}
-                variant='secondary'
-              >{status ?? 'Unknown'}</Badge>
-              {'  '}
-              <Button
-                variant='outline-success'
-                size='sm'
-                onClick={startGames}
-                disabled={status !== LobbyStatus.Waiting}
-              >Start Games</Button>
-              {
-                startGameStatus ?
-                (
-                  typeof startGameStatus === 'string' ?
-                  <span style={{ color: 'red' }}> {startGameStatus}</span> : <>&#10003;</>
-                )
+  return <>
+    <Wrapper>
+      {
+        createTime && socket ?
+        <>
+          <Jumbotron>
+            <Title>Lobby {code}</Title>
+            <LobbyControls>
+              <p>
+                Time created: {createTime}
+              </p>
+              <p>
+                {'Lobby status: '}
+                <Badge
+                  style={{ fontSize: '16px' }}
+                  variant='secondary'
+                >{status ?? 'Unknown'}</Badge>
+                {'  '}
+                <Button
+                  variant='outline-success'
+                  size='sm'
+                  onClick={() => setShowModal(true)}
+                  disabled={status !== LobbyStatus.Waiting}
+                >Start Games</Button>
+                {
+                  startGameStatus ?
+                  (
+                    typeof startGameStatus === 'string' ?
+                    <span style={{ color: 'red' }}> {startGameStatus}</span> : <>&#10003;</>
+                  )
+                  :
+                  <></>
+                }
+              </p>
+              <p>
+                {'Time remaining: '}
+                <input
+                  value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
+                  onChange={onMinutesChange}
+                  onFocus={(e) => e.target.select()}
+                  disabled={status !== LobbyStatus.Waiting}
+                  type='number'
+                  min={0}
+                  max={999}
+                  step={1}
+                  onKeyDown={onKeyDown}
+                />
                 :
-                <></>
-              }
-            </p>
-            <p>
-              {'Time remaining: '}
-              <input
-                value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
-                onChange={onMinutesChange}
-                onFocus={(e) => e.target.select()}
-                disabled={status !== LobbyStatus.Waiting}
-                type='number'
-                min={0}
-                max={999}
-                step={1}
-                onKeyDown={onKeyDown}
-              />
-              :
-              <input
-                value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
-                onChange={onSecondsChange}
-                onFocus={(e) => e.target.select()}
-                disabled={status !== LobbyStatus.Waiting}
-                type='number'
-                min={0}
-                max={59}
-                step={1}
-                onKeyDown={onKeyDown}
-              />
-              {'  '}
-              <Button
-                variant='outline-success'
-                size='sm'
-                onClick={setGameCountDown}
-                disabled={status !== LobbyStatus.Waiting}
-              >Set</Button>
+                <input
+                  value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
+                  onChange={onSecondsChange}
+                  onFocus={(e) => e.target.select()}
+                  disabled={status !== LobbyStatus.Waiting}
+                  type='number'
+                  min={0}
+                  max={59}
+                  step={1}
+                  onKeyDown={onKeyDown}
+                />
+                {'  '}
+                <Button
+                  variant='outline-success'
+                  size='sm'
+                  onClick={setGameCountDown}
+                  disabled={status !== LobbyStatus.Waiting}
+                >Set</Button>
+                {
+                  configCountDownStatus ?
+                  (
+                    typeof configCountDownStatus === 'string' ?
+                    <span style={{ color: 'red' }}> {configCountDownStatus}</span> : <>&#10003;</>
+                  )
+                  :
+                  <></>
+                }
+              </p>
+            </LobbyControls>
+          </Jumbotron>
+          <Button
+            variant='outline-info'
+            style={{ marginBottom: '20px' }}
+            onClick={exportSnapshot}
+          >Export lobby snapshot as csv file</Button>
+          <Table striped bordered hover size='sm'>
+            <tbody>
+              <tr>
+                <th>Room Name</th>
+                <th>O2-temp<br/>(day 6)</th>
+                <th>Oxygen<br/>(day 21)</th>
+                <th>Water<br/>(day 23)</th>
+                <th>Food<br/>(day 24)</th>
+                <th>Medical<br/>(day 25)</th>
+                <th>Scientists Alive</th>
+                <th>Day Count</th>
+                <th>Mission Time</th>
+              </tr>
               {
-                configCountDownStatus ?
-                (
-                  typeof configCountDownStatus === 'string' ?
-                  <span style={{ color: 'red' }}> {configCountDownStatus}</span> : <>&#10003;</>
-                )
-                :
-                <></>
+                Object.keys(rooms).map((name, index) => {
+                  const room = rooms[name];
+                  const dropOffTimes = room.gameStats.dropOffTimes;
+                  return <tr key={index}>
+                    <td>{name}</td>
+                    {
+                      [
+                        RescueResource.O2ReplacementCells,
+                        RescueResource.OxygenRepairTeam,
+                        RescueResource.WaterRepairTeam,
+                        RescueResource.FoodRepairTeam,
+                        RescueResource.MedicalRepairTeam,
+                      ].map((resource, index) => <td key={index}>
+                        {dropOffTimes[resource] >= 0 ? dropOffTimes[resource] : '-'}
+                      </td>)
+                    }
+                    <td>
+                      {
+                        room.status === GameStatus.MissionFailed ?
+                        'Mission Failed':
+                        `${room.gameStats.scientistsRemaining}/20`
+                      }
+                    </td>
+                    <td>{room.time}</td>
+                    <td>
+                      {
+                        room.gameStats.endTime ?
+                        formatTime(room.gameStats.endTime) :
+                        formatTime(duration)
+                      }
+                    </td>
+                  </tr>;
+                })
               }
-            </p>
-          </LobbyControls>
-        </Jumbotron>
+            </tbody>
+          </Table>
+        </>
+        :
+        <Jumbotron><Title>Lobby {code} does not exist.</Title></Jumbotron>
+      }
+    </Wrapper>
+    <Modal
+      show={showModal}
+      onHide={() => setShowModal(false)}
+    >
+      <Modal.Header closeButton>
+        <h4>About to start games</h4>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Are you sure to start games?</p>
+        <p>It cannot be undone.</p>
+        <p>No rooms can be added afterwards.</p>
+      </Modal.Body>
+      <Modal.Footer>
         <Button
-          variant='outline-info'
-          style={{ marginBottom: '20px' }}
-          onClick={exportSnapshot}
-        >Export lobby snapshot as csv file</Button>
-        <Table striped bordered hover size='sm'>
-          <tbody>
-            <tr>
-              <th>Room Name</th>
-              <th>O2-temp<br/>(day 6)</th>
-              <th>Oxygen<br/>(day 21)</th>
-              <th>Water<br/>(day 23)</th>
-              <th>Food<br/>(day 24)</th>
-              <th>Medical<br/>(day 25)</th>
-              <th>Scientists Alive</th>
-              <th>Day Count</th>
-              <th>Mission Time</th>
-            </tr>
-            {
-              Object.keys(rooms).map((name, index) => {
-                const room = rooms[name];
-                const dropOffTimes = room.gameStats.dropOffTimes;
-                return <tr key={index}>
-                  <td>{name}</td>
-                  {
-                    [
-                      RescueResource.O2ReplacementCells,
-                      RescueResource.OxygenRepairTeam,
-                      RescueResource.WaterRepairTeam,
-                      RescueResource.FoodRepairTeam,
-                      RescueResource.MedicalRepairTeam,
-                    ].map((resource, index) => <td key={index}>
-                      {dropOffTimes[resource] >= 0 ? dropOffTimes[resource] : '-'}
-                    </td>)
-                  }
-                  <td>
-                    {
-                      room.status === GameStatus.MissionFailed ?
-                      'Mission Failed':
-                      `${room.gameStats.scientistsRemaining}/20`
-                    }
-                  </td>
-                  <td>{room.time}</td>
-                  <td>
-                    {
-                      room.gameStats.endTime ?
-                      formatTime(room.gameStats.endTime) :
-                      formatTime(duration)
-                    }
-                  </td>
-                </tr>;
-              })
-            }
-          </tbody>
-        </Table>
-      </>
-      :
-      <Jumbotron><Title>Lobby {code} does not exist.</Title></Jumbotron>
-    }
-  </Wrapper>
+          variant='secondary'
+          onClick={() => setShowModal(false)}
+        >Cancel</Button>
+        <Button
+          variant='primary'
+          onClick={startGames}
+        >Yes, let's start</Button>
+      </Modal.Footer>
+    </Modal>
+  </>;
 }

@@ -2,6 +2,8 @@ import express from 'express';
 import io from 'socket.io';
 import { LobbyStatus } from '../metadata/types';
 import repository, { Lobby } from '../repository';
+import jwt from 'jsonwebtoken';
+import { jwtOptions } from '../auth';
 
 export default (router: express.Router, wss: io.Server) => {
   router.get('/:code', (req, res) => {
@@ -60,6 +62,29 @@ export default (router: express.Router, wss: io.Server) => {
   });
 
   wss.use((socket, next) => {
+    const token = socket.handshake.query?.token;
+    if (!token) {
+      socket.disconnect();
+      return;
+    }
+    let username: string;
+
+    // sync callback
+    jwt.verify(token, jwtOptions.secretOrKey, (err: any, decoded: { username: string }) => {
+      if (err) {
+        next(new Error('Authentication failed.'));
+        return;
+      }
+      username = decoded.username;
+    });
+
+    if (!username) {
+      socket.disconnect();
+      return;
+    }
+
+    // TODO: compare with lobby's admin
+
     const lobbyCode = parseInt(socket.handshake.query?.lobby);
     const lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {

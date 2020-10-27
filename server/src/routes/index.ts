@@ -4,6 +4,7 @@ import room from './room';
 import admin from './admin';
 import lobby from './lobby';
 import io from 'socket.io';
+import { passport } from '../auth';
 
 export default (app: express.Express, server: http.Server): void => {
 
@@ -13,6 +14,7 @@ export default (app: express.Express, server: http.Server): void => {
 
   const lobbyWss = io().path('/lobbies/socket').attach(server);
   const lobbyRouter = express.Router();
+  lobbyRouter.use(passport.authenticate("jwt", { session: false }));
   app.use('/lobbies', lobbyRouter);
   lobby(lobbyRouter, lobbyWss);
 
