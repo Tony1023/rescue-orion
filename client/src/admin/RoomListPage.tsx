@@ -275,9 +275,18 @@ export default () => {
           </Jumbotron>
           <Button
             variant='outline-info'
-            style={{ marginBottom: '20px' }}
             onClick={exportSnapshot}
           >Export lobby snapshot as csv file</Button>
+          <p style={{ margin: '10px 0' }}>
+            Teams: {Object.keys(rooms).length}, not finished: {
+              Object.values(rooms).reduce((accumulator: number, state: GameState) => {
+                if (state.status === GameStatus.NotStarted || state.status === GameStatus.Started) {
+                  return accumulator + 1;
+                }
+                return accumulator;
+              }, 0)
+            }
+          </p>
           <Table striped bordered hover size='sm'>
             <tbody>
               <tr>
