@@ -53,6 +53,10 @@ const LobbyControls = styled.div`
   margin: 0 auto;
 `;
 
+const Time = styled.span`
+  font-family: 'Courier New', Courier, monospace;
+`;
+
 export default () => {
   const { code } = useParams<{ code?: string }>();
 
@@ -150,8 +154,7 @@ export default () => {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then(() => {
-        setStartGameStatus(true);
-        setTimeout(() => setStartGameStatus(false), 5000);
+        setShowModal(false);
       })
       .catch((err) => {
         setStartGameStatus(err.response.data);
@@ -231,29 +234,36 @@ export default () => {
               </p>
               <p>
                 {'Time remaining: '}
-                <input
-                  value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
-                  onChange={onMinutesChange}
-                  onFocus={(e) => e.target.select()}
-                  disabled={status !== LobbyStatus.Waiting}
-                  type='number'
-                  min={0}
-                  max={999}
-                  step={1}
-                  onKeyDown={onKeyDown}
-                />
-                :
-                <input
-                  value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
-                  onChange={onSecondsChange}
-                  onFocus={(e) => e.target.select()}
-                  disabled={status !== LobbyStatus.Waiting}
-                  type='number'
-                  min={0}
-                  max={59}
-                  step={1}
-                  onKeyDown={onKeyDown}
-                />
+                {
+                  status === LobbyStatus.Waiting ?
+                  <>
+                    <input    
+                      value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
+                      onChange={onMinutesChange}
+                      onFocus={(e) => e.target.select()}
+                      disabled={status !== LobbyStatus.Waiting}
+                      type='number'
+                      min={0}
+                      max={999}
+                      step={1}
+                      onKeyDown={onKeyDown}
+                    />
+                    :
+                    <input
+                      value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
+                      onChange={onSecondsChange}
+                      onFocus={(e) => e.target.select()}
+                      disabled={status !== LobbyStatus.Waiting}
+                      type='number'
+                      min={0}
+                      max={59}
+                      step={1}
+                      onKeyDown={onKeyDown}
+                    />
+                  </>
+                  :
+                  <Time>{formatTime(countDownMinutes * 60 + countDownSeconds)}</Time>
+                }
                 {'  '}
                 <Button
                   variant='outline-success'
@@ -299,6 +309,7 @@ export default () => {
                 <th>Scientists Alive</th>
                 <th>Day Count</th>
                 <th>Mission Time</th>
+                <th>Mission Status</th>
               </tr>
               {
                 Object.keys(rooms).map((name, index) => {
@@ -319,19 +330,20 @@ export default () => {
                     }
                     <td>
                       {
-                        room.status === GameStatus.MissionFailed ?
-                        'Mission Failed':
                         `${room.gameStats.scientistsRemaining}/20`
                       }
                     </td>
                     <td>{room.time}</td>
                     <td>
-                      {
-                        room.gameStats.endTime ?
-                        formatTime(room.gameStats.endTime) :
-                        formatTime(duration)
-                      }
+                      <Time>
+                        {
+                          room.gameStats.endTime ?
+                          formatTime(room.gameStats.endTime) :
+                          formatTime(duration)
+                        }
+                      </Time>
                     </td>
+                    <td>{room.status}</td>
                   </tr>;
                 })
               }
