@@ -76,39 +76,42 @@ export default () => {
       .then((res) => {
         const date = new Date(res.data.createTime);
         setCreateTime(date.toLocaleString());
-
-        const newSocket = SocketIOClient('http://localhost:9000', {
-          path: '/lobbies/socket',
-          query: {
-            lobby: code,
-          }
-        });
-        setSocket(newSocket);
-    
-        newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
-          const state = JSON.parse(data) as LobbyState;
-          setStaus(state.status);
-          setDuration(state.gameDuration.duration);
-          setCountDownMinutes(Math.floor(state.gameDuration.countDown / 60));
-          setCountDownSeconds(state.gameDuration.countDown % 60);
-          if (Object.keys(state.updatedRooms).length > 0) {
-            const newRooms = {...rooms};
-            Object.keys(state.updatedRooms).forEach((name) => {
-              newRooms[name] = state.updatedRooms[name];
-            });
-            setRooms(newRooms);
-          }
-        });
-    
-        newSocket.on('disconnect', () => {
-          setSocket(undefined);
-        });
-    
-        newSocket.on('connect_error', () => {
-          setSocket(undefined);
-        });
+      })
+      .catch(() => {
+        setCreateTime(undefined);
       });
+    
+    const newSocket = SocketIOClient('http://localhost:9000', {
+      path: '/lobbies/socket',
+      query: {
+        lobby: code,
+        token: localStorage.getItem('token'),
+      }
+    });
+    setSocket(newSocket);
 
+    newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
+      const state = JSON.parse(data) as LobbyState;
+      setStaus(state.status);
+      setDuration(state.gameDuration.duration);
+      setCountDownMinutes(Math.floor(state.gameDuration.countDown / 60));
+      setCountDownSeconds(state.gameDuration.countDown % 60);
+      if (Object.keys(state.updatedRooms).length > 0) {
+        const newRooms = {...rooms};
+        Object.keys(state.updatedRooms).forEach((name) => {
+          newRooms[name] = state.updatedRooms[name];
+        });
+        setRooms(newRooms);
+      }
+    });
+
+    newSocket.on('disconnect', () => {
+      setSocket(undefined);
+    });
+
+    newSocket.on('connect_error', () => {
+      setSocket(undefined);
+    });
   }, [code]);
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
