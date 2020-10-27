@@ -102,27 +102,27 @@ export default () => {
         onClick={joinRoom}
         block
       >Join</Button>
-      <Modal
-        show={showReconnectModal}
-        onHide={() => setShowReconnectModal(false)}
-      >
-        <Modal.Header closeButton>
-          <h4>Room name {roomName} is taken</h4>
-        </Modal.Header>
-        <Modal.Body>
-          Are you trying to reconnect?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant='secondary'
-            onClick={() => setShowReconnectModal(false)}
-          >No, enter another name</Button>
-          <Button
-            variant='primary'
-            onClick={redirectToRoom}
-          >Yes, reconnect</Button>
-        </Modal.Footer>
-      </Modal>
     </Wrapper>
+    <Modal
+      show={showReconnectModal}
+      onHide={() => setShowReconnectModal(false)}
+    >
+      <Modal.Header closeButton>
+        <h4>Room name {roomName} is taken</h4>
+      </Modal.Header>
+      <Modal.Body>
+        Are you trying to reconnect?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          variant='secondary'
+          onClick={() => setShowReconnectModal(false)}
+        >No, enter another name</Button>
+        <Button
+          variant='primary'
+          onClick={redirectToRoom}
+        >Yes, reconnect</Button>
+      </Modal.Footer>
+    </Modal>
   </>;
 }

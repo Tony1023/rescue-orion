@@ -30,8 +30,8 @@ export default (router: express.Router) => {
 		})
 		.on('end', () => {
 			if(!found){
-				res.status(401).send('Unauthorized username: '+ username);
-				console.log('Unauthorized username: '+ username);
+				res.status(401).send('Unauthorized user: '+ username);
+				console.log('Unauthorized user: '+ username);
 			}
 		});
 	});
