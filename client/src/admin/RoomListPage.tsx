@@ -355,7 +355,7 @@ export default () => {
                       </Time>
                     </td>
                     <td>{game.status}</td>
-                    <td>
+                    <td style={{ textAlign: 'center', padding: '0.1em' }}>
                       <Button
                         size='sm'
                         variant='outline-danger'
