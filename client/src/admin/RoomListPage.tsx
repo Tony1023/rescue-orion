@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import SocketIOClient from 'socket.io-client';
 import {
@@ -65,15 +65,16 @@ export default () => {
   const [countDownMinutes, setCountDownMinutes] = useState(0);
   const [countDownSeconds, setCountDownSeconds] = useState(0);
   const [createTime, setCreateTime] = useState<string>();
-  const [rooms, setRooms] = useState<{
-    [name: string]: GameState
-  }>({});
-  const [status, setStaus] = useState<LobbyStatus>();
+  const [rooms, setRooms] = useState<{ [name: string]: GameState }>({});
+  const [status, setStatus] = useState<LobbyStatus>();
 
   const [startGameStatus, setStartGameStatus] = useState<string | boolean>(false);
   const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [restartModal, setRestartModal] = useState<string>();
+
+  const stateRef = useRef<{ [name: string]: GameState }>();
+  stateRef.current = rooms;
 
   useEffect(() => {
     client.get(`http://localhost:9000/lobbies/${code}`, {
@@ -98,12 +99,12 @@ export default () => {
 
     newSocket.on(SocketMessages.LobbyUpdate, (data: string) => {
       const state = JSON.parse(data) as LobbyState;
-      setStaus(state.status);
+      setStatus(state.status);
       setDuration(state.gameDuration.duration);
       setCountDownMinutes(Math.floor(state.gameDuration.countDown / 60));
       setCountDownSeconds(state.gameDuration.countDown % 60);
       if (Object.keys(state.updatedRooms).length > 0) {
-        const newRooms = {...rooms};
+        const newRooms = {...stateRef.current};
         Object.keys(state.updatedRooms).forEach((name) => {
           newRooms[name] = state.updatedRooms[name];
         });
@@ -118,7 +119,7 @@ export default () => {
     newSocket.on('connect_error', () => {
       setSocket(undefined);
     });
-  }, [code]);
+  }, []);
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
@@ -179,7 +180,6 @@ export default () => {
   }
 
   function restartGame(room: string) {
-    console.log('click!');
     client.post('http://localhost:9000/rooms/restart', {
       lobby: code,
       room: room
