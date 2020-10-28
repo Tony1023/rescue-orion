@@ -73,6 +73,7 @@ export default () => {
   const [startGameStatus, setStartGameStatus] = useState<string | boolean>(false);
   const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
   const [showModal, setShowModal] = useState(false);
+  const [restartModal, setRestartModal] = useState<string>();
 
   useEffect(() => {
     client.get(`http://localhost:9000/lobbies/${code}`, {
@@ -182,9 +183,7 @@ export default () => {
       lobby: code,
       room: room
     }, { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }})
-      .then(() => {
-
-      });
+      .then(() => setRestartModal(undefined));
   }
 
   function exportSnapshot() {
@@ -359,8 +358,8 @@ export default () => {
                     <td>
                       <Button
                         size='sm'
-                        variant='danger'
-                        onClick={() => restartGame(name)}
+                        variant='outline-danger'
+                        onClick={() => setRestartModal(name)}
                       >Restart</Button>
                     </td>
                   </tr>;
@@ -394,6 +393,28 @@ export default () => {
           variant='primary'
           onClick={startGames}
         >Yes, let's start</Button>
+      </Modal.Footer>
+    </Modal>
+    <Modal
+      show={restartModal}
+      onHide={() => setRestartModal(undefined)}
+    >
+      <Modal.Header closeButton>
+        <h4>About to restart room {restartModal}</h4>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Are you sure to restart mission for room {restartModal}</p>
+        <p>It cannot be undone and data of the current mission will be lost.</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          variant='secondary'
+          onClick={() => setRestartModal(undefined)}
+        >Cancel</Button>
+        <Button
+          variant='danger'
+          onClick={() => restartGame(restartModal ?? '')}
+        >Yes, restart</Button>
       </Modal.Footer>
     </Modal>
   </>;
