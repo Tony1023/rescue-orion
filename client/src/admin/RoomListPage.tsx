@@ -35,7 +35,7 @@ function formatTime(time: number) {
 }
 
 const Wrapper = styled.div`
-  max-width: 1024px;
+  max-width: 1100px;
   min-height: 100vh;
   margin: 0 auto;
   background-color: rgb(248, 248, 248);
@@ -177,6 +177,16 @@ export default () => {
       });
   }
 
+  function restartGame(room: string) {
+    client.post('http://localhost:9000/rooms', {
+      lobby: code,
+      room: room
+    }, { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }})
+      .then(() => {
+
+      });
+  }
+
   function exportSnapshot() {
     const lines = Object.keys(rooms).reduce((accumulator: string[], name: string) => {
       const stats = rooms[name].gameStats;
@@ -188,7 +198,7 @@ export default () => {
         stats.dropOffTimes[RescueResource.FoodRepairTeam],
         stats.dropOffTimes[RescueResource.MedicalRepairTeam],
         stats.scientistsRemaining,
-        stats.endTime ? formatTime(stats.endTime) : '',
+        rooms[name].endTime ? formatTime(rooms[name].endTime! - rooms[name].startTime) : '',
         rooms[name].status,
       ];
       accumulator.push(`${strings.join(',')}\n`);
@@ -310,11 +320,12 @@ export default () => {
                 <th>Day Count</th>
                 <th>Mission Time</th>
                 <th>Mission Status</th>
+                <th>Restart</th>
               </tr>
               {
                 Object.keys(rooms).map((name, index) => {
-                  const room = rooms[name];
-                  const dropOffTimes = room.gameStats.dropOffTimes;
+                  const game = rooms[name];
+                  const dropOffTimes = game.gameStats.dropOffTimes;
                   return <tr key={index}>
                     <td>{name}</td>
                     {
@@ -330,20 +341,28 @@ export default () => {
                     }
                     <td>
                       {
-                        `${room.gameStats.scientistsRemaining}/20`
+                        `${game.gameStats.scientistsRemaining}/20`
                       }
                     </td>
-                    <td>{room.time}</td>
+                    <td>{game.time}</td>
                     <td>
                       <Time>
                         {
-                          room.gameStats.endTime ?
-                          formatTime(room.gameStats.endTime) :
-                          formatTime(duration)
+                          game.status === GameStatus.NotStarted ?
+                          '00:00'
+                          :
+                          formatTime((game.endTime ?? duration) - game.startTime)
                         }
                       </Time>
                     </td>
-                    <td>{room.status}</td>
+                    <td>{game.status}</td>
+                    <td>
+                      <Button
+                        size='sm'
+                        variant='danger'
+                        onClick={() => restartGame(name)}
+                      >Restart</Button>
+                    </td>
                   </tr>;
                 })
               }
