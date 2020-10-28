@@ -179,6 +179,7 @@ export default () => {
   }
 
   function restartGame(room: string) {
+    console.log('click!');
     client.post('http://localhost:9000/rooms/restart', {
       lobby: code,
       room: room
@@ -357,6 +358,7 @@ export default () => {
                     <td>{game.status}</td>
                     <td style={{ textAlign: 'center', padding: '0.1em' }}>
                       <Button
+                        disabled={game.status === GameStatus.NotStarted}
                         size='sm'
                         variant='outline-danger'
                         onClick={() => setRestartModal(name)}
