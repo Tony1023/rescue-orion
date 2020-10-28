@@ -42,7 +42,7 @@ export default class Game implements MessageQueue {
   private startTime: number = 0;
   private endTime: number;
   newMessage = false;
-  status = GameStatus.NotStarted;
+  status = GameStatus.MissionSucceeded;
 
   load(): void {
     const gemini_1 = new Gemini_1(40, 80, [RescueResource.O2ReplacementCells]);

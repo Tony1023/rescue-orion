@@ -29,7 +29,7 @@ const StyledModal = styled(Modal)`
   padding: 30px;
 `;
 
-const StyledExtraModal = styled(ExtraModal)`
+export const StyledExtraModal = styled(ExtraModal)`
   padding: 30px;
 `;
 
