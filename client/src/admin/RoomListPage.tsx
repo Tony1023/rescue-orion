@@ -315,7 +315,7 @@ export default () => {
                 <th>Water<br/>(day 23)</th>
                 <th>Food<br/>(day 24)</th>
                 <th>Medical<br/>(day 25)</th>
-                <th>Scientists Alive</th>
+                <th>Scientists</th>
                 <th>Day Count</th>
                 <th>Mission Time</th>
                 <th>Mission Status</th>
@@ -403,7 +403,7 @@ export default () => {
         <h4>About to restart room {restartModal}</h4>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure to restart mission for room {restartModal}</p>
+        <p>Are you sure to restart mission for room {restartModal}?</p>
         <p>It cannot be undone and data of the current mission will be lost.</p>
       </Modal.Body>
       <Modal.Footer>
