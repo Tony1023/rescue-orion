@@ -37,8 +37,9 @@ export default class Game implements MessageQueue {
   private spaceships: { [id: string]: Spaceship } = {};
   private spaceStations: { [id: string]: SpaceStation } = {};
   private movedSinceStart = false;
-  private lastMove = 0;
+  private lastMove: number = 0;
   private countDownClock: CountDownClock;
+  private startTime: number = 0;
   private endTime: number;
   newMessage = false;
   status = GameStatus.NotStarted;
@@ -138,6 +139,12 @@ export default class Game implements MessageQueue {
         break;
       }
     }
+  }
+
+  startMission() {
+    this.lastMove = this.startTime = this.countDownClock.getSecondsElapsed();
+    this.status = GameStatus.Started;
+    this.messages = [spaceStationData[IDs.SAGITTARIUS].message];
   }
 
   endMission(success: boolean) {
@@ -254,10 +261,11 @@ export default class Game implements MessageQueue {
           return accumulator;
         },
       {}),
+      startTime: this.startTime,
+      endTime: this.endTime,
       messages: dump ? this.dumpMessages(): this.messages.slice(0),
       time: this.day,
       gameStats: {
-        endTime: this.endTime,
         scientistsRemaining: orion.getScientistCount(),
         dropOffTimes: orion.getDropOffTimes(),
       },
@@ -265,7 +273,8 @@ export default class Game implements MessageQueue {
     };
   }
 
-  private onTick(countDown: number, timeElapsed: number) {
+  private onTick(countDown: number, timeNow: number) {
+    const timeElapsed = timeNow - this.startTime;
     if (timeElapsed === 10 * 60 && !this.movedSinceStart) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',

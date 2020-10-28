@@ -2,8 +2,6 @@ import Game from './classes/Game';
 import io from 'socket.io';
 import { SocketMessages } from '../metadata/types';
 import * as Types from '../metadata/types';
-import { spaceStationData } from '../metadata';
-import * as IDs from '../metadata/agent-ids';
 import CountDownClock from './countdown-clock';
 
 
@@ -38,9 +36,18 @@ class Room {
 
   startGameIfNot() {
     if (this.game.status === Types.GameStatus.NotStarted) {
-      this.game.status = Types.GameStatus.Started;
-      this.game.pushMessage(spaceStationData[IDs.SAGITTARIUS].message);
+      this.game.startMission();
       this.sendGameUpdate();
+    }
+  }
+
+  restartGame() {
+    if (this.game.status !== Types.GameStatus.NotStarted) {
+      this.game = new Game(this.countDownClock);
+      this.game.load();
+      this.game.startMission();
+      this.sendGameUpdate();
+      this.dirty = true;
     }
   }
 

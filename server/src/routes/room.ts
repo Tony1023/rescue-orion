@@ -2,6 +2,7 @@ import express from 'express';
 import * as Types from '../metadata/types';
 import io from 'socket.io';
 import repository, { Lobby, Room } from '../repository';
+import passport from 'passport';
 
 export default (router: express.Router, wss: io.Server) => {
 
@@ -28,6 +29,25 @@ export default (router: express.Router, wss: io.Server) => {
       return;
     }
     lobby.insertRoom(roomName);
+    res.status(200).send();
+  });
+
+  router.use(passport.authenticate('jwt', { session: false }));
+  router.post('/restart', (req, res) => {
+    const lobbyCode = parseInt(req.body.lobby);
+    let lobby = repository.lobbies[lobbyCode];
+    if (isNaN(lobbyCode) || !lobby) {
+      res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
+      return;
+    }
+
+    const roomName = req.body.room;
+    const room = lobby.findRoom(roomName);
+    if (!room) {
+      res.status(404).send(`Room ${roomName} not found.`);
+      return;
+    }
+    room.restartGame();
     res.status(200).send();
   });
 
