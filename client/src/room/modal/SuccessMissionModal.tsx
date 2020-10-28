@@ -1,14 +1,13 @@
 import React from 'react';
 import {
-  BaseModalTextBackground,
+  BaseModalEndBackground,
   Modal,
   ModalBackground,
   Header,
 } from './modal';
 import { StyledExtraModal } from './MessageModal';
-import { useDispatch } from '../redux-hook-adapters';
-import EndGameModal from './EndGameModal';
 import styled from 'styled-components';
+import EndGameStatsModal from './EndGameStatsModal';
 
 const StyledModal = styled(Modal)`
   padding: 30px;
@@ -26,10 +25,8 @@ const Body = styled.div`
 `;
 
 export default () => {
-  const dispatch = useDispatch();
-
   return <SuccessModalBackground>
-    <BaseModalTextBackground>
+    <BaseModalEndBackground>
       <StyledModal>
         <Header>
           Welcome back to Sagittarius!
@@ -42,8 +39,8 @@ export default () => {
         </Body>
       </StyledModal>
       <StyledExtraModal>
-        <EndGameModal />
+        <EndGameStatsModal />
       </StyledExtraModal>      
-    </BaseModalTextBackground>
+    </BaseModalEndBackground>
   </SuccessModalBackground>;
 }

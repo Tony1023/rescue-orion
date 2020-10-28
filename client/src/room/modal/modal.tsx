@@ -21,6 +21,10 @@ export const BaseModalBackground = styled.div`
   transform: translate(-50%, 0);
 `;
 
+export const BaseModalEndBackground = styled(BaseModalBackground)`
+  top: 30px;
+`;
+
 export const BaseModalImageBackground = styled(BaseModalBackground)`
   height: 500px;
   background-size: cover;
