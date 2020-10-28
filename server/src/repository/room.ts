@@ -42,7 +42,13 @@ class Room {
   }
 
   restartGame() {
-    
+    if (this.game.status !== Types.GameStatus.NotStarted) {
+      this.game = new Game(this.countDownClock);
+      this.game.load();
+      this.game.startMission();
+      this.sendGameUpdate();
+      this.dirty = true;
+    }
   }
 
   getGameState() {
