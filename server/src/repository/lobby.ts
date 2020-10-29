@@ -15,6 +15,12 @@ class Lobby {
     this.countdownClock.subscribeTick(() => {
       this.sendUpdate();
     });
+    repository.lobbies[code] = this;
+    if (repository.adminLobbies[admin]) {
+      repository.adminLobbies[admin]?.push(code);
+    } else {
+      repository.adminLobbies[admin] = [code];
+    }
   }
 
   private sockets: io.Socket[] = [];
@@ -64,6 +70,7 @@ class Lobby {
       repository.adminLobbies[this.admin]?.splice(index, 1);
     }
     delete repository.lobbies[this.code];
+    this.sockets.forEach((socket) => socket.disconnect());
   }
 
   addSocket(socket: io.Socket) {

@@ -18,16 +18,16 @@ const strategy = new JwtStrategy(jwtOptions, (jwtPayload, next) => {
 	fs.createReadStream(cwd() + '/credentials.csv')
 		.pipe(csvParser())
 		.on('data', (data) => {
-			if (jwtPayload.username === data.username) {
-				found = true;
-				next(null, data.username);
-			}
-		})
-		.on('end', () => {
-			if (!found) {
-				next(null, null);
-			}
-		});
+			if (!found && jwtPayload.username === data.username) {
+        found = true;
+        next(null, jwtPayload.username);
+      }
+    })
+    .on('end', () => {
+      if (!found) {
+        next(null, null);
+      }
+    });
 });
 
 passport.use(strategy);
