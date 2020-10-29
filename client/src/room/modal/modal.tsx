@@ -21,6 +21,10 @@ export const BaseModalBackground = styled.div`
   transform: translate(-50%, 0);
 `;
 
+export const BaseModalEndBackground = styled(BaseModalBackground)`
+  top: 30px;
+`;
+
 export const BaseModalImageBackground = styled(BaseModalBackground)`
   height: 500px;
   background-size: cover;
@@ -43,7 +47,7 @@ export const Modal = styled(BaseModal)`
 `;
 
 export const ExtraModal = styled(BaseModal)`
-  clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 1% calc(100% - 25px), 0 13%);
+  clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px), 0 0);
 `;
 
 export const Header = styled.div`

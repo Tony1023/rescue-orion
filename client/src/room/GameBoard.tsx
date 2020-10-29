@@ -11,6 +11,7 @@ import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
 import EndGameModal from './modal/EndGameModal';
 import ConfirmMoveModal from './modal/ConfirmMoveModal';
+import SuccessMissionModal from './modal/SuccessMissionModal';
 import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
 import AbortMissionModal from './modal/AbortMissionModal';
@@ -278,6 +279,11 @@ export default function() {
           width={GAME_BOARD_WIDTH}
           height={GAME_BOARD_HEIGHT}  
         /> : <></>
+      }
+
+      {
+        gameState.status === GameStatus.MissionSucceeded ? 
+        <SuccessMissionModal /> : <></>
       }
 
       <Clock />
