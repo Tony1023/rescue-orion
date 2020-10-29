@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import client from '../axios-client';
 import { Jumbotron, Table, Button, Badge, Modal } from 'react-bootstrap';
 
 export default () => {
@@ -7,15 +7,14 @@ export default () => {
     const [lobbies, setLobbies] = useState<{ code: number, createTime: number }[]>([]);
 
     useEffect(() => {
-        axios.get('http://localhost:9000/lobbies',
+        client.get('http://localhost:9000/lobbies',
             { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}).then((res) => {
             setLobbies(res.data);
         });
     },[]);
 
     async function post() {
-        let res = await axios.post('http://localhost:9000/lobbies', {}, { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }});
-        console.log(res.data);
+        let res = await client.post('http://localhost:9000/lobbies', {}, { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }});
     }
     
     return <>
