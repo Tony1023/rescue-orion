@@ -9,7 +9,7 @@ import MessageModal from './modal/MessageModal';
 import { PixelPosition } from '../metadata/types';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
-import EndGameModal from './modal/EndGameModal';
+import AbortGameModal from './modal/AbortGameModal';
 import ConfirmMoveModal from './modal/ConfirmMoveModal';
 import SuccessMissionModal from './modal/SuccessMissionModal';
 import { useSelector } from './redux-hook-adapters';
@@ -244,8 +244,8 @@ export default function() {
         <WaitModal /> : <></>
       }
       {
-        gameState.status === GameStatus.MissionFailed ?
-        <EndGameModal/> : <></>
+        gameState.status === GameStatus.MissionAborted ?
+        <AbortGameModal/> : <></>
       }
       {
         showConfirmMoveModal ?

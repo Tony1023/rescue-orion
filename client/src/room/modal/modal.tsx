@@ -61,6 +61,12 @@ export const Header = styled.div`
   text-transform: uppercase;
 `;
 
+export const Body = styled.div`
+  font-family: 'Roboto' sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
 export const StyledButton = styled.div`
   font-family: 'Roboto' sans-serif;
   background-color: rgb(0, 198, 170);

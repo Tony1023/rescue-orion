@@ -113,7 +113,7 @@ class Room {
         break;
       }
       case Types.ABORT_MISSION: {
-        this.game.endMission(false);
+        this.game.endMission(Types.GameStatus.MissionAborted);
       }
       default:
         break;
