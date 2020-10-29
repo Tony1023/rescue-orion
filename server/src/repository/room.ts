@@ -38,6 +38,7 @@ class Room {
     if (this.game.status === Types.GameStatus.NotStarted) {
       this.game.startMission();
       this.sendGameUpdate();
+      this.dirty = true;
     }
   }
 
