@@ -39,7 +39,6 @@ export default (router: express.Router, wss: io.Server) => {
     res.status(200).send({lobbyCode : code, lobbyCreateTime : time});
   });
 
-  // new lobby
   router.post('/', (req, res) => {
     const lobbyCode = Math.floor(100000 + Math.random() * 900000)
     const lobby = new Lobby(lobbyCode, req.body.token);
@@ -58,7 +57,7 @@ export default (router: express.Router, wss: io.Server) => {
     res.status(200).send();
   });
 
-  router.put('/:code', (req, res) => {
+  router.put('/countdown/:code', (req, res) => {
     const code = parseInt(req.params.code);
     const lobby = repository.lobbies[code];
     if (isNaN(code) || !lobby) {

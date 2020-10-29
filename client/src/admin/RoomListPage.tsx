@@ -165,7 +165,7 @@ export default () => {
 
   function setGameCountdown() {
     const countdownInSeconds = countdownMinutes * 60 + countdownSeconds;
-    client.put(`http://localhost:9000/lobbies/${code}`, { 
+    client.put(`http://localhost:9000/lobbies/countdown/${code}`, { 
         countdown: countdownInSeconds
       }, {
         headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
