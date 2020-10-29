@@ -7,7 +7,6 @@ export default () => {
     const [lobbies, setLobbies] = useState<{ code: number, createTime: number }[]>([]);
 
     useEffect(() => {
-        console.log('here too');
         client.get('http://localhost:9000/lobbies',
             { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}).then((res) => {
             setLobbies(res.data);
