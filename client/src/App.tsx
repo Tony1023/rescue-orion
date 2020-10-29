@@ -14,7 +14,6 @@ export default () => {
         component={Room}
       >
       <Route
-        exact
         path='/admin/lobbies'
         component={LobbyListPage}
       />
