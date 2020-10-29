@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Room, { DevRoom } from './room';
 import Admin from './admin';
 import Join from './join';
+import LobbyListPage from './admin/LobbyListPage';
 
 export default () => {
 
@@ -12,6 +13,11 @@ export default () => {
         path='/rooms'
         component={Room}
       >
+      <Route
+        exact
+        path='/admin/lobbies'
+        component={LobbyListPage}
+      />
       </Route>
       <Route
         path='/admin'

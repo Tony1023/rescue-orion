@@ -60,6 +60,43 @@ export default (router: express.Router, wss: io.Server) => {
     lobby.setCountDown(countDownInSeconds);
     res.status(200).send();
   });
+    // new lobby
+  router.post('/', (req, res) => {
+    const lobbyCode = Math.floor(100000 + Math.random() * 900000)
+    const lobby = new Lobby(lobbyCode, req.body.token);
+    repository.lobbies[lobbyCode] = lobby;
+    res.status(200).send({ code: lobbyCode });
+  });
+
+  router.put('/start/:code', (req, res) => {
+    const code = parseInt(req.params.code);
+    const lobby = repository.lobbies[code];
+    if (isNaN(code) || !lobby) {
+      res.status(404).send(`Lobby code ${req.params.code} not found.`);
+      return;
+    }
+    lobby.startGames();
+    res.status(200).send();
+  });
+  
+    // new lobby
+    router.post('/', (req, res) => {
+      const lobbyCode = Math.floor(100000 + Math.random() * 900000)
+      const lobby = new Lobby(lobbyCode, req.body.token);
+      repository.lobbies[lobbyCode] = lobby;
+      res.status(200).send({ code: lobbyCode });
+    });
+  
+    router.put('/start/:code', (req, res) => {
+      const code = parseInt(req.params.code);
+      const lobby = repository.lobbies[code];
+      if (isNaN(code) || !lobby) {
+        res.status(404).send(`Lobby code ${req.params.code} not found.`);
+        return;
+      }
+      lobby.startGames();
+      res.status(200).send();
+    });
 
   wss.use((socket, next) => {
     const token = socket.handshake.query?.token;
