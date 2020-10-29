@@ -1,7 +1,7 @@
 import express from 'express';
 import * as Types from '../metadata/types';
 import io from 'socket.io';
-import repository, { Lobby, Room } from '../repository';
+import repository, { Room } from '../repository';
 import passport from 'passport';
 
 export default (router: express.Router, wss: io.Server) => {
