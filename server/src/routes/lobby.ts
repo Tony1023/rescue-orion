@@ -18,7 +18,7 @@ export default (router: express.Router, wss: io.Server) => {
     });
   });
 
-  router.delete('/', (req, res) => {
+  router.delete('/:code', (req, res) => {
     const code = parseInt(req.params.code);
     const admin = req.user as string;
     if (repository.adminLobbies[admin].indexOf(code) === -1) {
