@@ -100,7 +100,7 @@ export enum GameStatus {
   MissionSucceeded = 'Mission Complete',
   MissionTimeOut = 'Mission Time Out',
   MissionAborted = 'Mission Aborted',
-  OutOfResource = 'Out Of Resource',
+  OutOfResource = 'Out Of Resources',
 };
 
 export interface GameState {
