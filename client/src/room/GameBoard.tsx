@@ -16,6 +16,7 @@ import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
 import AbortMissionModal from './modal/AbortMissionModal';
 import WaitModal from './modal/WaitModal';
+import OutOfResourceModal from './modal/OutOfResourceModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -284,6 +285,11 @@ export default function() {
       {
         gameState.status === GameStatus.MissionSucceeded ? 
         <SuccessMissionModal /> : <></>
+      }
+
+      {
+        gameState.status === GameStatus.OutOfResource ? 
+        <OutOfResourceModal /> : <></>
       }
 
       <Clock />

@@ -7,7 +7,7 @@ import {
   ModalBackground,
   Header,
   Body,
-  StyledModal
+  StyledModal,
 } from './modal';
 import { StyledExtraModal } from './MessageModal';
 
@@ -16,12 +16,11 @@ export default () => {
     <BaseModalEndBackground>
       <StyledModal>
         <Header>
-          Mission Aborted!
+          Incoming Relay From Ground Control
         </Header>
         <Body>
-          <p>You have aborted your mission and without your assistance, </p>
-          <p>we fear the worst has happened at Space Station Orion. </p>
-          <p>Please alert the Space Commander to come and instruct you what to do next. </p>
+          <p>Oh no! Your ship ran out of the resources required to keep your ship moving so you can carry out your mission! </p>
+          <p>Please send a distress call to the Space Commander and we will provide further instruction. </p>
           <p>-Ground Control </p>
         </Body>
       </StyledModal>

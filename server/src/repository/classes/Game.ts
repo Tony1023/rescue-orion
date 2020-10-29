@@ -103,14 +103,6 @@ export default class Game implements MessageQueue {
     }
     for (const id in this.spaceships) {
       if(this.spaceships[id].energyCells <= 0 || this.spaceships[id].lifeSupportPacks <= 0) {
-        this.pushMessage({
-          title: 'Incoming Relay From Ground Control',
-          paragraphs: [
-            { text: 'Oh no! Your ship ran out of the resources required to keep your ship moving so you can carry out your mission! ' },
-            { text: 'Please send a distress call to the Space Commander and we will provide further instruction.' },
-            { text: '-Ground Control' },
-          ],
-        });
         this.endMission(GameStatus.OutOfResource);
         return;
       }

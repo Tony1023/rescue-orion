@@ -50,6 +50,11 @@ export const ExtraModal = styled(BaseModal)`
   clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px), 0 0);
 `;
 
+export const StyledModal = styled(Modal)`
+  padding: 30px;
+  font-family: 'roboto';
+`;
+
 export const Header = styled.div`
   height: 40px;
   line-height: 40px;
