@@ -1,31 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import SocketIOClient from 'socket.io-client';
-import axios from 'axios';
+import client from '../axios-client';
 import { Jumbotron, Table, Button, Badge, Modal } from 'react-bootstrap';
 
 export default () => {
 
-    const [lobbyCodes, setLobbyCodes] =  useState([]);
-    const [lobbyTimes, setLobbyTimes] =  useState([]);
+    const [lobbies, setLobbies] = useState<{ code: number, createTime: number }[]>([]);
 
     useEffect(() => {
-        axios.get('http://localhost:9000/lobbies', { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}).then((res) => {
-            console.log(res.data.lobbyCode);  
-            console.log(res.data.lobbyCreateTime);  
-            setLobbyCodes(res.data.lobbyCode);
-            setLobbyTimes(res.data.lobbyCreateTime);            
+        client.get('http://localhost:9000/lobbies',
+            { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}).then((res) => {
+            setLobbies(res.data);
         });
     },[]);
 
     async function post() {
-        let res = await axios.post('http://localhost:9000/lobbies', {}, { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }});
-        console.log(res.data);
+        let res = await client.post('http://localhost:9000/lobbies', {}, { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }});
     }
     
-    const code = lobbyCodes.map((number) => <li style={{ listStyleType: "none" }}>{number}</li>);
-    const time = lobbyTimes.map((number) => <li style={{ listStyleType: "none" }}>{number}</li>);
-
     return <>
     {
         
@@ -36,14 +27,16 @@ export default () => {
             <thead>
                 <tr>
                     <th>Lobby Code</th>
-                    <th>Create Time</th> 
+                    <th>Create Time</th>
                 </tr>
             </thead>
             <tbody id="lobbies">
-                <tr>
-                    <td><ol>{code}</ol></td>
-                    <td>{time}</td>
-                </tr>
+                {
+                    lobbies.map((lobby) => <tr>
+                        <td>{lobby.code}</td>
+                        <td>{lobby.createTime}</td>
+                    </tr>)
+                }
             </tbody>
             </Table>
             </div>

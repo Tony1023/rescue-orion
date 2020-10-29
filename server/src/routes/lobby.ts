@@ -18,53 +18,58 @@ export default (router: express.Router, wss: io.Server) => {
     });
   });
 
-  router.delete('/', (req, res) => {
-    const lobbyCode = parseInt(req.body.lobby);
-    const lobby = repository.lobbies[lobbyCode];
-    if (isNaN(lobbyCode) || !lobby) {
-      res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
+  router.delete('/:code', (req, res) => {
+    const code = parseInt(req.params.code);
+    const admin = req.user as string;
+    if (repository.adminLobbies[admin].indexOf(code) === -1) {
+      res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
-    lobby.destroy();
+    repository.lobbies[code].destroy();
     res.status(200).send();
   });
 
   router.get('/', (req, res) => {
-    var code:string[] = [];
-    var time:number[] = [];
-    Object.entries(repository.lobbies).map(([key, value]) => { 
-      code.push(key);
-      time.push(value.createTime);
-      });
-    res.status(200).send({lobbyCode : code, lobbyCreateTime : time});
+    const admin = req.user as string;
+    const lobbies = repository.adminLobbies[admin]?.map((code) => {
+      const lobby = repository.lobbies[code];
+      return {
+        code: code,
+        createTime: lobby.createTime,
+      };
+    });
+    res.status(200).send(lobbies ?? []);
   });
 
-  // new lobby
   router.post('/', (req, res) => {
-    const lobbyCode = Math.floor(100000 + Math.random() * 900000)
-    const lobby = new Lobby(lobbyCode, req.body.token);
-    repository.lobbies[lobbyCode] = lobby;
+    const admin = req.user as string;
+    let lobbyCode: number;
+    do {
+      lobbyCode = Math.floor(100000 + Math.random() * 900000)
+    } while (repository.lobbies[lobbyCode]);
+    new Lobby(lobbyCode, admin);
     res.status(200).send({ code: lobbyCode });
   });
 
   router.put('/start/:code', (req, res) => {
     const code = parseInt(req.params.code);
-    const lobby = repository.lobbies[code];
-    if (isNaN(code) || !lobby) {
+    const admin = req.user as string;
+    if (repository.adminLobbies[admin].indexOf(code) === -1) {
       res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
-    lobby.startGames();
+    repository.lobbies[code].startGames();
     res.status(200).send();
   });
 
-  router.put('/:code', (req, res) => {
+  router.put('/countdown/:code', (req, res) => {
     const code = parseInt(req.params.code);
-    const lobby = repository.lobbies[code];
-    if (isNaN(code) || !lobby) {
+    const admin = req.user as string;
+    if (repository.adminLobbies[admin].indexOf(code) === -1) {
       res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
+    const lobby = repository.lobbies[code];
     const { countdown } = req.body;
     const countdownInSeconds = parseInt(countdown);
     if (isNaN(countdownInSeconds) || countdownInSeconds <= 0 || countdownInSeconds > 999 * 60) {
@@ -101,18 +106,15 @@ export default (router: express.Router, wss: io.Server) => {
       return;
     }
 
-    // TODO: compare with lobby's admin
-
     const lobbyCode = parseInt(socket.handshake.query?.lobby);
-    const lobby = repository.lobbies[lobbyCode];
-    if (isNaN(lobbyCode) || !lobby) {
+    if (repository.adminLobbies[username].indexOf(lobbyCode) === -1) {
       socket.disconnect();
       return;
     }
-    socket.handshake.query.lobbyObj = lobby;
+    socket.handshake.query.lobby = repository.lobbies[lobbyCode];
     next();
   }).on('connection', (socket) => {
-    const lobby = socket.handshake.query.lobbyObj as Lobby;
+    const lobby = socket.handshake.query.lobby as Lobby;
     lobby.addSocket(socket);
   });
 

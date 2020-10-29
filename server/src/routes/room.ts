@@ -35,12 +35,12 @@ export default (router: express.Router, wss: io.Server) => {
   router.use(passport.authenticate('jwt', { session: false }));
   router.post('/restart', (req, res) => {
     const lobbyCode = parseInt(req.body.lobby);
-    let lobby = repository.lobbies[lobbyCode];
-    if (isNaN(lobbyCode) || !lobby) {
+    const admin = req.user as string;
+    if (repository.adminLobbies[admin].indexOf(lobbyCode) === -1) {
       res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
       return;
     }
-
+    const lobby = repository.lobbies[lobbyCode];
     const roomName = req.body.room;
     const room = lobby.findRoom(roomName);
     if (!room) {
