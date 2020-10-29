@@ -51,7 +51,7 @@ export default () => {
     <Wrapper>
       <Jumbotron>
         <Title>Welcome, {localStorage.getItem('username')}</Title>
-        <h5 style={{ textAlign: 'center' }}>The table below is the list of lobbies you are in charge of.</h5>
+        <h5 style={{ textAlign: 'center' }}>The table below contains the list of lobbies you are in charge of...</h5>
       </Jumbotron>
       <Button
         style={{ marginBottom: '10px' }}
