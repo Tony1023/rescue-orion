@@ -30,7 +30,7 @@ export default class Game implements MessageQueue {
     this.countDownClock = countDownClock;
   }
 
-  private day = 30;
+  private day = 0;
   private messages: Message[] = [];
   private agents: { [id: string]: TimeVaryingAgent } = {};
   private carriers: { [id: string]: ResourceCarrier } = {};
