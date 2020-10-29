@@ -12,22 +12,22 @@ import SpaceStationOrion from './SpaceStationOrion';
 import { RescueResource } from './RescueResource';
 import { locationData, spaceStationData } from '../../metadata';
 import MessageQueue from './MessageQueue';
-import CountDownClock from '../countdown-clock';
+import CountdownClock from '../countdown-clock';
 
 export default class Game implements MessageQueue {
 
-  constructor(countDownClock: CountDownClock) {
-    countDownClock.subscribeTick(() => {
+  constructor(countdownClock: CountdownClock) {
+    countdownClock.subscribeTick(() => {
       if (this.status === GameStatus.Started) {
-        this.onTick(countDownClock.getSecondsRemaining(), countDownClock.getSecondsElapsed());
+        this.onTick(countdownClock.getSecondsRemaining(), countdownClock.getSecondsElapsed());
       }
     });
-    countDownClock.subscribeTimeUp(() => {
+    countdownClock.subscribeTimeUp(() => {
       if (this.status === GameStatus.Started) {
         this.endMission(GameStatus.MissionTimeOut);
       }
     });
-    this.countDownClock = countDownClock;
+    this.countdownClock = countdownClock;
   }
 
   private day = 0;
@@ -38,7 +38,7 @@ export default class Game implements MessageQueue {
   private spaceStations: { [id: string]: SpaceStation } = {};
   private movedSinceStart = false;
   private lastMove: number = 0;
-  private countDownClock: CountDownClock;
+  private countdownClock: CountdownClock;
   private startTime: number = 0;
   private endTime: number;
   newMessage = false;
@@ -125,14 +125,14 @@ export default class Game implements MessageQueue {
   }
 
   startMission() {
-    this.lastMove = this.startTime = this.countDownClock.getSecondsElapsed();
+    this.lastMove = this.startTime = this.countdownClock.getSecondsElapsed();
     this.status = GameStatus.Started;
     this.messages = [spaceStationData[IDs.SAGITTARIUS].message];
   }
 
   endMission(gameStatus: GameStatus) {
     this.status = gameStatus;
-    this.endTime = this.countDownClock.getSecondsElapsed();
+    this.endTime = this.countdownClock.getSecondsElapsed();
   }
 
   pushMessage(m: Message) {
@@ -149,7 +149,7 @@ export default class Game implements MessageQueue {
 
   moveSpaceships(moves: { [id: string]: string }): void {
     this.movedSinceStart = true;
-    this.lastMove = this.countDownClock.getSecondsElapsed();
+    this.lastMove = this.countdownClock.getSecondsElapsed();
     for (const id in moves) {
       this.spaceships[id].addToPath(moves[id]);
       const spaceStation = locationData[moves[id]].location.spaceStationName;
@@ -256,7 +256,7 @@ export default class Game implements MessageQueue {
     };
   }
 
-  private onTick(countDown: number, timeNow: number) {
+  private onTick(countdown: number, timeNow: number) {
     const timeElapsed = timeNow - this.startTime;
     if (timeElapsed === 10 * 60 && !this.movedSinceStart) {
       this.pushMessage({
@@ -303,7 +303,7 @@ export default class Game implements MessageQueue {
           { text: '-Space Commander' },
         ],
       });
-    } else if (timeElapsed === countDown || timeElapsed + 1 === countDown) {
+    } else if (timeElapsed === countdown || timeElapsed + 1 === countdown) {
       this.pushMessage({
         title: 'Incoming relay from Ground Control',
         paragraphs: [
@@ -312,7 +312,7 @@ export default class Game implements MessageQueue {
           { text: '-Ground Control' },
         ],
       });
-    } else if (countDown === 10 * 60) {
+    } else if (countdown === 10 * 60) {
       this.pushMessage({
         title: 'Urgent relay from Ground Control',
         paragraphs: [

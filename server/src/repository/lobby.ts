@@ -1,5 +1,5 @@
 import io from 'socket.io';
-import CountDownClock from './countdown-clock';
+import CountdownClock from './countdown-clock';
 import Room from './room';
 import repository from './index';
 import { LobbyState, SocketMessages, LobbyStatus } from '../metadata/types';
@@ -9,10 +9,10 @@ class Lobby {
   constructor(code: number, admin: string) {
     this.code = code;
     this.admin = admin;
-    this.countDownClock.subscribeTimeUp(() => {
+    this.countdownClock.subscribeTimeUp(() => {
       global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
     });
-    this.countDownClock.subscribeTick(() => {
+    this.countdownClock.subscribeTick(() => {
       this.sendUpdate();
     });
   }
@@ -21,7 +21,7 @@ class Lobby {
   private rooms: { [name: string]: Room } = {};
   private code: number;
   private admin: string;
-  private countDownClock = new CountDownClock(75 * 60);
+  private countdownClock = new CountdownClock(75 * 60);
   readonly createTime = Date.now();
   status = LobbyStatus.Waiting;
 
@@ -29,7 +29,7 @@ class Lobby {
     if (this.status === LobbyStatus.Waiting) {
       this.status = LobbyStatus.Started;
       Object.values(this.rooms).forEach((room) => room.startGameIfNot());
-      this.countDownClock.start();
+      this.countdownClock.start();
     }
   }
 
@@ -38,7 +38,7 @@ class Lobby {
   }
 
   insertRoom(name: string) {
-    const room = new Room(this.countDownClock);
+    const room = new Room(this.countdownClock);
     if (this.status === LobbyStatus.Started) {
       room.startGameIfNot();
     }
@@ -50,9 +50,9 @@ class Lobby {
     return this.rooms[name];
   }
 
-  setCountDown(from: number) {
+  setCountdown(from: number) {
     if (this.status === LobbyStatus.Waiting) {
-      this.countDownClock.setCountDownTime(from);
+      this.countdownClock.setCountdownTime(from);
       this.sendUpdate();
     }
   }
@@ -77,7 +77,7 @@ class Lobby {
       return accumulator;
     }, {
       status: this.status,
-      gameDuration: this.countDownClock.getGameDuration(),
+      gameDuration: this.countdownClock.getGameDuration(),
       updatedRooms: {},
     })));
   }
@@ -93,7 +93,7 @@ class Lobby {
         return accumulator;
       }, {
         status: this.status,
-        gameDuration: this.countDownClock.getGameDuration(),
+        gameDuration: this.countdownClock.getGameDuration(),
         updatedRooms: {}
       })))
     );

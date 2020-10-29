@@ -2,15 +2,15 @@ import Game from './classes/Game';
 import io from 'socket.io';
 import { SocketMessages } from '../metadata/types';
 import * as Types from '../metadata/types';
-import CountDownClock from './countdown-clock';
+import CountdownClock from './countdown-clock';
 
 
 class Room {
 
-  constructor(countDownClock: CountDownClock) {
-    this.game = new Game(countDownClock);
+  constructor(countdownClock: CountdownClock) {
+    this.game = new Game(countdownClock);
     this.game.load();
-    countDownClock.subscribeTick(() => {
+    countdownClock.subscribeTick(() => {
       if (this.game.status === Types.GameStatus.NotStarted || this.game.status === Types.GameStatus.Started) {
         this.sendTimeUpdate();
         if (this.game.newMessage) {
@@ -18,12 +18,12 @@ class Room {
         }
       }
     });
-    this.countDownClock = countDownClock;
+    this.countdownClock = countdownClock;
   }
 
   private game;
   private socket: io.Socket = null;
-  private countDownClock: CountDownClock;
+  private countdownClock: CountdownClock;
   dirty = true;
 
   private sendGameUpdate() {
@@ -31,7 +31,7 @@ class Room {
   }
 
   private sendTimeUpdate() {
-    this.socket?.emit(SocketMessages.TimeUpdate, JSON.stringify(this.countDownClock.getGameDuration()));
+    this.socket?.emit(SocketMessages.TimeUpdate, JSON.stringify(this.countdownClock.getGameDuration()));
   }
 
   startGameIfNot() {
@@ -43,7 +43,7 @@ class Room {
 
   restartGame() {
     if (this.game.status !== Types.GameStatus.NotStarted) {
-      this.game = new Game(this.countDownClock);
+      this.game = new Game(this.countdownClock);
       this.game.load();
       this.game.startMission();
       this.sendGameUpdate();

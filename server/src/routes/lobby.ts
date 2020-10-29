@@ -65,9 +65,9 @@ export default (router: express.Router, wss: io.Server) => {
       res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
-    const { countDown } = req.body;
-    const countDownInSeconds = parseInt(countDown);
-    if (isNaN(countDownInSeconds) || countDownInSeconds <= 0 || countDownInSeconds > 999 * 60) {
+    const { countdown } = req.body;
+    const countdownInSeconds = parseInt(countdown);
+    if (isNaN(countdownInSeconds) || countdownInSeconds <= 0 || countdownInSeconds > 999 * 60) {
       res.status(400).send('Bad count down range.');
       return;
     }
@@ -75,7 +75,7 @@ export default (router: express.Router, wss: io.Server) => {
       res.status(403).send('Cannot set count down for started or finished lobbies.');
       return;
     }
-    lobby.setCountDown(countDownInSeconds);
+    lobby.setCountdown(countdownInSeconds);
     res.status(200).send();
   });
 

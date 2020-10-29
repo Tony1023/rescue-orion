@@ -62,14 +62,14 @@ export default () => {
 
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
   const [duration, setDuration] = useState(0);
-  const [countDownMinutes, setCountDownMinutes] = useState(0);
-  const [countDownSeconds, setCountDownSeconds] = useState(0);
+  const [countdownMinutes, setCountdownMinutes] = useState(0);
+  const [countdownSeconds, setCountdownSeconds] = useState(0);
   const [createTime, setCreateTime] = useState<string>();
   const [rooms, setRooms] = useState<{ [name: string]: GameState }>({});
   const [status, setStatus] = useState<LobbyStatus>();
 
   const [startGameStatus, setStartGameStatus] = useState<string | boolean>(false);
-  const [configCountDownStatus, setConfigCountDownStatus] = useState<string | boolean>(false);
+  const [configCountdownStatus, setConfigCountdownStatus] = useState<string | boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [restartModal, setRestartModal] = useState<string>();
 
@@ -101,8 +101,8 @@ export default () => {
       const state = JSON.parse(data) as LobbyState;
       setStatus(state.status);
       setDuration(state.gameDuration.duration);
-      setCountDownMinutes(Math.floor(state.gameDuration.countDown / 60));
-      setCountDownSeconds(state.gameDuration.countDown % 60);
+      setCountdownMinutes(Math.floor(state.gameDuration.countdown / 60));
+      setCountdownSeconds(state.gameDuration.countdown % 60);
       if (Object.keys(state.updatedRooms).length > 0) {
         const newRooms = {...stateRef.current};
         Object.keys(state.updatedRooms).forEach((name) => {
@@ -123,32 +123,32 @@ export default () => {
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
-      setGameCountDown();
+      setGameCountdown();
     }
   }
 
   function onMinutesChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = parseInt(e.target.value);
     if (isNaN(value) || !Number.isInteger(value)) {
-      setCountDownMinutes(0);
+      setCountdownMinutes(0);
       return;
     }
     if (value < 1 || value > 999) {
       return;
     }
-    setCountDownMinutes(value);
+    setCountdownMinutes(value);
   }
 
   function onSecondsChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = parseInt(e.target.value);
     if (isNaN(value) || !Number.isInteger(value)) {
-      setCountDownSeconds(0);
+      setCountdownSeconds(0);
       return;
     }
     if (value < 0 || value >= 60) {
       return;
     }
-    setCountDownSeconds(value);
+    setCountdownSeconds(value);
   }
 
   function startGames() {
@@ -163,19 +163,19 @@ export default () => {
       });
   }
 
-  function setGameCountDown() {
-    const countDownInSeconds = countDownMinutes * 60 + countDownSeconds;
+  function setGameCountdown() {
+    const countdownInSeconds = countdownMinutes * 60 + countdownSeconds;
     client.put(`http://localhost:9000/lobbies/${code}`, { 
-        countDown: countDownInSeconds
+        countdown: countdownInSeconds
       }, {
         headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then(() => {
-        setConfigCountDownStatus(true);
-        setTimeout(() => setConfigCountDownStatus(false), 5000);
+        setConfigCountdownStatus(true);
+        setTimeout(() => setConfigCountdownStatus(false), 5000);
       })
       .catch((err) => {
-        setConfigCountDownStatus(err.response.data);
+        setConfigCountdownStatus(err.response.data);
       });
   }
 
@@ -248,7 +248,7 @@ export default () => {
                   status === LobbyStatus.Waiting ?
                   <>
                     <input    
-                      value={countDownMinutes > 0 ? `${countDownMinutes}`.replace(/^0+/, ''): 0}
+                      value={countdownMinutes > 0 ? `${countdownMinutes}`.replace(/^0+/, ''): 0}
                       onChange={onMinutesChange}
                       onFocus={(e) => e.target.select()}
                       disabled={status !== LobbyStatus.Waiting}
@@ -260,7 +260,7 @@ export default () => {
                     />
                     :
                     <input
-                      value={countDownSeconds > 0 ? `${countDownSeconds}`.replace(/^0+/, ''): 0}
+                      value={countdownSeconds > 0 ? `${countdownSeconds}`.replace(/^0+/, ''): 0}
                       onChange={onSecondsChange}
                       onFocus={(e) => e.target.select()}
                       disabled={status !== LobbyStatus.Waiting}
@@ -272,20 +272,20 @@ export default () => {
                     />
                   </>
                   :
-                  <Time>{formatTime(countDownMinutes * 60 + countDownSeconds)}</Time>
+                  <Time>{formatTime(countdownMinutes * 60 + countdownSeconds)}</Time>
                 }
                 {'  '}
                 <Button
                   variant='outline-success'
                   size='sm'
-                  onClick={setGameCountDown}
+                  onClick={setGameCountdown}
                   disabled={status !== LobbyStatus.Waiting}
                 >Set</Button>
                 {
-                  configCountDownStatus ?
+                  configCountdownStatus ?
                   (
-                    typeof configCountDownStatus === 'string' ?
-                    <span style={{ color: 'red' }}> {configCountDownStatus}</span> : <>&#10003;</>
+                    typeof configCountdownStatus === 'string' ?
+                    <span style={{ color: 'red' }}> {configCountdownStatus}</span> : <>&#10003;</>
                   )
                   :
                   <></>

@@ -125,7 +125,7 @@ export interface GameState {
 };
 
 export interface GameDuration {
-  countDown: number,
+  countdown: number,
   duration: number,
 }
 

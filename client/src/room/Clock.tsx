@@ -29,8 +29,8 @@ function pad(n: number): string {
 
 export default () => {
   const gameDuration = useTime();
-  const minutes = Math.floor(gameDuration.countDown / 60);
-  const seconds = gameDuration.countDown % 60;
+  const minutes = Math.floor(gameDuration.countdown / 60);
+  const seconds = gameDuration.countdown % 60;
   
   return <Clock>
     {pad(minutes)}:{pad(seconds)}
