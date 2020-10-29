@@ -4,24 +4,16 @@ import {
   Modal,
   ModalBackground,
   Header,
+  Body,
+  StyledModal
 } from './modal';
 import { StyledExtraModal } from './MessageModal';
 import styled from 'styled-components';
 import EndGameStatsModal from './EndGameStatsModal';
 
-const StyledModal = styled(Modal)`
-  padding: 30px;
-`;
-
 const SuccessModalBackground = styled(ModalBackground)`
   background-image: url(${process.env.PUBLIC_URL}/game_success_map.png);
   background-size: contain;
-`;
-
-const Body = styled.div`
-  font-family: 'Roboto' sans-serif;
-  font-size: 20px;
-  font-weight: bold;
 `;
 
 export default () => {

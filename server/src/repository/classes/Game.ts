@@ -24,7 +24,7 @@ export default class Game implements MessageQueue {
     });
     countDownClock.subscribeTimeUp(() => {
       if (this.status === GameStatus.Started) {
-        this.endMission(false);
+        this.endMission(GameStatus.MissionTimeOut);
       }
     });
     this.countDownClock = countDownClock;
@@ -94,24 +94,16 @@ export default class Game implements MessageQueue {
     }
     ++this.day;
     if (this.isWinState()) {
-      this.endMission(true);
+      this.endMission(GameStatus.MissionSucceeded);
       return;
     }
     if (this.day > 30) {
-      this.endMission(false);
+      this.endMission(GameStatus.MissionTimeOut);
       return;
     }
     for (const id in this.spaceships) {
       if(this.spaceships[id].energyCells <= 0 || this.spaceships[id].lifeSupportPacks <= 0) {
-        this.pushMessage({
-          title: 'Incoming Relay From Ground Control',
-          paragraphs: [
-            { text: 'Oh no! Your ship ran out of the resources required to keep your ship moving so you can carry out your mission! ' },
-            { text: 'Please send a distress call to the Space Commander and we will provide further instruction.' },
-            { text: '-Ground Control' },
-          ],
-        });
-        this.endMission(false);
+        this.endMission(GameStatus.OutOfResource);
         return;
       }
     }
@@ -138,8 +130,8 @@ export default class Game implements MessageQueue {
     this.messages = [spaceStationData[IDs.SAGITTARIUS].message];
   }
 
-  endMission(success: boolean) {
-    this.status = success? GameStatus.MissionSucceeded : GameStatus.MissionFailed;
+  endMission(gameStatus: GameStatus) {
+    this.status = gameStatus;
     this.endTime = this.countDownClock.getSecondsElapsed();
   }
 

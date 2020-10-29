@@ -9,13 +9,15 @@ import MessageModal from './modal/MessageModal';
 import { PixelPosition } from '../metadata/types';
 import ResourcePanel from './ResourcePanel';
 import RebalanceResourceModal from './modal/RebalanceResourceModal';
-import EndGameModal from './modal/EndGameModal';
+import AbortGameModal from './modal/AbortGameModal';
 import ConfirmMoveModal from './modal/ConfirmMoveModal';
 import SuccessMissionModal from './modal/SuccessMissionModal';
 import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
 import AbortMissionModal from './modal/AbortMissionModal';
 import WaitModal from './modal/WaitModal';
+import OutOfResourceModal from './modal/OutOfResourceModal';
+import TimeOutModal from './modal/TimeOutModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -244,8 +246,8 @@ export default function() {
         <WaitModal /> : <></>
       }
       {
-        gameState.status === GameStatus.MissionFailed ?
-        <EndGameModal/> : <></>
+        gameState.status === GameStatus.MissionAborted ?
+        <AbortGameModal/> : <></>
       }
       {
         showConfirmMoveModal ?
@@ -284,6 +286,16 @@ export default function() {
       {
         gameState.status === GameStatus.MissionSucceeded ? 
         <SuccessMissionModal /> : <></>
+      }
+
+      {
+        gameState.status === GameStatus.OutOfResource ? 
+        <OutOfResourceModal /> : <></>
+      }
+
+      {
+        gameState.status === GameStatus.MissionTimeOut ? 
+        <TimeOutModal /> : <></>
       }
 
       <Clock />
