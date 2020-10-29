@@ -48,6 +48,7 @@ export default (router: express.Router, wss: io.Server) => {
     do {
       lobbyCode = Math.floor(100000 + Math.random() * 900000)
     } while (repository.lobbies[lobbyCode]);
+    // Lobbies stored in adminLobbies in chrono order
     new Lobby(lobbyCode, admin);
     res.status(200).send({ code: lobbyCode });
   });

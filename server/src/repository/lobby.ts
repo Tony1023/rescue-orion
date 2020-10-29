@@ -17,6 +17,7 @@ class Lobby {
     });
     repository.lobbies[code] = this;
     if (repository.adminLobbies[admin]) {
+      // which means lobbies are stored in chronological order
       repository.adminLobbies[admin]?.push(code);
     } else {
       repository.adminLobbies[admin] = [code];
@@ -102,8 +103,8 @@ class Lobby {
         gameDuration: this.countdownClock.getGameDuration(),
         updatedRooms: {}
       })));
-      Object.values(this.rooms).forEach((room) => room.dirty = false);
     });
+    Object.values(this.rooms).forEach((room) => room.dirty = false);
   }
 }
 
