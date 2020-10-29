@@ -26,6 +26,7 @@ export default (props: RouteComponentProps) => {
       component={RoomListPage}
     />
     <Route
+      exact
       path={`${props.match.url}/lobbies`}
       component={LobbyListPage}
     />

@@ -77,6 +77,7 @@ export default () => {
   stateRef.current = rooms;
 
   useEffect(() => {
+    console.log(code);
     client.get(`http://localhost:9000/lobbies/${code}`, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
