@@ -13,6 +13,7 @@ import client from '../axios-client';
 import fileSave from 'file-saver';
 import { Jumbotron, Table, Button, Badge, Modal } from 'react-bootstrap';
 import styled from 'styled-components';
+import { Title, Wrapper } from './styles';
 
 function pad(n: number): string {
   let digits = 0;
@@ -33,19 +34,6 @@ function formatTime(time: number) {
   const seconds = time % 60;
   return `${pad(minutes)}:${pad(seconds)}`;
 }
-
-const Wrapper = styled.div`
-  max-width: 1100px;
-  min-height: 100vh;
-  margin: 0 auto;
-  background-color: rgb(248, 248, 248);
-  padding: 20px;
-`;
-
-const Title = styled.h1`
-  margin-bottom: 30px;
-  text-align: center;
-`
 
 const LobbyControls = styled.div`
   min-width: 350px;

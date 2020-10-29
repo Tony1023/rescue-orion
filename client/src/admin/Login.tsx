@@ -7,6 +7,7 @@ import {
   FormControl,
   Button,
 } from 'react-bootstrap';
+import { History } from 'history';
 
 const Global = createGlobalStyle`
   html, body {
@@ -19,10 +20,12 @@ const Wrapper = styled(Jumbotron)`
   width: 500px;
 `;
 
-export default class extends React.Component<{}, {
-  username: string,
-  password: string,
-  error?: string,
+export default class extends React.Component<{
+    history: History,
+  }, {
+    username: string,
+    password: string,
+    error?: string,
 }> {
   constructor(props:any){
     super(props);
@@ -60,6 +63,8 @@ export default class extends React.Component<{}, {
         password: this.state.password,
       });
       localStorage.setItem('token', data.token);
+      localStorage.setItem('username', this.state.username);
+      this.props.history.push('/admin/lobbies');
     } catch (err) {
       this.setState({ error: err.response.data });
     }
