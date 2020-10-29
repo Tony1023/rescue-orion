@@ -192,7 +192,7 @@ export default class Game implements MessageQueue {
       sendingCarrier.pickUpFrom(type);
       receivingCarrier.dropOffTo(type);
     } catch (err) {
-      console.log(err);
+      console.log('Error when transferring resources: ', err);
     }
   }
 
