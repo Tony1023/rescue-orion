@@ -111,7 +111,8 @@ export default () => {
         <h4>Room name {roomName} is taken</h4>
       </Modal.Header>
       <Modal.Body>
-        Are you trying to reconnect?
+        <p>Are you trying to reconnect?</p>
+        <p>You will kick out anyone that's connected to the room.</p>
       </Modal.Body>
       <Modal.Footer>
         <Button

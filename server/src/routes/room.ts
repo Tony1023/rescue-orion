@@ -1,7 +1,7 @@
 import express from 'express';
 import * as Types from '../metadata/types';
 import io from 'socket.io';
-import repository, { Lobby, Room } from '../repository';
+import repository, { Room } from '../repository';
 import passport from 'passport';
 
 export default (router: express.Router, wss: io.Server) => {
@@ -11,7 +11,6 @@ export default (router: express.Router, wss: io.Server) => {
     let lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {
       res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
-      repository.lobbies[lobbyCode] = new Lobby(lobbyCode, 'admin');
       return;
     }
 
@@ -24,7 +23,7 @@ export default (router: express.Router, wss: io.Server) => {
       res.status(403).send(`Room name ${roomName} already taken.`);
       return;
     }
-    if (lobby.status === Types.LobbyStatus.Finished) {
+    if (lobby.status !== Types.LobbyStatus.Waiting) {
       res.status(404).send('Lobby is no longer accepting players.');
       return;
     }
@@ -36,7 +35,7 @@ export default (router: express.Router, wss: io.Server) => {
   router.post('/restart', (req, res) => {
     const lobbyCode = parseInt(req.body.lobby);
     const admin = req.user as string;
-    if (repository.adminLobbies[admin].indexOf(lobbyCode) === -1) {
+    if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(lobbyCode) === -1) {
       res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
       return;
     }

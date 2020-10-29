@@ -8,11 +8,12 @@ import { jwtOptions } from '../auth';
 export default (router: express.Router, wss: io.Server) => {
   router.get('/:code', (req, res) => {
     const code = parseInt(req.params.code);
-    const lobby = repository.lobbies[code];
-    if (isNaN(code) || !lobby) {
+    const admin = req.user as string;
+    if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(code) === -1) {
       res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
+    const lobby = repository.lobbies[code];
     res.status(200).send({
       createTime: lobby.createTime,
     });
@@ -21,7 +22,7 @@ export default (router: express.Router, wss: io.Server) => {
   router.delete('/:code', (req, res) => {
     const code = parseInt(req.params.code);
     const admin = req.user as string;
-    if (repository.adminLobbies[admin].indexOf(code) === -1) {
+    if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(code) === -1) {
       res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
@@ -54,7 +55,7 @@ export default (router: express.Router, wss: io.Server) => {
   router.put('/start/:code', (req, res) => {
     const code = parseInt(req.params.code);
     const admin = req.user as string;
-    if (repository.adminLobbies[admin].indexOf(code) === -1) {
+    if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(code) === -1) {
       res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
@@ -65,7 +66,7 @@ export default (router: express.Router, wss: io.Server) => {
   router.put('/countdown/:code', (req, res) => {
     const code = parseInt(req.params.code);
     const admin = req.user as string;
-    if (repository.adminLobbies[admin].indexOf(code) === -1) {
+    if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(code) === -1) {
       res.status(404).send(`Lobby code ${req.params.code} not found.`);
       return;
     }
@@ -90,7 +91,7 @@ export default (router: express.Router, wss: io.Server) => {
       socket.disconnect();
       return;
     }
-    let username: string;
+    let admin: string;
 
     // sync callback
     jwt.verify(token, jwtOptions.secretOrKey, (err: any, decoded: { username: string }) => {
@@ -98,16 +99,16 @@ export default (router: express.Router, wss: io.Server) => {
         next(new Error('Authentication failed.'));
         return;
       }
-      username = decoded.username;
+      admin = decoded.username;
     });
 
-    if (!username) {
+    if (!admin) {
       socket.disconnect();
       return;
     }
 
     const lobbyCode = parseInt(socket.handshake.query?.lobby);
-    if (repository.adminLobbies[username].indexOf(lobbyCode) === -1) {
+    if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(lobbyCode) === -1) {
       socket.disconnect();
       return;
     }
