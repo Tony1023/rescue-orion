@@ -11,9 +11,9 @@ import {
 } from '../metadata/types';
 import client from '../axios-client';
 import fileSave from 'file-saver';
-import { Jumbotron, Table, Button, Badge, Modal } from 'react-bootstrap';
+import { Jumbotron, Table, Button, Badge, Modal} from 'react-bootstrap';
 import styled from 'styled-components';
-import { Title, Wrapper } from './styles';
+import { Title, Wrapper, NavBar } from './styles';
 
 function pad(n: number): string {
   let digits = 0;
@@ -197,6 +197,7 @@ export default () => {
   }
 
   return <>
+    <NavBar></NavBar>
     <Wrapper>
       {
         createTime && socket ?

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import client from '../axios-client';
-import { Jumbotron, Table, Button, Modal } from 'react-bootstrap';
-import { Title, Wrapper } from './styles';
+import { Jumbotron, Table, Button, Modal} from 'react-bootstrap';
+import { Title, Wrapper, NavBar } from './styles';
 import styled from 'styled-components';
 
 const TableCell = styled.td`
@@ -48,6 +48,7 @@ export default () => {
   }
   
   return <>
+  <NavBar></NavBar>
     <Wrapper>
       <Jumbotron>
         <Title>Welcome, {localStorage.getItem('username')}</Title>
