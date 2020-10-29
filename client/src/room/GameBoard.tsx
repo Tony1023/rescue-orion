@@ -17,6 +17,7 @@ import Clock from './Clock';
 import AbortMissionModal from './modal/AbortMissionModal';
 import WaitModal from './modal/WaitModal';
 import OutOfResourceModal from './modal/OutOfResourceModal';
+import TimeOutModal from './modal/TimeOutModal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -290,6 +291,11 @@ export default function() {
       {
         gameState.status === GameStatus.OutOfResource ? 
         <OutOfResourceModal /> : <></>
+      }
+
+      {
+        gameState.status === GameStatus.MissionTimeOut ? 
+        <TimeOutModal /> : <></>
       }
 
       <Clock />

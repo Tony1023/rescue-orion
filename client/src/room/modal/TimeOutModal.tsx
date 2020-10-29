@@ -15,11 +15,12 @@ export default () => {
     <BaseModalEndBackground>
       <StyledModal>
         <Header>
-          Incoming Relay From Ground Control
+          Attention, Gemini crew.
         </Header>
         <Body>
-          <p>Oh no! Your ship ran out of the resources required to keep your ship moving so you can carry out your mission! </p>
-          <p>Please send a distress call to the Space Commander and we will provide further instruction. </p>
+          <p>Time has unfortunately expired on your mission to rescue Orion. </p>
+          <p>Our command team will continue to work to save the space station, but you are needed back at the command center. </p>
+          <p>Buckle up; we are about to beam you back to meet with the Space Commander so we can debrief your mission. </p>
           <p>-Ground Control </p>
         </Body>
       </StyledModal>
