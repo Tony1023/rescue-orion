@@ -79,7 +79,6 @@ class Room {
     switch (action.type) {
       case Types.MOVE_SPACESHIP: {
         this.game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
-        this.game.advanceTime();
         break;
       }
       case Types.PICK_UP_SUPPLY_RESOURCE: {
