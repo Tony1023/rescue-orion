@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import client from '../axios-client';
 import { Jumbotron, Table, Button, Modal } from 'react-bootstrap';
-import { Title, Wrapper } from './styles';
+import { Title, Wrapper, NavBar } from './styles';
 import styled from 'styled-components';
 
 const TableCell = styled.td`
@@ -48,6 +48,7 @@ export default () => {
   }
   
   return <>
+    <NavBar />
     <Wrapper>
       <Jumbotron>
         <Title>Welcome, {localStorage.getItem('username')}</Title>
@@ -65,10 +66,10 @@ export default () => {
             <th style={{ width: '110px'}}>Close Lobby</th>
           </tr>
           {
-            lobbies.map((lobby) => {
+            lobbies.map((lobby, index) => {
               const date = new Date(lobby.createTime);
               const timeString = date.toLocaleString();
-              return <tr>
+              return <tr key={index}>
                 <TableCell onClick={() => navigateToLobby(lobby.code)}>{lobby.code}</TableCell>
                 <td>{timeString}</td>
                 <td style={{ textAlign: 'center', padding: '0.1em' }}>
