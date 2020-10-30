@@ -87,7 +87,7 @@ export default class Game implements MessageQueue {
     sagittarius.visited = true;
   }
 
-  advanceTime(): void {
+  private advanceTime(): void {
     // Invoking onDayUpdate at the end of day
     for (const id in this.agents) {
       this.agents[id].onDayUpdate(this.day);
@@ -148,16 +148,33 @@ export default class Game implements MessageQueue {
   }
 
   moveSpaceships(moves: { [id: string]: string }): void {
+    let validMoves = true;
+    Object.entries(moves).forEach(([id, move]) => {
+      const spaceship = this.spaceships[id];
+      const neighbors = spaceship.generateReachableNeighbors();
+      let valid = false;
+      neighbors.forEach((cost) => {
+        if (cost.location === move) {
+          valid = true;
+        }
+      });
+      validMoves &&= valid;
+    });
+    if (!validMoves) {
+      return;
+    }
     this.movedSinceStart = true;
     this.lastMove = this.countdownClock.getSecondsElapsed();
-    for (const id in moves) {
+    Object.entries(moves).forEach(([id, move]) => {
       this.spaceships[id].addToPath(moves[id]);
-      const spaceStation = locationData[moves[id]].location.spaceStationName;
+      
+      const spaceStation = locationData[move].location.spaceStationName;
       if (spaceStation && !this.spaceStations[spaceStation].visited) {
         this.spaceStations[spaceStation].visited = true;
         this.messages.push(spaceStationData[spaceStation].message);
       }
-    }
+    });
+    this.advanceTime();
   }
 
   transferEnergyCells(from: string, to: string, count?: number): void {
