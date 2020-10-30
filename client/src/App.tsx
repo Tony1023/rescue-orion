@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Room, { DevRoom } from './room';
 import Admin from './admin';
 import Join from './join';
+import Landing from './Landing';
 
 export default () => {
 
@@ -25,7 +26,10 @@ export default () => {
         path='/dev'
         component={DevRoom}
       />
-      {/* <Route component={allotherlinks} /> */}
+      <Route
+        path='/'
+        component={Landing}
+      />
     </Switch>
   </BrowserRouter>
 }
