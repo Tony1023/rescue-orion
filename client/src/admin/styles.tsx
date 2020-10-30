@@ -6,9 +6,10 @@ import React, { Component } from 'react';
 export const Wrapper = styled.div`
   max-width: 1100px;
   margin: 0 auto;
+  min-height: 100vh;
   background-color: rgb(248, 248, 248);
   padding: 20px;
-  padding-bottom: 100px;
+  padding-top: 75px;
 `;
 
 export const Title = styled.h1`
@@ -28,7 +29,7 @@ const StyledLink = styled(Link)`
 export class NavBar extends Component{
   render() {
     return (
-      <Navbar sticky="top" bg="dark" variant="dark">
+      <Navbar fixed="top" bg="dark" variant="dark">
         <Nav className="mr-auto">
           <StyledLink to="/admin/lobbies">Return to Lobby List</StyledLink>
         </Nav>
