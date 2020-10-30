@@ -8,6 +8,9 @@ client.interceptors.response.use((res) => res, (err) => {
     window.location.href = '/admin';
     return;
   }
+  if (err.response === undefined) {
+    alert('Cannot connect to server.');
+  }
   throw err;
 });
 

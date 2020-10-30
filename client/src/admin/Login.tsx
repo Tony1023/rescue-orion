@@ -66,7 +66,7 @@ export default class extends React.Component<{
       localStorage.setItem('username', this.state.username);
       this.props.history.push('/admin/lobbies');
     } catch (err) {
-      this.setState({ error: err.response.data });
+      this.setState({ error: err.response?.data ?? 'Cannot connect to server.' });
     }
   }
 
