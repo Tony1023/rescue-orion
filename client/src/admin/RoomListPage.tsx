@@ -197,7 +197,7 @@ export default () => {
   }
 
   return <>
-    <NavBar></NavBar>
+    <NavBar />
     <Wrapper>
       {
         createTime && socket ?
