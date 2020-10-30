@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Room, { DevRoom } from './room';
+import Room from './room';
 import Admin from './admin';
 import Join from './join';
 
@@ -21,11 +21,6 @@ export default () => {
         path='/join'
         component={Join}
       />
-      <Route
-        path='/dev'
-        component={DevRoom}
-      />
-      {/* <Route component={allotherlinks} /> */}
     </Switch>
   </BrowserRouter>
 }
