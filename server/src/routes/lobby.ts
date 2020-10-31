@@ -32,7 +32,7 @@ export default (router: express.Router, wss: io.Server) => {
 
   router.get('/', (req, res) => {
     const admin = req.user as string;
-    const lobbies = repository.adminLobbies[admin]?.map((code) => {
+    const lobbies = repository.adminLobbies[admin]?.slice(0).reverse().map((code) => {
       const lobby = repository.lobbies[code];
       return {
         code: code,

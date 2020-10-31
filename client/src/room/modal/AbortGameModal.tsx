@@ -1,9 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
 import EndGameStatsModal from './EndGameStatsModal';
 
 import {
-  BaseModalEndBackground,
+  BaseModalBackground,
   ModalBackground,
   Header,
   Body,
@@ -13,14 +12,13 @@ import { StyledExtraModal } from './MessageModal';
 
 export default () => {
   return <ModalBackground zIndex={1}>
-    <BaseModalEndBackground>
+    <BaseModalBackground>
       <StyledModal>
         <Header>
           Mission Aborted!
         </Header>
         <Body>
-          <p>You have aborted your mission and without your assistance, </p>
-          <p>we fear the worst has happened at Space Station Orion. </p>
+          <p>You have aborted your mission and without your assistance, we fear the worst has happened at Space Station Orion. </p>
           <p>Please alert the Space Commander to come and instruct you what to do next. </p>
           <p>-Ground Control </p>
         </Body>
@@ -28,6 +26,6 @@ export default () => {
       <StyledExtraModal>
         <EndGameStatsModal />
       </StyledExtraModal>    
-    </BaseModalEndBackground>
+    </BaseModalBackground>
   </ModalBackground>
 }

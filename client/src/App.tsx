@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Room from './room';
 import Admin from './admin';
 import Join from './join';
+import Landing from './Landing';
 
 export default () => {
 
@@ -20,6 +21,10 @@ export default () => {
       <Route
         path='/join'
         component={Join}
+      />
+      <Route
+        path='/'
+        component={Landing}
       />
     </Switch>
   </BrowserRouter>

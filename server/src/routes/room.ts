@@ -32,18 +32,22 @@ export default (router: express.Router, wss: io.Server) => {
   });
 
   router.use(passport.authenticate('jwt', { session: false }));
-  router.post('/restart', (req, res) => {
-    const lobbyCode = parseInt(req.body.lobby);
+  router.post('/restart/:lobby/:room', (req, res) => {
+    const lobbyCode = parseInt(req.params.lobby);
     const admin = req.user as string;
     if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(lobbyCode) === -1) {
-      res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
+      res.status(404).send(`Lobby code ${req.params.lobby} not found!`);
       return;
     }
     const lobby = repository.lobbies[lobbyCode];
-    const roomName = req.body.room;
+    const roomName = req.params.room;
     const room = lobby.findRoom(roomName);
     if (!room) {
       res.status(404).send(`Room ${roomName} not found.`);
+      return;
+    }
+    if (lobby.status !== Types.LobbyStatus.Started) {
+      res.status(403).send('Cannot restart room when game is not in progress.');
       return;
     }
     room.restartGame();

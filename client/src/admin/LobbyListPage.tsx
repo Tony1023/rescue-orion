@@ -4,6 +4,7 @@ import client from '../axios-client';
 import { Jumbotron, Table, Button, Modal } from 'react-bootstrap';
 import { Title, Wrapper, NavBar } from './styles';
 import styled from 'styled-components';
+import { localeTimeString } from '../time-format-utils';
 
 const TableCell = styled.td`
   &:hover {
@@ -11,26 +12,42 @@ const TableCell = styled.td`
   }
 `;
 
+const HighlightableRow = styled.tr`
+  background-color: ${(props: { highlight: boolean }) =>
+    props.highlight ? '#fff2a8' : 'auto'
+  };
+`;
+
 export default () => {
 
   const history = useHistory();
   const [lobbies, setLobbies] = useState<{ code: number, createTime: number }[]>([]);
   const [deleteModal, setDeleteModal] = useState<number>();
+  const [newLobby, setNewLobby] = useState<number>();
+  const [newLobbyDisplayTimeout, setNewLobbyDisplayTimeout] = useState<number>();
 
   useEffect(loadLobbies, []);
 
   function loadLobbies() {
     client.get('http://localhost:9000/lobbies',
-      { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}).then((res) => {
-      setLobbies(res.data);
-    });
+      { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}
+    )
+      .then((res) => {
+        setLobbies(res.data);
+      });
   }
 
   function createLobby() {
     client.post('http://localhost:9000/lobbies', {}, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
-      .then(loadLobbies);
+      .then((res) => {
+        setNewLobby(res.data.code);
+        loadLobbies();
+        clearTimeout(newLobbyDisplayTimeout);
+        const timeout = setTimeout(() => setNewLobby(undefined), 5000);
+        setNewLobbyDisplayTimeout(timeout);
+      });
   }
 
   function deleteLobby(code: number) {
@@ -55,7 +72,7 @@ export default () => {
         <h5 style={{ textAlign: 'center' }}>The table below contains the list of lobbies you are in charge of...</h5>
       </Jumbotron>
       <Button
-        style={{ marginBottom: '10px' }}
+        style={{ margin: '0 15px 15px 0' }}
         onClick={createLobby}
       >Create Lobby</Button>
       <Table striped bordered hover size='sm'>
@@ -67,9 +84,11 @@ export default () => {
           </tr>
           {
             lobbies.map((lobby, index) => {
-              const date = new Date(lobby.createTime);
-              const timeString = date.toLocaleString();
-              return <tr key={index}>
+              const timeString = localeTimeString(lobby.createTime);
+              return <HighlightableRow
+                key={index}
+                highlight={newLobby === lobby.code}
+              >
                 <TableCell onClick={() => navigateToLobby(lobby.code)}>{lobby.code}</TableCell>
                 <td>{timeString}</td>
                 <td style={{ textAlign: 'center', padding: '0.1em' }}>
@@ -77,16 +96,16 @@ export default () => {
                     size='sm'
                     variant='outline-danger'
                     onClick={() => setDeleteModal(lobby.code)}
-                    >Close</Button>
+                    >Shut Down</Button>
                 </td>
-              </tr>;
+              </HighlightableRow>;
             })
           }
         </tbody>
       </Table>
     </Wrapper>
     <Modal
-      show={deleteModal}
+      show={deleteModal !== undefined}
       onHide={() => setDeleteModal(undefined)}
     >
       <Modal.Header closeButton>
@@ -104,7 +123,7 @@ export default () => {
         <Button
           variant='danger'
           onClick={() => deleteLobby(deleteModal!)}
-        >Yes, close it</Button>
+        >Yes, shut it down</Button>
       </Modal.Footer>
     </Modal>
   </>;

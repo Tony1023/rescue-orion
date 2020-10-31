@@ -21,10 +21,6 @@ export const BaseModalBackground = styled.div`
   transform: translate(-50%, 0);
 `;
 
-export const BaseModalEndBackground = styled(BaseModalBackground)`
-  top: 30px;
-`;
-
 export const BaseModalImageBackground = styled(BaseModalBackground)`
   height: 500px;
   background-size: cover;
@@ -39,6 +35,7 @@ export const BaseModal = styled.div`
   padding: 30px;
   background-color: rgb(197, 205, 233);
   border-bottom: 5px solid #b62021;
+  font-family: 'roboto';
 `;
 
 export const Modal = styled(BaseModal)`
@@ -52,7 +49,6 @@ export const ExtraModal = styled(BaseModal)`
 
 export const StyledModal = styled(Modal)`
   padding: 30px;
-  font-family: 'roboto';
 `;
 
 export const Header = styled.div`

@@ -2,7 +2,7 @@ import React from 'react';
 import EndGameStatsModal from './EndGameStatsModal';
 
 import {
-  BaseModalEndBackground,
+  BaseModalBackground,
   ModalBackground,
   Header,
   Body,
@@ -12,7 +12,7 @@ import { StyledExtraModal } from './MessageModal';
 
 export default () => {
   return <ModalBackground zIndex={1}>
-    <BaseModalEndBackground>
+    <BaseModalBackground>
       <StyledModal>
         <Header>
           Attention, Gemini crew.
@@ -27,6 +27,6 @@ export default () => {
       <StyledExtraModal>
         <EndGameStatsModal />
       </StyledExtraModal>    
-    </BaseModalEndBackground>
+    </BaseModalBackground>
   </ModalBackground>
 }

@@ -14,7 +14,7 @@ import ConfirmMoveModal from './modal/ConfirmMoveModal';
 import SuccessMissionModal from './modal/SuccessMissionModal';
 import { useSelector } from './redux-hook-adapters';
 import Clock from './Clock';
-import AbortMissionModal from './modal/AbortMissionModal';
+import AbortMissionModal from './modal/ConfirmAbortMissionModal';
 import WaitModal from './modal/WaitModal';
 import OutOfResourceModal from './modal/OutOfResourceModal';
 import TimeOutModal from './modal/TimeOutModal';
