@@ -77,7 +77,7 @@ export default () => {
                     size='sm'
                     variant='outline-danger'
                     onClick={() => setDeleteModal(lobby.code)}
-                    >Close</Button>
+                    >Shut Down</Button>
                 </td>
               </tr>;
             })
@@ -104,7 +104,7 @@ export default () => {
         <Button
           variant='danger'
           onClick={() => deleteLobby(deleteModal!)}
-        >Yes, close it</Button>
+        >Yes, shut it down</Button>
       </Modal.Footer>
     </Modal>
   </>;
