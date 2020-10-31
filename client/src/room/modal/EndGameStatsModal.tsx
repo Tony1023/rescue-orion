@@ -51,6 +51,23 @@ export default () => {
         </StatValue>
       </DataPoint>
       <DataPoint>
+        <StatName>Scientists Saved</StatName>
+        <StatValue>
+          {
+            state.status === GameStatus.MissionSucceeded ?
+            `${stats.scientistsRemaining} of 20` : 'None'
+          }
+        </StatValue>
+      </DataPoint>
+      <DataPoint>
+        <StatName>Mission Duration</StatName>
+        <StatValue>
+          {
+            formatTime(state.endTime! - state.startTime)
+          }
+        </StatValue>
+      </DataPoint>
+      <DataPoint>
         <StatName>O2 temp (by day 6)</StatName>
         <StatValue>
           {
@@ -59,6 +76,8 @@ export default () => {
           }
         </StatValue>
       </DataPoint>
+    </ColumnHalf>
+    <ColumnHalf>
       <DataPoint>
         <StatName>Oxygen (by day 21)</StatName>
         <StatValue>
@@ -77,8 +96,6 @@ export default () => {
           }
         </StatValue>
       </DataPoint>
-    </ColumnHalf>
-    <ColumnHalf>
       <DataPoint>
         <StatName>Food (by day 24)</StatName>
         <StatValue>
@@ -94,23 +111,6 @@ export default () => {
           {
             stats.dropOffTimes[RescueResource.FoodRepairTeam] > -1 ?
             stats.dropOffTimes[RescueResource.FoodRepairTeam] : 'Did not fix'
-          }
-        </StatValue>
-      </DataPoint>
-      <DataPoint>
-        <StatName>Scientists Saved</StatName>
-        <StatValue>
-          {
-            state.status === GameStatus.MissionSucceeded ?
-            `${stats.scientistsRemaining} of 20` : 'None'
-          }
-        </StatValue>
-      </DataPoint>
-      <DataPoint>
-        <StatName>Mission Duration</StatName>
-        <StatValue>
-          {
-            formatTime(state.endTime! - state.startTime)
           }
         </StatValue>
       </DataPoint>
