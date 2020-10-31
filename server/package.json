@@ -9,7 +9,8 @@
     "prestart": "yarn run build",
     "start": "node .",
     "test": "jest",
-    "develop": "nodemon ."
+    "develop": "nodemon .",
+    "watch-test": "npx jest --watch"
   },
   "dependencies": {
     "@types/cors": "^2.8.7",
