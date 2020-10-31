@@ -10,11 +10,6 @@ export function useSelector<TSelected = unknown>(
   return selector(state);
 }
 
-export function useTime(): Types.GameDuration {
-  const context = useContext(GameContext);
-  return context.gameDuration!;
-}
-
 export function useDispatch() {
   const context = useContext(GameContext);
   return (action: Types.GameAction) => {
