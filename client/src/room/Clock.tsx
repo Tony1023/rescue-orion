@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { useTime } from './redux-hook-adapters';
+import GameContext from './game-context';
 
 const Clock = styled.div`
   position: absolute;
@@ -28,9 +28,16 @@ function pad(n: number): string {
 }
 
 export default () => {
-  const gameDuration = useTime();
-  const minutes = Math.floor(gameDuration.countdown / 60);
-  const seconds = gameDuration.countdown % 60;
+  const context = useContext(GameContext);
+  let countdown: number;
+  if (context.gameState!.endTime) {
+    const lobbyCountdown = context.gameDuration!.countdown + context.gameDuration!.duration;
+    countdown = lobbyCountdown - context.gameState!.endTime;
+  } else {
+    countdown = context.gameDuration!.countdown;
+  }
+  const minutes = Math.floor(countdown / 60);
+  const seconds = countdown % 60;
   
   return <Clock>
     {pad(minutes)}:{pad(seconds)}

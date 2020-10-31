@@ -46,6 +46,10 @@ export default (router: express.Router, wss: io.Server) => {
       res.status(404).send(`Room ${roomName} not found.`);
       return;
     }
+    if (lobby.status !== Types.LobbyStatus.Started) {
+      res.status(403).send('Cannot restart room when game is not in progress.');
+      return;
+    }
     room.restartGame();
     res.status(200).send();
   });

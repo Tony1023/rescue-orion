@@ -14,26 +14,7 @@ import fileSave from 'file-saver';
 import { Jumbotron, Table, Button, Badge, Modal} from 'react-bootstrap';
 import styled from 'styled-components';
 import { Title, Wrapper, NavBar } from './styles';
-
-function pad(n: number): string {
-  let digits = 0;
-  let copy = n;
-  while (copy > 0) {
-    copy = Math.floor(copy / 10);
-    ++digits;
-  }
-  if (digits < 2) {
-    return `0${n}`;
-  } else {
-    return `${n}`;
-  }
-}
-
-function formatTime(time: number) {
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
-  return `${pad(minutes)}:${pad(seconds)}`;
-}
+import { formatTime, localeTimeString } from '../time-format-utils';
 
 const LobbyControls = styled.div`
   min-width: 350px;
@@ -69,8 +50,7 @@ export default () => {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then((res) => {
-        const date = new Date(res.data.createTime);
-        setCreateTime(date.toLocaleString());
+        setCreateTime(localeTimeString(res.data.createTime));
       })
       .catch(() => {
         setCreateTime(undefined);

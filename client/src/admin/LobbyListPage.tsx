@@ -4,6 +4,7 @@ import client from '../axios-client';
 import { Jumbotron, Table, Button, Modal } from 'react-bootstrap';
 import { Title, Wrapper, NavBar } from './styles';
 import styled from 'styled-components';
+import { localeTimeString } from '../time-format-utils';
 
 const TableCell = styled.td`
   &:hover {
@@ -83,8 +84,7 @@ export default () => {
           </tr>
           {
             lobbies.map((lobby, index) => {
-              const date = new Date(lobby.createTime);
-              const timeString = date.toLocaleString();
+              const timeString = localeTimeString(lobby.createTime);
               return <HighlightableRow
                 key={index}
                 highlight={newLobby === lobby.code}
