@@ -11,26 +11,42 @@ const TableCell = styled.td`
   }
 `;
 
+const HighlightableRow = styled.tr`
+  background-color: ${(props: { highlight: boolean }) =>
+    props.highlight ? '#fff2a8' : 'auto'
+  };
+`;
+
 export default () => {
 
   const history = useHistory();
   const [lobbies, setLobbies] = useState<{ code: number, createTime: number }[]>([]);
   const [deleteModal, setDeleteModal] = useState<number>();
+  const [newLobby, setNewLobby] = useState<number>();
+  const [newLobbyDisplayTimeout, setNewLobbyDisplayTimeout] = useState<number>();
 
   useEffect(loadLobbies, []);
 
   function loadLobbies() {
     client.get('http://localhost:9000/lobbies',
-      { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}).then((res) => {
-      setLobbies(res.data);
-    });
+      { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}
+    )
+      .then((res) => {
+        setLobbies(res.data);
+      });
   }
 
   function createLobby() {
     client.post('http://localhost:9000/lobbies', {}, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
-      .then(loadLobbies);
+      .then((res) => {
+        setNewLobby(res.data.code);
+        loadLobbies();
+        clearTimeout(newLobbyDisplayTimeout);
+        const timeout = setTimeout(() => setNewLobby(undefined), 5000);
+        setNewLobbyDisplayTimeout(timeout);
+      });
   }
 
   function deleteLobby(code: number) {
@@ -55,7 +71,7 @@ export default () => {
         <h5 style={{ textAlign: 'center' }}>The table below contains the list of lobbies you are in charge of...</h5>
       </Jumbotron>
       <Button
-        style={{ marginBottom: '10px' }}
+        style={{ margin: '0 15px 15px 0' }}
         onClick={createLobby}
       >Create Lobby</Button>
       <Table striped bordered hover size='sm'>
@@ -69,7 +85,10 @@ export default () => {
             lobbies.map((lobby, index) => {
               const date = new Date(lobby.createTime);
               const timeString = date.toLocaleString();
-              return <tr key={index}>
+              return <HighlightableRow
+                key={index}
+                highlight={newLobby === lobby.code}
+              >
                 <TableCell onClick={() => navigateToLobby(lobby.code)}>{lobby.code}</TableCell>
                 <td>{timeString}</td>
                 <td style={{ textAlign: 'center', padding: '0.1em' }}>
@@ -79,7 +98,7 @@ export default () => {
                     onClick={() => setDeleteModal(lobby.code)}
                     >Shut Down</Button>
                 </td>
-              </tr>;
+              </HighlightableRow>;
             })
           }
         </tbody>
