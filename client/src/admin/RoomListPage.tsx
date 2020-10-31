@@ -386,7 +386,7 @@ export default () => {
       </Modal.Footer>
     </Modal>
     <Modal
-      show={restartModal}
+      show={restartModal !== undefined}
       onHide={() => setRestartModal(undefined)}
     >
       <Modal.Header closeButton>

@@ -19,8 +19,7 @@ export default () => {
           Mission Aborted!
         </Header>
         <Body>
-          <p>You have aborted your mission and without your assistance, </p>
-          <p>we fear the worst has happened at Space Station Orion. </p>
+          <p>You have aborted your mission and without your assistance, we fear the worst has happened at Space Station Orion. </p>
           <p>Please alert the Space Commander to come and instruct you what to do next. </p>
           <p>-Ground Control </p>
         </Body>

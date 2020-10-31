@@ -18,9 +18,9 @@ export default () => {
           Incoming Relay From Ground Control
         </Header>
         <Body>
-          <p>Oh no! Your ship ran out of the resources required to keep your ship moving so you can carry out your mission! </p>
-          <p>Please send a distress call to the Space Commander and we will provide further instruction. </p>
-          <p>-Ground Control </p>
+          <p>Oh no! Your ship ran out of the resources required to keep your ship moving so you can carry out your mission!</p>
+          <p>Please send a distress call to the Space Commander and we will provide further instruction.</p>
+          <p>-Ground Control</p>
         </Body>
       </StyledModal>
       <StyledExtraModal>

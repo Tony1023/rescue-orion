@@ -105,7 +105,7 @@ export default () => {
       </Table>
     </Wrapper>
     <Modal
-      show={deleteModal}
+      show={deleteModal !== undefined}
       onHide={() => setDeleteModal(undefined)}
     >
       <Modal.Header closeButton>

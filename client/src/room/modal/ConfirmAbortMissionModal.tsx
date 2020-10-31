@@ -3,6 +3,7 @@ import {
   BaseModalTextBackground,
   Modal,
   ModalBackground,
+  Body,
   StyledButton,
   Header,
 } from './modal';
@@ -34,8 +35,12 @@ export default (props: {
     <BaseModalTextBackground>
       <Modal>
         <Header>
-          Are you sure to abort mission?
+          About to abort mission
         </Header>
+        <Body>
+          <p>Are you sure you want to abandon your mission to Rescue Orion?</p>
+          <p>Confirming this will end your mission and undo all progress made so far.</p>
+        </Body>
         <div style={{
           position: 'relative',
           height: '80px',
