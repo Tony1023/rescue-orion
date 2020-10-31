@@ -168,10 +168,9 @@ export default () => {
   }
 
   function restartGame(room: string) {
-    client.post('http://localhost:9000/rooms/restart', {
-      lobby: code,
-      room: room
-    }, { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }})
+    client.post(`http://localhost:9000/rooms/restart/${code}/${room}`, {},
+      { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}
+    )
       .then(() => setRestartModal(undefined));
   }
 
