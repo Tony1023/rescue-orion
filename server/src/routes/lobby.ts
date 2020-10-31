@@ -35,7 +35,7 @@ export default (router: express.Router, wss: io.Server) => {
     const lobbies = repository.adminLobbies[admin]?.slice(0).reverse().map((code) => {
       const lobby = repository.lobbies[code];
       return {
-        code: code,
+        code,
         createTime: lobby.createTime,
       };
     });
@@ -49,7 +49,7 @@ export default (router: express.Router, wss: io.Server) => {
       lobbyCode = Math.floor(100000 + Math.random() * 900000)
     } while (repository.lobbies[lobbyCode]);
     // Lobbies stored in adminLobbies in chrono order
-    new Lobby(lobbyCode, admin);
+    const _ = new Lobby(lobbyCode, admin);
     res.status(200).send({ code: lobbyCode });
   });
 

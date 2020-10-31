@@ -4,9 +4,9 @@ import { cwd } from 'process';
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 
-let ExtractJwt = passportJWT.ExtractJwt;
+const ExtractJwt = passportJWT.ExtractJwt;
 
-let JwtStrategy = passportJWT.Strategy;
+const JwtStrategy = passportJWT.Strategy;
 
 export const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

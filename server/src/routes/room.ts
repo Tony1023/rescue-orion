@@ -8,7 +8,7 @@ export default (router: express.Router, wss: io.Server) => {
 
   router.post('/', (req, res) => {
     const lobbyCode = parseInt(req.body.lobby);
-    let lobby = repository.lobbies[lobbyCode];
+    const lobby = repository.lobbies[lobbyCode];
     if (isNaN(lobbyCode) || !lobby) {
       res.status(404).send(`Lobby code ${req.body.lobby} not found!`);
       return;

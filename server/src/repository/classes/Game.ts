@@ -167,7 +167,7 @@ export default class Game implements MessageQueue {
     this.lastMove = this.countdownClock.getSecondsElapsed();
     Object.entries(moves).forEach(([id, move]) => {
       this.spaceships[id].addToPath(moves[id]);
-      
+
       const spaceStation = locationData[move].location.spaceStationName;
       if (spaceStation && !this.spaceStations[spaceStation].visited) {
         this.spaceStations[spaceStation].visited = true;

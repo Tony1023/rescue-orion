@@ -110,7 +110,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
     // Moving thru time portals
     if (locationData[location].location.type === LocationType.TimePortal &&
         locationData[prev].location.type === LocationType.TimePortal) {
-      // Going back: pop off 
+      // Going back: pop off
       if (this.timePortalRouteStack[this.timePortalRouteStack.length - 1] === location) {
         this.timePortalRouteStack.pop();
       } else {

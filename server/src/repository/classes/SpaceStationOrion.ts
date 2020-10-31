@@ -235,7 +235,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
       })
     }
     // check whether all resources are dropped
-    if(this.rescueResources.includes(RescueResource.OxygenRepairTeam) 
+    if(this.rescueResources.includes(RescueResource.OxygenRepairTeam)
     && this.rescueResources.includes(RescueResource.WaterRepairTeam)
     && this.rescueResources.includes(RescueResource.FoodRepairTeam)
     && this.rescueResources.includes(RescueResource.MedicalRepairTeam)) {

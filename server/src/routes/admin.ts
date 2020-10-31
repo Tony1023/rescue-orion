@@ -10,18 +10,18 @@ export default (router: express.Router) => {
 		const username=req.body.username;
 		const password=req.body.password;
 		let found = false;
-		
-		//compare username, password with csv file
+
+		// compare username, password with csv file
 		fs.createReadStream(cwd() + '/credentials.csv')
 		.pipe(csvParser())
 		.on('data', (data) => {
 			if(username === data.username){
 				found=true;
 				if(password === data.password){
-					let token = jwt.sign({
-						username: username,
+					const token = jwt.sign({
+						username,
 					}, jwtOptions.secretOrKey);
-					res.status(200).send({ token: token });
+					res.status(200).send({ token });
 				}else{
 					res.status(401).send('Wrong Password for user: ' + username);
 					console.log('Wrong Password for user: ' + username);
