@@ -1,7 +1,6 @@
 import React from 'react';
 import {
-  BaseModalEndBackground,
-  Modal,
+  BaseModalBackground,
   ModalBackground,
   Header,
   Body,
@@ -18,7 +17,7 @@ const SuccessModalBackground = styled(ModalBackground)`
 
 export default () => {
   return <SuccessModalBackground>
-    <BaseModalEndBackground>
+    <BaseModalBackground>
       <StyledModal>
         <Header>
           Welcome back to Sagittarius!
@@ -33,6 +32,6 @@ export default () => {
       <StyledExtraModal>
         <EndGameStatsModal />
       </StyledExtraModal>      
-    </BaseModalEndBackground>
+    </BaseModalBackground>
   </SuccessModalBackground>;
 }

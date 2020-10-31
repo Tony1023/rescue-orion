@@ -16,12 +16,12 @@ const AbortButton = styled(StyledButton)`
   color: white;
   position: absolute;
   top: 20px;
-  left: 100px;
+  left: 150px;
 `;
 
 const CancelButton = styled(StyledButton)`
   position: absolute;
-  right: 100px;
+  right: 150px;
   top: 20px;
 `;
 

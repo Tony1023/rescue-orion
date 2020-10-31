@@ -1,9 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
 import EndGameStatsModal from './EndGameStatsModal';
 
 import {
-  BaseModalEndBackground,
+  BaseModalBackground,
   ModalBackground,
   Header,
   Body,
@@ -13,7 +12,7 @@ import { StyledExtraModal } from './MessageModal';
 
 export default () => {
   return <ModalBackground zIndex={1}>
-    <BaseModalEndBackground>
+    <BaseModalBackground>
       <StyledModal>
         <Header>
           Mission Aborted!
@@ -27,6 +26,6 @@ export default () => {
       <StyledExtraModal>
         <EndGameStatsModal />
       </StyledExtraModal>    
-    </BaseModalEndBackground>
+    </BaseModalBackground>
   </ModalBackground>
 }
