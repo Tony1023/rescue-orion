@@ -24,3 +24,10 @@ or
 $ npm start
 ```
 to start application on localhost:3000
+
+# Testing
+All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started).
+
+If you haven't already, run `yarn install`.
+
+Run `yarn test` and you'll see an interactive console.

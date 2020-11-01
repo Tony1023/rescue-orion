@@ -23,3 +23,14 @@ For production, run
 ```
 yarn start
 ```
+
+# Testing
+All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started).
+
+If you haven't already, run `yarn install`.
+
+There are two ways to run the tests: `yarn test` and `yarn run watch-test`.
+
+If you run `yarn test`, then all the tests will be executed once.
+
+If you run `yarn run watch-test`, there will be an interactive console. You might need to `npm install --global npx` to install the `npx` package in order to use the interactive console.
