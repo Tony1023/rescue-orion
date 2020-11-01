@@ -10,7 +10,8 @@ class Lobby {
     this.code = code;
     this.admin = admin;
     this.countdownClock.subscribeTimeUp(() => {
-      global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
+      this.status = LobbyStatus.Finished;
+      this.destroyTimeout = global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
     });
     this.countdownClock.subscribeTick(() => {
       this.sendUpdate();
@@ -29,6 +30,7 @@ class Lobby {
   private code: number;
   private admin: string;
   private countdownClock = new CountdownClock(75 * 60);
+  private destroyTimeout: NodeJS.Timeout;
   readonly createTime = Date.now();
   status = LobbyStatus.Waiting;
 
@@ -65,6 +67,9 @@ class Lobby {
   }
 
   destroy() {
+    if (this.destroyTimeout) {
+      clearTimeout(this.destroyTimeout);
+    }
     Object.values(this.rooms).forEach((room) => room.destroy());
     const index = repository.adminLobbies[this.admin]?.indexOf(this.code);
     if (index >= 0) {
