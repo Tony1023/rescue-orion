@@ -4,13 +4,14 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "prebuild": "rm -rf dist/* && tslint -c tslint.json -p tsconfig.json --fix",
+    "prebuild": "rm -rf dist/*",
     "build": "tsc",
     "prestart": "yarn run build",
     "start": "node .",
     "test": "jest",
     "develop": "nodemon .",
-    "watch-test": "npx jest --watch"
+    "watch-test": "npx jest --watch",
+    "format": "tslint -c tslint.json -p tsconfig.json --fix"
   },
   "dependencies": {
     "@types/cors": "^2.8.7",

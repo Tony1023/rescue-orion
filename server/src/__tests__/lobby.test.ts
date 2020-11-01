@@ -14,7 +14,7 @@ describe('lobby', () => {
 
     // Should be destroyed after 2 hrs
     jest.advanceTimersByTime(2 * 60 * 60 * 1000);
-    expect(repository.adminLobbies['admin'].length).toBe(0);
+    expect(repository.adminLobbies.admin.length).toBe(0);
     expect(repository.lobbies[12306]).toBeUndefined();
   });
 });
