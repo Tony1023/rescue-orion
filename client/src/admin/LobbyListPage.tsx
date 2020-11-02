@@ -5,6 +5,7 @@ import { Jumbotron, Table, Button, Modal } from 'react-bootstrap';
 import { Title, Wrapper, NavBar } from './styles';
 import styled from 'styled-components';
 import { localeTimeString } from '../time-format-utils';
+import { API_BASE_URL } from '../config';
 
 const TableCell = styled.td`
   &:hover {
@@ -29,7 +30,7 @@ export default () => {
   useEffect(loadLobbies, []);
 
   function loadLobbies() {
-    client.get('http://localhost:9000/lobbies',
+    client.get(`${API_BASE_URL}/lobbies`,
       { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}
     )
       .then((res) => {
@@ -38,7 +39,7 @@ export default () => {
   }
 
   function createLobby() {
-    client.post('http://localhost:9000/lobbies', {}, {
+    client.post(`${API_BASE_URL}/lobbies`, {}, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then((res) => {
@@ -51,7 +52,7 @@ export default () => {
   }
 
   function deleteLobby(code: number) {
-    client.delete(`http://localhost:9000/lobbies/${code}`, {
+    client.delete(`${API_BASE_URL}/lobbies/${code}`, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then(() => {

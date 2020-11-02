@@ -3,6 +3,7 @@ import csvParser from 'csv-parser';
 import { cwd } from 'process';
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
+import { JWT_SECRET } from './config';
 
 const ExtractJwt = passportJWT.ExtractJwt;
 
@@ -10,7 +11,7 @@ const JwtStrategy = passportJWT.Strategy;
 
 export const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: 'skrskr',
+  secretOrKey: JWT_SECRET,
 };
 
 const strategy = new JwtStrategy(jwtOptions, (jwtPayload, next) => {

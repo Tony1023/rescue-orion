@@ -15,6 +15,7 @@ import { Jumbotron, Table, Button, Badge, Modal} from 'react-bootstrap';
 import styled from 'styled-components';
 import { Title, Wrapper, NavBar } from './styles';
 import { formatTime, localeTimeString } from '../time-format-utils';
+import { API_BASE_URL } from '../config';
 
 const LobbyControls = styled.div`
   min-width: 350px;
@@ -46,7 +47,7 @@ export default () => {
   stateRef.current = rooms;
 
   useEffect(() => {
-    client.get(`http://localhost:9000/lobbies/${code}`, {
+    client.get(`${API_BASE_URL}/lobbies/${code}`, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then((res) => {
@@ -56,7 +57,7 @@ export default () => {
         setCreateTime(undefined);
       });
     
-    const newSocket = SocketIOClient('http://localhost:9000', {
+    const newSocket = SocketIOClient(`${API_BASE_URL}`, {
       path: '/lobbies/socket',
       query: {
         lobby: code,
@@ -120,7 +121,7 @@ export default () => {
   }
 
   function startGames() {
-    client.put(`http://localhost:9000/lobbies/start/${code}`, {}, {
+    client.put(`${API_BASE_URL}/lobbies/start/${code}`, {}, {
       headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
     })
       .then(() => {
@@ -133,7 +134,7 @@ export default () => {
 
   function setGameCountdown() {
     const countdownInSeconds = countdownMinutes * 60 + countdownSeconds;
-    client.put(`http://localhost:9000/lobbies/countdown/${code}`, { 
+    client.put(`${API_BASE_URL}/lobbies/countdown/${code}`, { 
         countdown: countdownInSeconds
       }, {
         headers: { Authorization: `bearer ${localStorage.getItem('token')}` }
@@ -148,7 +149,7 @@ export default () => {
   }
 
   function restartGame(room: string) {
-    client.post(`http://localhost:9000/rooms/restart/${code}/${room}`, {},
+    client.post(`${API_BASE_URL}/rooms/restart/${code}/${room}`, {},
       { headers: { Authorization: `bearer ${localStorage.getItem('token')}` }}
     )
       .then(() => setRestartModal(undefined));

@@ -24,6 +24,13 @@ For production, run
 yarn start
 ```
 
+# ENV setup!!!
+Create a file in server/ called `.env` and put
+```
+JWT_SECRET=JefferyMiller401
+```
+as the file content. You can choose any JWT_SECRET you want.
+
 # Testing
 All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started).
 

@@ -8,6 +8,7 @@ import {
   Button,
 } from 'react-bootstrap';
 import { History } from 'history';
+import { API_BASE_URL } from '../config';
 
 const Global = createGlobalStyle`
   html, body {
@@ -58,7 +59,7 @@ export default class extends React.Component<{
       return;
     }
     try {
-      const { data } = await axios.post('http://localhost:9000/admin/login', {
+      const { data } = await axios.post(`${API_BASE_URL}/admin/login`, {
         username: this.state.username,
         password: this.state.password,
       });

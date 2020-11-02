@@ -6,6 +6,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import SocketIOClient from 'socket.io-client';
 import { Location } from 'history';
 import queryString from 'query-string';
+import { API_BASE_URL } from '../config';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -35,7 +36,7 @@ export default (props: {
   const [gameDuration, setGameDuration] = useState<GameDuration>();
 
   async function setup() {
-    let newSocket = SocketIOClient('http://localhost:9000', {
+    let newSocket = SocketIOClient(`${API_BASE_URL}`, {
       path: '/rooms/socket',
       query: {
         lobby: lobby,

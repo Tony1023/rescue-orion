@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import client from '../axios-client';
 import { Jumbotron, InputGroup, FormControl, Button, Modal } from 'react-bootstrap';
 import styled, { createGlobalStyle } from 'styled-components';
+import { API_BASE_URL } from '../config';
 
 const Wrapper = styled(Jumbotron)`
   margin: 50px auto;
@@ -27,7 +28,7 @@ export default () => {
       setError('Lobby code and room name must not be empty.');
       return;
     }
-    client.post('http://localhost:9000/rooms', {
+    client.post(`${API_BASE_URL}/rooms`, {
       lobby: lobbyCode,
       room: roomName,
     }).then(() => redirectToRoom())

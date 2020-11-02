@@ -25,6 +25,13 @@ $ npm start
 ```
 to start application on localhost:3000
 
+# ENV setup!!!
+Create a file in server/ called `.env` and put
+```
+REACT_APP_API_BASE_URL=http://localhost:9000
+```
+as the file content.
+
 # Testing
 All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started).
 
