@@ -8,7 +8,8 @@ import waitFor from 'wait-for-expect';
 
 import React from 'react';
 import Room from '../room/index';
-import SpaceStation from '../room/SpaceStation';
+import MessageModal from '../room/modal/MessageModal';
+import WaitModal from '../room/modal/WaitModal';
 import GameBoard from '../room/GameBoard';
 
 describe('Load game board', () => {
@@ -49,33 +50,46 @@ describe('Load game board', () => {
       });
     });
     expect(room.text().includes('Cannot connect to Rescue Orion server... Try refreshing the page or report to your commander!')).toBeFalsy();
-    expect(room.text().includes('Waiting for your commander to start mission...'))
+    expect(room.find(GameBoard)).toBeTruthy();
+    const gameBoard = room.find(GameBoard);
+    expect(gameBoard.find(WaitModal)).toBeTruthy();
+    expect(room.text().includes('Waiting for your commander to start mission...')).toBeTruthy();
     done();
   });
 
-  // it('should render game board if started', async() => {
-    // await axios.put(`${API_BASE_URL}/lobbies/start/${lobbyCode}`, {}, {
-    //   headers: { Authorization: `bearer ${token}` }
-    // })
-    // const room = mount(<Room location={{
-    //   hash: "",
-    //   key: "d2o3w6",
-    //   pathname: "/rooms",
-    //   search: `?lobby=${lobbyCode}&room=testRoom`,
-    //   state: undefined,
-    // }} />);
-    // const gameBoard = shallow(<GameBoard />);
-    // expect(room.containsAnyMatchingElements(gameBoard)).toBeTruthy();
-    // expect(room.text().includes('DISMISS'));
-    // console.log(room.find(SpaceStation).debug())
-    // expect(room.find(SpaceStation)).toHaveLength(1);
-    // expect(room.text().includes('Waiting for your commander to start mission...'));
-  // });
+  it('should render game board if started', async() => {
+    const room = mount(<Room location={{
+      hash: "",
+      key: "d2o3w6",
+      pathname: "/rooms",
+      search: `?lobby=${lobbyCode}&room=testRoom`,
+      state: undefined,
+    }} />);
+    await act(async () => {
+      // start game from lobby list
+      await axios.put(`${API_BASE_URL}/lobbies/start/${lobbyCode}`, {}, {
+        headers: { Authorization: `bearer ${token}` }
+      });
+      // wait for room to update
+      await waitFor(async () => {
+        room.update();
+        expect(room.text().includes('Waiting for your commander to start mission...')).toBeFalsy();
+      });
+    });
+    // should render game board
+    expect(room.find(GameBoard)).toHaveLength(1);
+    // should show information card at Sagittarius
+    const gameBoard = room.find(GameBoard);
+    expect(gameBoard.find(MessageModal)).toHaveLength(1);
+  });
 
-  afterAll(() => {
-    axios.delete(`${API_BASE_URL}/lobbies/${lobbyCode}`, {
-      headers: { Authorization: `bearer ${token}` }
-    })
+  afterAll(async (done) => {
+    await act(async () => {
+      await axios.delete(`${API_BASE_URL}/lobbies/${lobbyCode}`, {
+        headers: { Authorization: `bearer ${token}` }
+      })
+    });
+    done();
   })
 
 })
