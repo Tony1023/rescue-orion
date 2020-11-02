@@ -30,13 +30,14 @@ const Time = styled.span`
 export default () => {
   const { code } = useParams<{ code?: string }>();
 
-  const [socket, setSocket] = useState<SocketIOClient.Socket>();
+  const [_, setSocket] = useState<SocketIOClient.Socket>();
   const [duration, setDuration] = useState(0);
   const [countdownMinutes, setCountdownMinutes] = useState(0);
   const [countdownSeconds, setCountdownSeconds] = useState(0);
   const [createTime, setCreateTime] = useState<string>();
   const [rooms, setRooms] = useState<{ [name: string]: GameState }>({});
   const [status, setStatus] = useState<LobbyStatus>();
+  const [notFound, setNotFound] = useState(false);
 
   const [startGameStatus, setStartGameStatus] = useState<string | boolean>(false);
   const [configCountdownStatus, setConfigCountdownStatus] = useState<string | boolean>(false);
@@ -53,8 +54,10 @@ export default () => {
       .then((res) => {
         setCreateTime(localeTimeString(res.data.createTime));
       })
-      .catch(() => {
-        setCreateTime(undefined);
+      .catch((err) => {
+        if (err.response?.status === 404) {
+          setNotFound(true);
+        }
       });
     
     const newSocket = SocketIOClient(`${API_BASE_URL}`, {
@@ -180,7 +183,7 @@ export default () => {
     <NavBar />
     <Wrapper>
       {
-        createTime && socket ?
+        createTime ?
         <>
           <Jumbotron>
             <Title>Lobby {code}</Title>
@@ -340,7 +343,16 @@ export default () => {
           </Table>
         </>
         :
-        <Jumbotron><Title>Lobby {code} does not exist.</Title></Jumbotron>
+        <Jumbotron>
+          <Title>
+            {
+              notFound ?
+              `Lobby ${code} does not exist.`
+              :
+              `Loading lobby ${code}...`
+            }
+          </Title>
+        </Jumbotron>
       }
     </Wrapper>
     <Modal
