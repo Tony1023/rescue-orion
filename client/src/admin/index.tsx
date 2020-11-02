@@ -3,18 +3,10 @@ import { Route, RouteComponentProps } from 'react-router-dom';
 import Login from './Login';
 import RoomListPage from './RoomListPage';
 import LobbyListPage from './LobbyListPage';
-import { createGlobalStyle } from 'styled-components';
-
-const Global = createGlobalStyle`
-  html, body {
-    background-color: rgb(233, 233, 233) !important;
-  }
-`;
 
 export default (props: RouteComponentProps) => {
 
   return <>
-    <Global />
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"

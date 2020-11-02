@@ -13,7 +13,7 @@ import client from '../axios-client';
 import fileSave from 'file-saver';
 import { Jumbotron, Table, Button, Badge, Modal} from 'react-bootstrap';
 import styled from 'styled-components';
-import { Title, Wrapper, NavBar } from './styles';
+import { PortalGlobal, Title, Wrapper, NavBar } from './styles';
 import { formatTime, localeTimeString } from '../time-format-utils';
 import { API_BASE_URL } from '../config';
 
@@ -180,6 +180,7 @@ export default () => {
   }
 
   return <>
+    <PortalGlobal />
     <NavBar />
     <Wrapper>
       {

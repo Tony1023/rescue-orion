@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import client from '../axios-client';
 import { Jumbotron, Table, Button, Modal } from 'react-bootstrap';
-import { Title, Wrapper, NavBar } from './styles';
+import { PortalGlobal, Title, Wrapper, NavBar } from './styles';
 import styled from 'styled-components';
 import { localeTimeString } from '../time-format-utils';
 import { API_BASE_URL } from '../config';
@@ -66,6 +66,7 @@ export default () => {
   }
   
   return <>
+    <PortalGlobal />
     <NavBar />
     <Wrapper>
       <Jumbotron>

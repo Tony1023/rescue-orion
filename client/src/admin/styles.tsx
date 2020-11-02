@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import {Navbar, Nav} from 'react-bootstrap';
+import styled, { createGlobalStyle } from 'styled-components';
+import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 
@@ -24,6 +24,12 @@ const StyledLink = styled(Link)`
     text-decoration: none;
   }
   padding: 5px;
+`;
+
+export const PortalGlobal = createGlobalStyle`
+  html, body {
+    background-color: rgb(233, 233, 233) !important;
+  }
 `;
 
 export class NavBar extends Component{
