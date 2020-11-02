@@ -10,7 +10,23 @@ const server = http.createServer(app);
 server.listen(PORT, () => console.log(`server started at http://localhost:${PORT}`));
 app.use(express.json());
 
-app.use(cors());
+const whitelist = [
+  undefined,
+  'http://localhost:3000',
+  'https://rescue-orion-beta.netlify.app'
+]
+
+app.use(cors({
+  origin: function(origin, callback) {
+    const index = whitelist.indexOf(origin);
+    if (index >= 0) {
+      callback(null, true);
+    } else {
+      callback(new Error(`${origin} not allowed by CORS`));
+    }
+  },
+  optionsSuccessStatus: 200,
+}));
 
 app.get("/", (req, res) => {
   res.send( "Hello world!" );
