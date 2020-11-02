@@ -1,10 +1,10 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect'
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import {shallow, mount} from 'enzyme';
-import SocketIOClient from 'socket.io-client';
+import waitFor from 'wait-for-expect';
 
 import React from 'react';
 import Room from '../room/index';
@@ -22,12 +22,10 @@ describe('Load game board', () => {
     );
     token = res.data.token;
     // create a lobby
-    await axios.post(`${API_BASE_URL}/lobbies`, {}, {
+    const res2 = await axios.post(`${API_BASE_URL}/lobbies`, {}, {
       headers: { Authorization: `bearer ${token}` }
-    })
-    .then((res) => {
-      lobbyCode = res.data.code;
     });
+    lobbyCode = res2.data.code;
     // player join the game with lobby code
     await axios.post(`${API_BASE_URL}/rooms`, {
       lobby: lobbyCode,
@@ -36,7 +34,7 @@ describe('Load game board', () => {
     done();
   });
 
-  it('should render wait modal if not started', () => {
+  it('should render wait modal if not started', async (done) => {
     const room = mount(<Room location={{
       hash: "",
       key: "d2o3w6",
@@ -44,8 +42,15 @@ describe('Load game board', () => {
       search: `?lobby=${lobbyCode}&room=testRoom`,
       state: undefined,
     }} />);
-    console.log('here',room.text());
-    expect(room.text().includes('Cannot connect to Rescue Orion server... Try refreshing the page or report to your commander!')).toBeTruthy();
+    await act(async () => {
+      await waitFor(async () => {
+        room.update();
+        expect(room.text().includes('Loading')).toBeFalsy();
+      });
+    });
+    expect(room.text().includes('Cannot connect to Rescue Orion server... Try refreshing the page or report to your commander!')).toBeFalsy();
+    expect(room.text().includes('Waiting for your commander to start mission...'))
+    done();
   });
 
   // it('should render game board if started', async() => {

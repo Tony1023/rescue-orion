@@ -34,7 +34,8 @@
     "redux": "^4.0.5",
     "socket.io-client": "^2.3.1",
     "styled-components": "^5.2.0",
-    "typescript": "~3.9.2"
+    "typescript": "~3.9.2",
+    "wait-for-expect": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
