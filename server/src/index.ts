@@ -13,7 +13,8 @@ app.use(express.json());
 const whitelist = [
   undefined,
   'http://localhost:3000',
-  'https://rescue-orion-beta.netlify.app'
+  'https://rescue-orion-beta.netlify.app',
+  'http://localhost'
 ]
 
 app.use(cors({

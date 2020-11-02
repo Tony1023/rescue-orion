@@ -10,7 +10,7 @@ describe('socket.io client in rooms', () => {
 
   beforeAll(async (done) => {
     const res = await axios.post(`${API_BASE_URL}/admin/login`,
-      { username: 'tony', password: 'pwd' }
+      { username: 'Gita', password: 'RescueOrion!' }
     );
     token = res.data.token;
 
