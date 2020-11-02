@@ -3,9 +3,11 @@ import http from 'http';
 import routes from './routes';
 import cors from 'cors';
 
+const PORT = process.env.PORT || 9000;
+
 const app = express();
 const server = http.createServer(app);
-server.listen(9000, () => console.log(`server started at http://localhost:9000`));
+server.listen(PORT, () => console.log(`server started at http://localhost:${PORT}`));
 app.use(express.json());
 
 app.use(cors());

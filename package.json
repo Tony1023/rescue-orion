@@ -1,6 +1,11 @@
 {
   "scripts": {
     "heroku-prebuild": "cd server && yarn install",
-    "start": "cd server && yarn start"
+    "heroku-postbuild": "cd server && tsc",
+    "start": "cd server && node ."
+  },
+  "devDependencies": {
+    "tsc": "^1.20150623.0",
+    "typescript": "^4.0.3"
   }
 }
