@@ -128,8 +128,8 @@ describe('lobby socket and endpoints', () => {
 
   beforeAll(async (done) => {
     const res = await axios.post(`${API_BASE_URL}/admin/login`, {
-      username: 'Gita',
-      password: 'RescueOrion!',
+      username: 'LobbyTest',
+      password: 'pwd',
     });
     token = res.data.token;
     done();
@@ -173,6 +173,62 @@ describe('lobby socket and endpoints', () => {
     });
     waitFor(() => expect(callCount).toBe(4));
 
+    await axios.put(`${API_BASE_URL}/lobbies/start/${lobby}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    let ticks = [0, 0];
+    sockets.forEach((socket, index) => {
+      socket.removeListener(SocketMessages.LobbyUpdate);
+      socket.on(SocketMessages.LobbyUpdate, (data: string) => {
+        const state = JSON.parse(data) as LobbyState;
+        expect(state.gameDuration.duration).toBe(++ticks[index]);
+        if (ticks[index] > 3) {
+          done();
+        }
+      });
+    });
+  });
+
+  it('cannot set time or join after start', async (done) => {
+
+    await axios.put(`${API_BASE_URL}/lobbies/start/${lobby}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    try {
+      await axios.put(`${API_BASE_URL}/lobbies/countdown/${lobby}`, {
+        countdown: 3600,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      done(new Error('Should not reach here'));
+    } catch (err) {
+      expect(err.response.status).toBe(403);
+    }
+
+    try {
+      await axios.post(`${API_BASE_URL}/rooms`, {
+        lobby: lobby,
+        room: 'any',
+      });
+      done(new Error('Should not reach here'));
+    } catch (err) {
+      expect(err.response.status).toBe(404);
+    }
+    done();
+  });
+
+  it('errors correctly on bad input', async (done) => {
+    try {
+      await axios.put(`${API_BASE_URL}/lobbies/start/${lobby}222`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      done(new Error('Should not reach here'));
+    } catch (err) {
+      expect(err.response.status).toBe(404);  
+    }
+
     try {
       await axios.put(`${API_BASE_URL}/lobbies/countdown/${lobby}`, {
         countdown: 0,
@@ -194,42 +250,7 @@ describe('lobby socket and endpoints', () => {
     } catch (err) {
       expect(err.response.status).toBe(400);
     }
-    
-    try {
-      await axios.put(`${API_BASE_URL}/lobbies/start/${lobby}222`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      done(new Error('Should not reach here'));
-    } catch (err) {
-      expect(err.response.status).toBe(404);  
-    }
-
-    await axios.put(`${API_BASE_URL}/lobbies/start/${lobby}`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    
-    let ticks = [0, 0];
-    sockets.forEach((socket, index) => {
-      socket.removeListener(SocketMessages.LobbyUpdate);
-      socket.on(SocketMessages.LobbyUpdate, (data: string) => {
-        const state = JSON.parse(data) as LobbyState;
-        expect(state.gameDuration.duration).toBe(++ticks[index]);
-        if (ticks[index] > 3) {
-          done();
-        }
-      });
-    });
-
-    try {
-      await axios.put(`${API_BASE_URL}/lobbies/countdown/${lobby}`, {
-        countdown: 3600,
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      done(new Error('Should not reach here'));
-    } catch (err) {
-      expect(err.response.status).toBe(403);
-    }
+    done();
   });
 
   afterEach(async (done) => {
