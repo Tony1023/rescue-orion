@@ -33,7 +33,6 @@ export default (router: express.Router, wss: io.Server) => {
 
   router.use(passport.authenticate('jwt', { session: false }));
   router.post('/restart/:lobby/:room', (req, res) => {
-    console.log('restarting...');
     const lobbyCode = parseInt(req.params.lobby);
     const admin = req.user as string;
     if (!repository.adminLobbies[admin] || repository.adminLobbies[admin].indexOf(lobbyCode) === -1) {

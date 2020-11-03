@@ -65,7 +65,7 @@ describe('socket.io client in rooms with bad inputs', () => {
   beforeAll(async (done) => {
     // admin log in
     const res = await axios.post(`${API_BASE_URL}/admin/login`,
-      { username: 'Gita', password: 'RescueOrion!' }
+      { username: 'RoomTest', password: 'pwd' }
     );
     token = res.data.token;
     // create a lobby
@@ -242,6 +242,13 @@ describe('socket.io client in rooms with bad inputs', () => {
     socket.disconnected || socket.disconnect();
     await axios.post(`${API_BASE_URL}/rooms/restart/${lobbyCode}/${roomName}`, {}, {
       headers: { Authorization: `bearer ${token}` }
+    });
+    done();
+  });
+
+  afterAll(async (done) => {
+    await axios.delete(`${API_BASE_URL}/lobbies/${lobbyCode}`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
     done();
   });
