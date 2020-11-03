@@ -23,8 +23,8 @@ export default (router: express.Router) => {
 					}, jwtOptions.secretOrKey);
 					res.status(200).send({ token });
 				}else{
-					res.status(401).send('Wrong Password for user: ' + username);
-					console.log('Wrong Password for user: ' + username);
+					res.status(401).send('Wrong password for user: ' + username);
+					console.log('Wrong password for user: ' + username);
 				}
 			}
 		})
