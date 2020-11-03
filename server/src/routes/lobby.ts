@@ -49,8 +49,11 @@ export default (router: express.Router, wss: io.Server) => {
       lobbyCode = Math.floor(100000 + Math.random() * 900000)
     } while (repository.lobbies[lobbyCode]);
     // Lobbies stored in adminLobbies in chrono order
-    const _ = new Lobby(lobbyCode, admin);
-    res.status(200).send({ code: lobbyCode });
+    const lobby = new Lobby(lobbyCode, admin);
+    res.status(200).send({
+      code: lobbyCode,
+      createTime: lobby.createTime,
+    });
   });
 
   router.put('/start/:code', (req, res) => {
@@ -74,7 +77,7 @@ export default (router: express.Router, wss: io.Server) => {
     const lobby = repository.lobbies[code];
     const { countdown } = req.body;
     const countdownInSeconds = parseInt(countdown);
-    if (isNaN(countdownInSeconds) || countdownInSeconds <= 0 || countdownInSeconds > 999 * 60) {
+    if (isNaN(countdownInSeconds) || countdownInSeconds <= 0 || countdownInSeconds > 1000 * 60) {
       res.status(400).send('Bad count down range.');
       return;
     }

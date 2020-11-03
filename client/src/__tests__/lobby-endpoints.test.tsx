@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom';
 import axios from 'axios';
+import SocketIOClient, { Socket } from 'socket.io-client';
 import { API_BASE_URL } from '../config';
+import waitFor from 'wait-for-expect';
+import { LobbyState, SocketMessages } from '../metadata/types';
 
 describe('lobby endpoints', () => {
   let token1: string;
@@ -9,15 +12,15 @@ describe('lobby endpoints', () => {
   beforeAll(async (done) => {
     {
       const res = await axios.post(`${API_BASE_URL}/admin/login`, {
-        username: 'Gita',
-        password: 'RescueOrion!',
+        username: 'LobbyTest',
+        password: 'pwd',
       });
       token1 = res.data.token;
     }
     {
       const res = await axios.post(`${API_BASE_URL}/admin/login`, {
-        username: 'Brady',
-        password: 'RescueOrion!',
+        username: 'LobbyTest2',
+        password: 'pwd',
       });
       token2 = res.data.token;
     }
@@ -26,6 +29,7 @@ describe('lobby endpoints', () => {
 
   it('creates a lobby', async (done) => {
     let newLobbyCode;
+    let newLobbyCreateTime;
     let lobbyList1, lobbyList2;
     {
       let res = await axios.get(`${API_BASE_URL}/lobbies`, {
@@ -42,6 +46,20 @@ describe('lobby endpoints', () => {
         headers: { Authorization: `Bearer ${token1}` }
       });
       newLobbyCode = res.data.code;
+      newLobbyCreateTime = res.data.createTime;
+    }
+    {
+      const res = await axios.get(`${API_BASE_URL}/lobbies/${newLobbyCode}`, {
+        headers: { Authorization: `Bearer ${token1}` }
+      });
+      expect(res.data.createTime).toBe(newLobbyCreateTime);
+      try {
+        await axios.get(`${API_BASE_URL}/lobbies/${newLobbyCode}`, {
+          headers: { Authorization: `Bearer ${token2}` }
+        });
+      } catch (err) {
+        expect(err.response.status).toBe(404);
+      }
     }
     {
       let res = await axios.get(`${API_BASE_URL}/lobbies`, {
@@ -64,6 +82,9 @@ describe('lobby endpoints', () => {
       });
       done(new Error('Should\'ve failed'));
     } catch (err) { }
+    await axios.delete(`${API_BASE_URL}/lobbies/${newLobbyCode}`, {
+      headers: { Authorization: `Bearer ${token1} `}
+    });
     done();
   });
 
@@ -101,5 +122,122 @@ describe('lobby endpoints', () => {
 });
 
 describe('lobby socket and endpoints', () => {
+  let token: string;
+  let sockets: SocketIOClient.Socket[];
+  let lobby: number;
+
+  beforeAll(async (done) => {
+    const res = await axios.post(`${API_BASE_URL}/admin/login`, {
+      username: 'Gita',
+      password: 'RescueOrion!',
+    });
+    token = res.data.token;
+    done();
+  });
+
+  beforeEach(async (done) => {
+    const res = await axios.post(`${API_BASE_URL}/lobbies`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    lobby = res.data.code;
+    sockets = [
+      SocketIOClient(`${API_BASE_URL}`, {
+        path: '/lobbies/socket',
+        query: {
+          lobby: lobby,
+          token: token,
+        },
+      }),
+      SocketIOClient(`${API_BASE_URL}`, {
+        path: '/lobbies/socket',
+        query: {
+          lobby: lobby,
+          token: token,
+        },
+      }),
+    ];
+    done();
+  });
+
+  it('both receive lobby status (including bad inputs)', async (done) => {
+    let callCount = 0;
+    sockets.forEach((socket) => socket.on(SocketMessages.LobbyUpdate, () => {
+      ++callCount;
+    }));
+    waitFor(() => expect(callCount).toBe(2));
+
+    await axios.put(`${API_BASE_URL}/lobbies/countdown/${lobby}`, {
+      countdown: 3600,
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    waitFor(() => expect(callCount).toBe(4));
+
+    try {
+      await axios.put(`${API_BASE_URL}/lobbies/countdown/${lobby}`, {
+        countdown: 0,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      done(new Error('Should not reach here'));
+    } catch (err) {
+      expect(err.response.status).toBe(400);
+    }
+
+    try {
+      await axios.put(`${API_BASE_URL}/lobbies/countdown/${lobby}`, {
+        countdown: 9684135168412,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      done(new Error('Should not reach here'));
+    } catch (err) {
+      expect(err.response.status).toBe(400);
+    }
+    
+    try {
+      await axios.put(`${API_BASE_URL}/lobbies/start/${lobby}222`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      done(new Error('Should not reach here'));
+    } catch (err) {
+      expect(err.response.status).toBe(404);  
+    }
+
+    await axios.put(`${API_BASE_URL}/lobbies/start/${lobby}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    let ticks = [0, 0];
+    sockets.forEach((socket, index) => {
+      socket.removeListener(SocketMessages.LobbyUpdate);
+      socket.on(SocketMessages.LobbyUpdate, (data: string) => {
+        const state = JSON.parse(data) as LobbyState;
+        expect(state.gameDuration.duration).toBe(++ticks[index]);
+        if (ticks[index] > 3) {
+          done();
+        }
+      });
+    });
+
+    try {
+      await axios.put(`${API_BASE_URL}/lobbies/countdown/${lobby}`, {
+        countdown: 3600,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      done(new Error('Should not reach here'));
+    } catch (err) {
+      expect(err.response.status).toBe(403);
+    }
+  });
+
+  afterEach(async (done) => {
+    sockets.forEach((socket) => socket.disconnect());
+    await axios.delete(`${API_BASE_URL}/lobbies/${lobby}`, {
+      headers: { Authorization: `Bearer ${token}`}
+    });
+    done();
+  });
 
 });
