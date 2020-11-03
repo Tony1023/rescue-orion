@@ -76,49 +76,53 @@ class Room {
   applyGameAction(action: Types.GameAction) {
     if (this.game.status !== Types.GameStatus.Started) { return; }
     this.dirty = true;
-    switch (action.type) {
-      case Types.MOVE_SPACESHIP: {
-        this.game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
-        break;
+    try {
+      switch (action.type) {
+        case Types.MOVE_SPACESHIP: {
+          this.game.moveSpaceships((action as Types.MoveSpaceshipAction).payload);
+          break;
+        }
+        case Types.PICK_UP_SUPPLY_RESOURCE: {
+          const transfer = (action as Types.PickUpSupplyResourceAction).payload;
+          this.game.transferEnergyCells(transfer.from, transfer.to);
+          this.game.transferLifeSupportPacks(transfer.from, transfer.to);
+          break;
+        }
+        case Types.PICK_UP_RESCUE_RESOURCE: {
+          const transfer = (action as Types.PickUpRescueResourceAction).payload;
+          this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
+          break;
+        }
+        case Types.DROP_OFF_RESCUE_RESOURCE: {
+          const transfer = (action as Types.PickUpRescueResourceAction).payload;
+          this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
+          break;
+        }
+        case Types.TRANSFER_ENERGY_CELLS: {
+          const transfer = (action as Types.TransferEnergyCellsAction).payload;
+          this.game.transferEnergyCells(transfer.from, transfer.to, transfer.count);
+          break;
+        }
+        case Types.TRANSFER_LIFE_SUPPORT_PACKS: {
+          const transfer = (action as Types.TransferLifeSupportPacksAction).payload;
+          this.game.transferLifeSupportPacks(transfer.from, transfer.to, transfer.count);
+          break;
+        }
+        case Types.TRANSFER_RESCUE_RESOURCE: {
+          const transfer = (action as Types.TransferRescueResourceAction).payload;
+          this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
+          break;
+        }
+        case Types.ABORT_MISSION: {
+          this.game.endMission(Types.GameStatus.MissionAborted);
+        }
+        default:
+          break;
       }
-      case Types.PICK_UP_SUPPLY_RESOURCE: {
-        const transfer = (action as Types.PickUpSupplyResourceAction).payload;
-        this.game.transferEnergyCells(transfer.from, transfer.to);
-        this.game.transferLifeSupportPacks(transfer.from, transfer.to);
-        break;
-      }
-      case Types.PICK_UP_RESCUE_RESOURCE: {
-        const transfer = (action as Types.PickUpRescueResourceAction).payload;
-        this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
-        break;
-      }
-      case Types.DROP_OFF_RESCUE_RESOURCE: {
-        const transfer = (action as Types.PickUpRescueResourceAction).payload;
-        this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
-        break;
-      }
-      case Types.TRANSFER_ENERGY_CELLS: {
-        const transfer = (action as Types.TransferEnergyCellsAction).payload;
-        this.game.transferEnergyCells(transfer.from, transfer.to, transfer.count);
-        break;
-      }
-      case Types.TRANSFER_LIFE_SUPPORT_PACKS: {
-        const transfer = (action as Types.TransferLifeSupportPacksAction).payload;
-        this.game.transferLifeSupportPacks(transfer.from, transfer.to, transfer.count);
-        break;
-      }
-      case Types.TRANSFER_RESCUE_RESOURCE: {
-        const transfer = (action as Types.TransferRescueResourceAction).payload;
-        this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
-        break;
-      }
-      case Types.ABORT_MISSION: {
-        this.game.endMission(Types.GameStatus.MissionAborted);
-      }
-      default:
-        break;
+      this.sendGameUpdate();
+    } catch (err) {
+      console.log(err);  // Likely malformed requests, ignore.
     }
-    this.sendGameUpdate();
   };
 
 }
