@@ -148,9 +148,11 @@ export default class Game implements MessageQueue {
   }
 
   moveSpaceships(moves: { [id: string]: string }): void {
-    let validMoves = true;
     Object.entries(moves).forEach(([id, move]) => {
       const spaceship = this.spaceships[id];
+      if (!spaceship) {
+        throw new Error('Invalid move');
+      }
       const neighbors = spaceship.generateReachableNeighbors();
       let valid = false;
       neighbors.forEach((cost) => {
@@ -158,11 +160,10 @@ export default class Game implements MessageQueue {
           valid = true;
         }
       });
-      validMoves &&= valid;
+      if (!valid) {
+        throw new Error('Invalid move');
+      }
     });
-    if (!validMoves) {
-      return;
-    }
     this.movedSinceStart = true;
     this.lastMove = this.countdownClock.getSecondsElapsed();
     Object.entries(moves).forEach(([id, move]) => {
@@ -178,10 +179,16 @@ export default class Game implements MessageQueue {
   }
 
   transferEnergyCells(from: string, to: string, count?: number): void {
+    if (from === to) {
+      throw new Error('Self-self transfers not allowed');
+    }
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
+    if (receivingCarrier instanceof SpaceStation) {
+      throw new Error('Space stations cannot receive supplies');
+    }
     if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
-      return;
+      throw new Error('Carriers cannot transfer stuff when they are not together.');
     }
     const transferCount = count ?? sendingCarrier.energyCells;
     sendingCarrier.energyCells -= transferCount;
@@ -189,10 +196,16 @@ export default class Game implements MessageQueue {
   }
 
   transferLifeSupportPacks(from: string, to: string, count?: number): void {
+    if (from === to) {
+      throw new Error('Self-self transfers not allowed');
+    }
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
+    if (receivingCarrier instanceof SpaceStation) {
+      throw new Error('Space stations cannot receive supplies');
+    }
     if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
-      return;
+      throw new Error('Carriers cannot transfer stuff when they are not together.');
     }
     const transferCount = count ?? sendingCarrier.lifeSupportPacks;
     sendingCarrier.lifeSupportPacks -= transferCount;
@@ -200,17 +213,16 @@ export default class Game implements MessageQueue {
   }
 
   transferRescueResource(from: string, to: string, type: RescueResource): void {
+    if (from === to) {
+      throw new Error('Self-self transfers not allowed');
+    }
     const sendingCarrier = this.carriers[from];
     const receivingCarrier = this.carriers[to];
     if (sendingCarrier.getLocation() !== receivingCarrier.getLocation()) {
-      return;
+      throw new Error('Carriers cannot transfer stuff when they are not together.');
     }
-    try {
-      sendingCarrier.pickUpFrom(type);
-      receivingCarrier.dropOffTo(type);
-    } catch (err) {
-      console.log('Error when transferring resources: ', err);
-    }
+    sendingCarrier.pickUpFrom(type);
+    receivingCarrier.dropOffTo(type);
   }
 
   toGameState(dump: boolean = true): GameState {
