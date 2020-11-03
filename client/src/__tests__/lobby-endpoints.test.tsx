@@ -132,6 +132,7 @@ describe('lobby socket and endpoints', () => {
       password: 'pwd',
     });
     token = res.data.token;
+    jest.setTimeout(10000);
     done();
   });
 
@@ -260,5 +261,6 @@ describe('lobby socket and endpoints', () => {
     });
     done();
   });
-
+  
+  afterAll(() => jest.setTimeout(5000));
 });
