@@ -13,6 +13,34 @@ import { API_BASE_URL } from '../config';
 import { abortMission, moveSpaceship, transferEnergyCells, transferRescueResource } from '../room/actions';
 import * as IDs from '../metadata/agent-ids';
 
+let socket: SocketIOClient.Socket;
+
+function runner(actions: { action: any, verify?: (newState: GameState) => void}[], done: () => void) {
+  socket.on(SocketMessages.StateUpdate, (data: string) => {
+    const newState = JSON.parse(data) as GameState;
+    newState.messages = [];
+    const { verify } = actions.splice(0, 1)[0];
+    verify && verify(newState);
+    while (actions.length > 0 && !actions[0].verify) {
+      const { action } = actions.splice(0, 1)[0];
+      socket.emit(SocketMessages.Action, JSON.stringify(action));
+    }
+    if (actions.length === 0) {
+      done();
+      return;
+    }
+    const { action } = actions[0];
+    socket.emit(SocketMessages.Action, JSON.stringify(action));
+  });
+
+  while (actions.length > 0 && !actions[0].verify) {
+    const { action } = actions.splice(0, 1)[0];
+    socket.emit(SocketMessages.Action, JSON.stringify(action));
+  }
+  const { action } = actions[0];
+  socket.emit(SocketMessages.Action, JSON.stringify(action));
+}
+
 describe('socket.io client in rooms without lobby', () => {
 
   it('disconnects immediately after when lobby is not created', (done) => {
@@ -28,8 +56,7 @@ describe('socket.io client in rooms without lobby', () => {
   });
 });
 
-describe('socket.io client in rooms', () => {
-  let socket: SocketIOClient.Socket;
+describe('socket.io client in rooms with bad inputs', () => {
   let token: string;
   let lobbyCode: number;
   const roomName = 'test room';
@@ -73,32 +100,6 @@ describe('socket.io client in rooms', () => {
       done();
     });
   });
-
-  function runner(actions: { action: any, verify?: (newState: GameState) => void}[], done: () => void) {
-    socket.on(SocketMessages.StateUpdate, (data: string) => {
-      const newState = JSON.parse(data) as GameState;
-      newState.messages = [];
-      const { verify } = actions.splice(0, 1)[0];
-      verify && verify(newState);
-      while (actions.length > 0 && !actions[0].verify) {
-        const { action } = actions.splice(0, 1)[0];
-        socket.emit(SocketMessages.Action, JSON.stringify(action));
-      }
-      if (actions.length === 0) {
-        done();
-        return;
-      }
-      const { action } = actions[0];
-      socket.emit(SocketMessages.Action, JSON.stringify(action));
-    });
-
-    while (actions.length > 0 && !actions[0].verify) {
-      const { action } = actions.splice(0, 1)[0];
-      socket.emit(SocketMessages.Action, JSON.stringify(action));
-    }
-    const { action } = actions[0];
-    socket.emit(SocketMessages.Action, JSON.stringify(action));
-  }
 
   it('handles legal and illegal moves correctly', (done) => {
     const actions = [
