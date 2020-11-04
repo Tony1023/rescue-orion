@@ -47,6 +47,18 @@ describe('Load resource panel and updates with move', () => {
     });
   }
 
+  const checkResource = (g1Energy: string, g1LifeSupport: string, g1Resource: string, g2Energy: string, g2LifeSupport: string, g2Resource: string) => {
+    const resourcePanel = gameBoard.find(ResourcePanel);
+    // gemini 1
+    expect(resourcePanel.find('div[data-testid="energy-gemini1"]').text()).toEqual(g1Energy);
+    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini1"]').text()).toEqual(g1LifeSupport);
+    expect(resourcePanel.find('div[data-testid="resource-gemini1"]').text().includes(g1Resource)).toBeTruthy();
+    // gemini 2
+    expect(resourcePanel.find('div[data-testid="energy-gemini2"]').text()).toEqual(g2Energy);
+    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini2"]').text()).toEqual(g2LifeSupport);
+    expect(resourcePanel.find('div[data-testid="resource-gemini2"]').text().includes(g2Resource)).toBeTruthy();
+  }
+
   beforeAll(async (done) => {
     // admin log in
     const res = await axios.post(`${API_BASE_URL}/admin/login`,
@@ -92,15 +104,7 @@ describe('Load resource panel and updates with move', () => {
   it('should match initial resource level', async (done) => {
     // check resource panel initial resource level
     expect(gameBoard.find(ResourcePanel)).toHaveLength(1);
-    const resourcePanel = gameBoard.find(ResourcePanel);
-    // gemini 1
-    expect(resourcePanel.find('div[data-testid="energy-gemini1"]').text()).toEqual('40');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini1"]').text()).toEqual('80');
-    expect(resourcePanel.find('div[data-testid="resource-gemini1"]').text().includes('O2 Replacement Cells')).toBeTruthy();
-    // gemini 2
-    expect(resourcePanel.find('div[data-testid="energy-gemini2"]').text()).toEqual('40');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini2"]').text()).toEqual('100');
-    expect(resourcePanel.find('div[data-testid="resource-gemini2"]').text()).toEqual('');
+    checkResource('40', '80', 'O2 Replacement Cells', '40','100', '');
     done();
   });
 
@@ -110,15 +114,7 @@ describe('Load resource panel and updates with move', () => {
 
     // check resource panel resource level
     gameBoard.update();
-    const resourcePanel = gameBoard.find(ResourcePanel);
-    // gemini 1
-    expect(resourcePanel.find('div[data-testid="energy-gemini1"]').text()).toEqual('39');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini1"]').text()).toEqual('79');
-    expect(resourcePanel.find('div[data-testid="resource-gemini1"]').text().includes('O2 Replacement Cells')).toBeTruthy();
-    // gemini 2
-    expect(resourcePanel.find('div[data-testid="energy-gemini2"]').text()).toEqual('40');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini2"]').text()).toEqual('100');
-    expect(resourcePanel.find('div[data-testid="resource-gemini2"]').text()).toEqual('');
+    checkResource('39', '79', 'O2 Replacement Cells', '40','100', '');
     done();
   });
 
@@ -143,15 +139,7 @@ describe('Load resource panel and updates with move', () => {
 
     // check resource panel initial resource level
     gameBoard.update();
-    resourcePanel = gameBoard.find(ResourcePanel);
-    // gemini 1
-    expect(resourcePanel.find('div[data-testid="energy-gemini1"]').text()).toEqual('18');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini1"]').text()).toEqual('73');
-    expect(resourcePanel.find('div[data-testid="resource-gemini1"]').text().includes('O2 Replacement Cells')).toBeTruthy();
-    // gemini 2
-    expect(resourcePanel.find('div[data-testid="energy-gemini2"]').text()).toEqual('40');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini2"]').text()).toEqual('100');
-    expect(resourcePanel.find('div[data-testid="resource-gemini2"]').text()).toEqual('');
+    checkResource('18', '73', 'O2 Replacement Cells', '40','100', '');
     done();
   });
 
