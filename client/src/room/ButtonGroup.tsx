@@ -75,6 +75,7 @@ export default function(props: Props) {
       {
         props.shipReachability[IDs.GEMINI_1] ? 
         <Gemini1Button
+          data-testid={`move-${props.id}-gemini1`}
           selected={props.gemini1NextMove && !props.gemini2NextMove}
           onClick={()=>{
             props.setGemini1NextMove(props.id)
@@ -84,6 +85,7 @@ export default function(props: Props) {
       {
         props.shipReachability[IDs.GEMINI_2] ? 
         <Gemini2Button
+          data-testid={`move-${props.id}-gemini2`}
           selected={!props.gemini1NextMove && props.gemini2NextMove}
           onClick={() => {
             props.setGemini2NextMove(props.id)
@@ -93,6 +95,7 @@ export default function(props: Props) {
       {
         props.shipReachability[IDs.GEMINI_1] && props.shipReachability[IDs.GEMINI_2] ? 
         <Gemini12Button
+          data-testid={`move-${props.id}-gemini12`}
           selected={props.gemini1NextMove && props.gemini2NextMove}
           onClick={() => {
             props.setGemini1NextMove(props.id)

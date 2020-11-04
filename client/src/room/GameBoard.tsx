@@ -173,7 +173,8 @@ export default function() {
 
   return <>
     <GameBoard>
-      <ConfirmMoveButton  
+      <ConfirmMoveButton 
+        data-testid="confirm-move-dialog"
         noMove={!selectedMove}
         onClick={() => {
           if(selectedMove) {
@@ -206,6 +207,7 @@ export default function() {
         Object.entries(gameState.nextMoves).map((location, index) => {
           return (
             <ButtonGroup 
+              data-testid={`move-${location[0]}`}
               key={index}
               id={location[0]}
               gemini1NextMove={gemini1NextMove === location[0]}
