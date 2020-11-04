@@ -90,6 +90,32 @@ describe('Load abort game modal', () => {
     done();
   });
 
+  it('should see abort modal if confirm abort mission', async (done) => {
+    expect(gameBoard.find('div[data-testid="abort-mission-dialog"]')).toHaveLength(1);
+    gameBoard.find('div[data-testid="abort-mission-dialog"]').simulate('click');
+    await act(async () => {
+      await waitFor(() => {
+        room.update();
+        // should render confirm abort mission modal
+        gameBoard = room.find(GameBoard);
+        expect(gameBoard.find(ConfirmAbortMissionModal)).toHaveLength(1);
+        expect(gameBoard.find('div[data-testid="abort-mission-confirm"]')).toHaveLength(1);
+      });
+    });
+    // click confirm 
+    gameBoard.find('div[data-testid="abort-mission-confirm"]').simulate('click');
+
+    await act(async () => {
+      await waitFor(() => {
+        room.update();
+        gameBoard = room.find(GameBoard);
+        // should see abort mission modal
+          expect(gameBoard.find(AbortGameModal)).toHaveLength(1);
+      });
+    });
+    done();
+  });
+
   afterAll(async (done) => {
     await act(async () => {
       await axios.delete(`${API_BASE_URL}/lobbies/${lobbyCode}`, {
