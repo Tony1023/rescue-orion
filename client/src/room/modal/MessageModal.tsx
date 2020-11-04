@@ -48,7 +48,10 @@ export default (props: {
       !props.message?.asset ?
       <BaseModalTextBackground>
         <StyledModal>
-          <StyledDismissButton onClose={props.onClose} />
+          <StyledDismissButton 
+            data-testid="close-message-button"
+            onClose={props.onClose} 
+          />
           <Header>
             {props.message?.title}
           </Header>

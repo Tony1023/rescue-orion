@@ -124,15 +124,7 @@ describe('Load resource panel and updates with move', () => {
 
     // check resource panel resource level
     gameBoard.update();
-    let resourcePanel = gameBoard.find(ResourcePanel);
-    // gemini 1
-    expect(resourcePanel.find('div[data-testid="energy-gemini1"]').text()).toEqual('38');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini1"]').text()).toEqual('78');
-    expect(resourcePanel.find('div[data-testid="resource-gemini1"]').text().includes('O2 Replacement Cells')).toBeTruthy();
-    // gemini 2
-    expect(resourcePanel.find('div[data-testid="energy-gemini2"]').text()).toEqual('40');
-    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini2"]').text()).toEqual('100');
-    expect(resourcePanel.find('div[data-testid="resource-gemini2"]').text()).toEqual('');
+    checkResource('38', '78', 'O2 Replacement Cells', '40','100', '');
 
     // press next move to HyperGate 2
     await confirmMove('h2', '38');
@@ -140,6 +132,23 @@ describe('Load resource panel and updates with move', () => {
     // check resource panel initial resource level
     gameBoard.update();
     checkResource('18', '73', 'O2 Replacement Cells', '40','100', '');
+    done();
+  });
+
+  it('should reduce correctly after a timeportal move', async (done) => {
+    // press next move to Time Portal 5
+    await confirmMove('t5', '18');
+
+    // check resource panel resource level
+    gameBoard.update();
+    checkResource('17', '72', 'O2 Replacement Cells', '40','100', '');
+
+    // press next move to Time Portal 1
+    await confirmMove('t1', '17');
+
+    // check resource panel initial resource level
+    gameBoard.update();
+    checkResource('7', '42', 'O2 Replacement Cells', '40','100', '');
     done();
   });
 
