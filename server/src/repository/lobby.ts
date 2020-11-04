@@ -9,6 +9,7 @@ class Lobby {
   constructor(code: number, admin: string) {
     this.code = code;
     this.admin = admin;
+    this.destroyTimeout = global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
     this.countdownClock.subscribeTimeUp(() => {
       this.status = LobbyStatus.Finished;
       this.destroyTimeout = global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
@@ -39,6 +40,8 @@ class Lobby {
       this.status = LobbyStatus.Started;
       Object.values(this.rooms).forEach((room) => room.startGameIfNot());
       this.countdownClock.start();
+      global.clearTimeout(this.destroyTimeout);
+      this.destroyTimeout = null;
     }
   }
 
