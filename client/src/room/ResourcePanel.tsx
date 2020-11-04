@@ -73,11 +73,11 @@ interface Props {
 export default function(props: Props) {
   return (
     <>
-      <Gemini1Energy>{props.gemini1.energyCells}</Gemini1Energy>
-      <Gemini2Energy>{props.gemini2.energyCells}</Gemini2Energy>
-      <Gemini1LifeSupport>{props.gemini1.lifeSupportPacks}</Gemini1LifeSupport>
-      <Gemini2LifeSupport>{props.gemini2.lifeSupportPacks}</Gemini2LifeSupport>
-      <Gemini1Resource>
+      <Gemini1Energy data-testid="energy-gemini1">{props.gemini1.energyCells}</Gemini1Energy>
+      <Gemini2Energy data-testid="energy-gemini2">{props.gemini2.energyCells}</Gemini2Energy>
+      <Gemini1LifeSupport data-testid="lifeSupport-gemini1">{props.gemini1.lifeSupportPacks}</Gemini1LifeSupport>
+      <Gemini2LifeSupport data-testid="lifeSupport-gemini2">{props.gemini2.lifeSupportPacks}</Gemini2LifeSupport>
+      <Gemini1Resource data-testid="resource-gemini1">
         {
           props.gemini1.rescueResources.map((resource, i) => {
             if (i % 2 === 0) {
@@ -89,7 +89,7 @@ export default function(props: Props) {
           })
         }
       </Gemini1Resource>
-      <Gemini2Resource>
+      <Gemini2Resource data-testid="resource-gemini2">
         {
           props.gemini2.rescueResources.map((resource, i) => {
             if (i % 2 === 0) {
