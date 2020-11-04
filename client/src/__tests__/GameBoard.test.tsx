@@ -1,10 +1,9 @@
-import { act, render } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect'
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import {shallow, mount} from 'enzyme';
-import waitFor from 'wait-for-expect';
 
 import React from 'react';
 import Room from '../room/index';
@@ -44,7 +43,7 @@ describe('Load game board', () => {
       state: undefined,
     }} />);
     await act(async () => {
-      await waitFor(async () => {
+      await waitFor(() => {
         room.update();
         expect(room.text().includes('Loading')).toBeFalsy();
       });
@@ -71,13 +70,13 @@ describe('Load game board', () => {
         headers: { Authorization: `bearer ${token}` }
       });
       // wait for room to update
-      await waitFor(async () => {
+      await waitFor(() => {
         room.update();
         expect(room.text().includes('Waiting for your commander to start mission...')).toBeFalsy();
+        // should render game board
+        expect(room.find(GameBoard)).toHaveLength(1);
       });
     });
-    // should render game board
-    expect(room.find(GameBoard)).toHaveLength(1);
     // should show information card at Sagittarius
     const gameBoard = room.find(GameBoard);
     expect(gameBoard.find(MessageModal)).toHaveLength(1);
