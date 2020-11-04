@@ -52,10 +52,10 @@ export default (props: {
             data-testid="close-message-button"
             onClose={props.onClose} 
           />
-          <Header>
+          <Header data-testid="message-modal-header">
             {props.message?.title}
           </Header>
-          <Body>
+          <Body data-testid="message-modal-body">
             {
               props.message?.paragraphs.map((paragraph, i) => {
                 return <p key={i}>
