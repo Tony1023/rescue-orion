@@ -191,6 +191,7 @@ export default function() {
         }}
       ></MoveResourceButton>
       <TerminateGameButton 
+        data-testid="abort-mission-dialog"
         onClick={() => {
           setShowAbortMissionModal(true);
         }}
