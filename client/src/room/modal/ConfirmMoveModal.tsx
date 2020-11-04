@@ -138,16 +138,22 @@ export default (props: {
         </Column>
           <Title><span>Day {day}</span> <i className="fas fa-long-arrow-alt-right"></i> <span>Day {day + 1}</span></Title>
         <Column>
-          <ActionButton onClick={() => {
-            dispatch(moveSpaceship({
-              gemini_1: `${props.gemini1NextMove}`,
-              gemini_2: `${props.gemini2NextMove}`
-            }))
-            props.onClose();
-          }}>Confirm Move</ActionButton>
+          <ActionButton
+            data-testid="confirm-move-button"
+            onClick={() => {
+              dispatch(moveSpaceship({
+                gemini_1: `${props.gemini1NextMove}`,
+                gemini_2: `${props.gemini2NextMove}`
+              }))
+              props.onClose();
+            }}>Confirm Move</ActionButton>
         </Column>
         <Column>
-          <ActionButton onClick={props.onClose}>Cancel Move</ActionButton>
+          <ActionButton 
+            data-testid="cancel-move-button"
+            onClick={props.onClose}>
+              Cancel Move
+          </ActionButton>
         </Column>
       </StyledModal>
     </BaseModalTextBackground>

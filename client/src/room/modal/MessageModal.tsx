@@ -48,11 +48,14 @@ export default (props: {
       !props.message?.asset ?
       <BaseModalTextBackground>
         <StyledModal>
-          <StyledDismissButton onClose={props.onClose} />
-          <Header>
+          <StyledDismissButton 
+            data-testid="close-message-button"
+            onClose={props.onClose} 
+          />
+          <Header data-testid="message-modal-header">
             {props.message?.title}
           </Header>
-          <Body>
+          <Body data-testid="message-modal-body">
             {
               props.message?.paragraphs.map((paragraph, i) => {
                 return <p key={i}>

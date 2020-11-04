@@ -46,12 +46,14 @@ export default (props: {
           height: '80px',
         }}>
           <AbortButton
+            data-testid="abort-mission-confirm"
             onClick={() => {
               dispatch(abortMission());
               props.onClose();
             }}
             >YES</AbortButton>
           <CancelButton
+            data-testid="abort-mission-cancel"
             onClick={props.onClose}
           >NO</CancelButton>
         </div>
