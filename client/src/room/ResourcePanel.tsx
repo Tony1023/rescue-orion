@@ -101,7 +101,7 @@ export default function(props: Props) {
           })
         }
       </Gemini2Resource>
-      <Time>{props.time}</Time>
+      <Time data-testid="travel-day">{props.time}</Time>
     </>
   );
 }
