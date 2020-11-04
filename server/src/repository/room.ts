@@ -94,7 +94,7 @@ class Room {
           break;
         }
         case Types.DROP_OFF_RESCUE_RESOURCE: {
-          const transfer = (action as Types.PickUpRescueResourceAction).payload;
+          const transfer = (action as Types.DropOffRescueResourceAction).payload;
           this.game.transferRescueResource(transfer.from, transfer.to, transfer.type);
           break;
         }
