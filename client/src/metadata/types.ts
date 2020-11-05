@@ -113,6 +113,7 @@ export interface GameState {
   },
   messages: Message[],
   time: number,
+  accumulatedTime: number,
   startTime: number,
   endTime?: number,
   gameStats: {

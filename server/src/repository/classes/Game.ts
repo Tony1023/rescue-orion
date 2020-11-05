@@ -16,7 +16,7 @@ import CountdownClock from '../countdown-clock';
 
 export default class Game implements MessageQueue {
 
-  constructor(countdownClock: CountdownClock) {
+  constructor(countdownClock: CountdownClock, accumulatedTime: number, accumulateTime: (time: number) => void) {
     countdownClock.subscribeTick(() => {
       if (this.status === GameStatus.Started) {
         this.onTick(countdownClock.getSecondsRemaining(), countdownClock.getSecondsElapsed());
@@ -28,6 +28,8 @@ export default class Game implements MessageQueue {
       }
     });
     this.countdownClock = countdownClock;
+    this.accumulatedTime = accumulatedTime;
+    this.accumulateTime = accumulateTime;
   }
 
   private day = 0;
@@ -41,6 +43,8 @@ export default class Game implements MessageQueue {
   private countdownClock: CountdownClock;
   private startTime: number = 0;
   private endTime: number;
+  private accumulatedTime: number;
+  private accumulateTime: (time: number) => void;
   newMessage = false;
   status = GameStatus.NotStarted;
 
@@ -133,6 +137,7 @@ export default class Game implements MessageQueue {
   endMission(gameStatus: GameStatus) {
     this.status = gameStatus;
     this.endTime = this.countdownClock.getSecondsElapsed();
+    this.accumulateTime(this.endTime - this.startTime);
   }
 
   pushMessage(m: Message) {
@@ -273,6 +278,7 @@ export default class Game implements MessageQueue {
           return accumulator;
         },
       {}),
+      accumulatedTime: this.accumulatedTime,
       startTime: this.startTime,
       endTime: this.endTime,
       messages: dump ? this.dumpMessages(): this.messages.slice(0),

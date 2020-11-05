@@ -5,15 +5,19 @@ import { GameState, GameStatus, RescueResource } from '../../metadata/types';
 import * as IDs from '../../metadata/agent-ids';
 import { formatTime } from '../../time-format-utils';
 
+const Wrapper = styled.div`
+  font-size: 14px;
+`;
+
 const Title = styled.h1`
   font-family: 'Grandstander', cursive;
   text-align: center;
 `;
 
 const ColumnHalf = styled.div`
-  width: calc(50% - 20px);
+  width: calc(50% - 10px);
   display: inline-block;
-  padding: 10px;
+  padding: 5px;
 `;
 
 const DataPoint = styled.div`
@@ -23,8 +27,8 @@ const DataPoint = styled.div`
 const StatName = styled.div`
   display: inline-block;
   font-weight: bold;
-  width: 50%;
-  margin-right: 10px;
+  width: 60%;
+  margin-right: 5px;
 `;
 
 const StatValue = styled.div`
@@ -35,10 +39,8 @@ export default () => {
 
   const state = useSelector((state: GameState) => state);
   const stats = state.gameStats;
-  const gemini_1 = state.spaceships[IDs.GEMINI_1];
-  const gemini_2 = state.spaceships[IDs.GEMINI_2];
 
-  return <>
+  return <Wrapper>
     <Title>End Game Stats</Title>
     <ColumnHalf>
       <DataPoint>
@@ -63,57 +65,57 @@ export default () => {
         <StatName>Mission Duration</StatName>
         <StatValue>
           {
-            formatTime(state.endTime! - state.startTime)
+            formatTime(state.endTime! - state.startTime + state.accumulatedTime)
           }
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>O2 temp (by day 6)</StatName>
+        <StatName>O2 temp (required by day 6)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.O2ReplacementCells] > -1 ?
-            stats.dropOffTimes[RescueResource.O2ReplacementCells] : 'Did not fix'
+            `Delivered on day ${stats.dropOffTimes[RescueResource.O2ReplacementCells]}` : 'Did not fix'
           }
         </StatValue>
       </DataPoint>
     </ColumnHalf>
     <ColumnHalf>
       <DataPoint>
-        <StatName>Oxygen (by day 21)</StatName>
+        <StatName>Oxygen (required by day 21)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.OxygenRepairTeam] > -1 ?
-            stats.dropOffTimes[RescueResource.OxygenRepairTeam] : 'Did not fix'
+            `Delivered on day ${stats.dropOffTimes[RescueResource.OxygenRepairTeam]}` : 'Did not fix'
           }
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>Water (by day 23)</StatName>
+        <StatName>Water (required by day 23)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.WaterRepairTeam] > -1 ?
-            stats.dropOffTimes[RescueResource.WaterRepairTeam] : 'Did not fix'
+            `Delivered on day ${stats.dropOffTimes[RescueResource.WaterRepairTeam]}` : 'Did not fix'
           }
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>Food (by day 24)</StatName>
+        <StatName>Food (required by day 24)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.FoodRepairTeam] > -1 ?
-            stats.dropOffTimes[RescueResource.FoodRepairTeam] : 'Did not fix'
+            `Delivered on day ${stats.dropOffTimes[RescueResource.FoodRepairTeam]}` : 'Did not fix'
           }
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>Medical (by day 25)</StatName>
+        <StatName>Medical (required by day 25)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.FoodRepairTeam] > -1 ?
-            stats.dropOffTimes[RescueResource.FoodRepairTeam] : 'Did not fix'
+            `Delivered on day ${stats.dropOffTimes[RescueResource.FoodRepairTeam]}` : 'Did not fix'
           }
         </StatValue>
       </DataPoint>
     </ColumnHalf>
-  </>;
+  </Wrapper>;
 }

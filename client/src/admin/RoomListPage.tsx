@@ -169,7 +169,7 @@ export default () => {
         stats.dropOffTimes[RescueResource.FoodRepairTeam],
         stats.dropOffTimes[RescueResource.MedicalRepairTeam],
         stats.scientistsRemaining,
-        rooms[name].endTime ? formatTime(rooms[name].endTime! - rooms[name].startTime) : '',
+        rooms[name].endTime ? formatTime(rooms[name].endTime! - rooms[name].startTime + rooms[name].accumulatedTime) : '',
         rooms[name].status,
       ];
       accumulator.push(`${strings.join(',')}\n`);
@@ -324,7 +324,7 @@ export default () => {
                           game.status === GameStatus.NotStarted ?
                           '00:00'
                           :
-                          formatTime((game.endTime ?? duration) - game.startTime)
+                          formatTime((game.endTime ?? duration) - game.startTime + game.accumulatedTime)
                         }
                       </Time>
                     </td>
