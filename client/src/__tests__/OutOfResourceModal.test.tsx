@@ -74,8 +74,10 @@ describe('Load out of resource modal', () => {
       state: undefined,
     }} />);
     // start game from lobby list
-    await axios.put(`${API_BASE_URL}/lobbies/start/${lobbyCode}`, {}, {
-      headers: { Authorization: `bearer ${token}` }
+    await act(async () => {
+      await axios.put(`${API_BASE_URL}/lobbies/start/${lobbyCode}`, {}, {
+        headers: { Authorization: `bearer ${token}` }
+      });
     });
     done();
   });

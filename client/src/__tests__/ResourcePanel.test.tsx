@@ -84,8 +84,10 @@ describe('Load resource panel and updates with move', () => {
       state: undefined,
     }} />);
     // start game from lobby list
-    await axios.put(`${API_BASE_URL}/lobbies/start/${lobbyCode}`, {}, {
-      headers: { Authorization: `bearer ${token}` }
+    await act(async () => {
+      await axios.put(`${API_BASE_URL}/lobbies/start/${lobbyCode}`, {}, {
+        headers: { Authorization: `bearer ${token}` }
+      });
     });
     done();
   });
