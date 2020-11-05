@@ -109,7 +109,8 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
 
     // Moving thru time portals
     if (locationData[location].location.type === LocationType.TimePortal &&
-        locationData[prev].location.type === LocationType.TimePortal) {
+        locationData[prev].location.type === LocationType.TimePortal &&
+        prev !== location) {
       // Going back: pop off
       if (this.timePortalRouteStack[this.timePortalRouteStack.length - 1] === location) {
         this.timePortalRouteStack.pop();
@@ -124,7 +125,7 @@ export default abstract class Spaceship implements ResourceCarrier, TimeVaryingA
   generateReachableNeighbors(): NeighborCost[] {
 
     function normalNextMovesFrom(location: string) {
-      const nextMoves = locationData[location].neighbors;
+      const nextMoves = locationData[location].neighbors.slice(0);
       nextMoves.push(location);
       return nextMoves;
     }
