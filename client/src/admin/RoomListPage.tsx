@@ -324,7 +324,7 @@ export default () => {
                           game.status === GameStatus.NotStarted ?
                           '00:00'
                           :
-                          formatTime((game.endTime ?? duration) - game.startTime)
+                          formatTime(game.endTime ?? duration)
                         }
                       </Time>
                     </td>

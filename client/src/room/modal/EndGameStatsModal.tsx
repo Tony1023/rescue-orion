@@ -63,7 +63,7 @@ export default () => {
         <StatName>Mission Duration</StatName>
         <StatValue>
           {
-            formatTime(state.endTime! - state.startTime)
+            formatTime(state.endTime!)
           }
         </StatValue>
       </DataPoint>
