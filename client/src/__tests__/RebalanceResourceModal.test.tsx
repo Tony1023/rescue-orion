@@ -19,11 +19,14 @@ describe('Load rebalance resource modal', () => {
   let room: ReactWrapper;
   let gameBoard: ReactWrapper;
 
-  const confirmMove = async(moveShip:string,  moveLocation: string, previousEnergy: string) => {
+  const confirmMove = async(moveShip:string,  moveLocation: string, previousEnergy: string, other: string, otherShip: string) => {
     // press next move to moved location
     const moveButtons = gameBoard.find(`[data-testid="move-${moveLocation}"]`);
+    const otherButtons = gameBoard.find(`[data-testid="move-${other}"]`);
     expect(moveButtons.find(`div[data-testid="move-${moveLocation}-${moveShip}"]`)).toHaveLength(1);
+    expect(otherButtons.find(`div[data-testid="move-${other}-${otherShip}"]`)).toHaveLength(1);
     moveButtons.find(`div[data-testid="move-${moveLocation}-${moveShip}"]`).simulate('click');
+    otherButtons.find(`div[data-testid="move-${other}-${otherShip}"]`).simulate('click');
     // open confirm move dialog
     gameBoard.find('div[data-testid="confirm-move-dialog"]').simulate('click');
     await act(async () => {
@@ -187,10 +190,10 @@ describe('Load rebalance resource modal', () => {
 
   it('should not open the dialog if two geminis are at different location', async (done) => {
     // move gemini1 to b3
-    confirmMove('gemini1', 'b3', '50');
+    await confirmMove('gemini1', 'b3', '50', 'sagittarius', 'gemini2');
 
     // move gemini2 to t1
-    confirmMove('gemini2', 't1', '30');
+    await confirmMove('gemini2', 't1', '30', 'b3', 'gemini1');
 
     // should not open the move resource dialog
     gameBoard = room.find(GameBoard);
