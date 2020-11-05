@@ -183,6 +183,7 @@ export default function() {
         }}
         ></ConfirmMoveButton>
       <MoveResourceButton
+        data-testid="move-resource-dialog"
         disabled={!canRebalanceResource}
         onClick={() => {
           if (canRebalanceResource) {

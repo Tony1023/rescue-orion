@@ -302,12 +302,14 @@ function Gemini2Panel() {
     <ResourceName>
       Energy Cells
       <RightPanelTriangle
+        data-testid="move-resource-gemini2-energy-button"
         onClick={energyCellSubmit}
       />
     </ResourceName>
     <ResourceCount>
       {gemini_2.energyCells}
       <RightPanelInput
+        data-testid="move-resource-gemini2-energy-input"
         incorrect={energyCellsIncorrect}
         placeholder={'0'}
         value={energyCellsInput}
@@ -364,7 +366,10 @@ export default (props: {
       <Column style={{ width: '6%' }} />
       <Column style={{ width: '47%' }}>
         <StyledModal>
-          <StyledButton onClose={props.onClose} />
+          <StyledButton 
+            data-testid="move-resource-close-button"
+            onClose={props.onClose} 
+          />
           <Gemini2Panel />
         </StyledModal>
       </Column>
