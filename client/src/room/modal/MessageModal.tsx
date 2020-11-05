@@ -30,7 +30,7 @@ const StyledModal = styled(Modal)`
 `;
 
 export const StyledExtraModal = styled(ExtraModal)`
-  padding: 30px;
+  padding: 20px;
 `;
 
 export const StyledDismissButton = styled(DismissButton)`
