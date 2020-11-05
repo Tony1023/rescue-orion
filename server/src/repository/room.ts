@@ -8,7 +8,9 @@ import CountdownClock from './countdown-clock';
 class Room {
 
   constructor(countdownClock: CountdownClock) {
-    this.game = new Game(countdownClock);
+    this.game = new Game(countdownClock, 0, (time) => {
+      this.accumulatedTime += time;
+    });
     this.game.load();
     countdownClock.subscribeTick(() => {
       if (this.game.status === Types.GameStatus.NotStarted || this.game.status === Types.GameStatus.Started) {
@@ -24,6 +26,7 @@ class Room {
   private game;
   private socket: io.Socket = null;
   private countdownClock: CountdownClock;
+  private accumulatedTime: number = 0;
   dirty = true;
 
   private sendGameUpdate() {
@@ -44,7 +47,9 @@ class Room {
 
   restartGame() {
     if (this.game.status !== Types.GameStatus.NotStarted) {
-      this.game = new Game(this.countdownClock);
+      this.game = new Game(this.countdownClock, this.accumulatedTime, (time) => {
+        this.accumulatedTime += time;
+      });
       this.game.load();
       this.game.startMission();
       this.sendGameUpdate();
