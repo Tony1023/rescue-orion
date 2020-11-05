@@ -10,13 +10,44 @@ import React from 'react';
 import Room from '../room/index';
 import GameBoard from '../room/GameBoard';
 import RebalanceResourceModal from '../room/modal/RebalanceResourceModal';
+import ConfirmMoveModal from '../room/modal/ConfirmMoveModal';
 import ResourcePanel from '../room/ResourcePanel';
 
-describe('Load confirm move modal', () => {
+describe('Load rebalance resource modal', () => {
   let token: string;
   let lobbyCode: string;
   let room: ReactWrapper;
   let gameBoard: ReactWrapper;
+
+  const confirmMove = async(moveShip:string,  moveLocation: string, previousEnergy: string) => {
+    // press next move to moved location
+    const moveButtons = gameBoard.find(`[data-testid="move-${moveLocation}"]`);
+    expect(moveButtons.find(`div[data-testid="move-${moveLocation}-${moveShip}"]`)).toHaveLength(1);
+    moveButtons.find(`div[data-testid="move-${moveLocation}-${moveShip}"]`).simulate('click');
+    // open confirm move dialog
+    gameBoard.find('div[data-testid="confirm-move-dialog"]').simulate('click');
+    await act(async () => {
+      await waitFor(() => {
+        room.update();
+        gameBoard = room.find(GameBoard);
+        // should render confirm move modal
+        expect(gameBoard.find(ConfirmMoveModal)).toHaveLength(1)
+      });
+    });
+  
+    // confirm move
+    expect(gameBoard.find('div[data-testid="confirm-move-button"]')).toHaveLength(1);
+    gameBoard.find('div[data-testid="confirm-move-button"]').simulate('click');
+    await act(async () => {
+      await waitFor(() => {
+        room.update();
+        gameBoard = room.find(GameBoard);
+        // confirm modal should disappear and resource panel updated
+        expect(gameBoard.find(ConfirmMoveModal)).toHaveLength(0);
+        expect(gameBoard.find(ResourcePanel).find(`div[data-testid="energy-${moveShip}"]`).text().includes(previousEnergy)).toBeFalsy();
+      });
+    });
+  }
 
   const checkResource = (g1Energy: string, g1LifeSupport: string, g1Resource: string, g2Energy: string, g2LifeSupport: string, g2Resource: string) => {
     const resourcePanel = gameBoard.find(ResourcePanel);
@@ -86,6 +117,8 @@ describe('Load confirm move modal', () => {
         expect(gameBoard.find(RebalanceResourceModal)).toHaveLength(1);
       });
     });
+    // close the modal
+    gameBoard.find(RebalanceResourceModal).find('DismissButton[data-testid="move-resource-close-button"]').simulate('click');
     done();
   });
 
@@ -110,6 +143,9 @@ describe('Load confirm move modal', () => {
     resourceModal.find('div[data-testid="move-resource-gemini2-energy-button"]').simulate('click');
     checkResource('40', '80', 'O2 Replacement Cells', '40','100', '');
 
+    // close the modal 
+    resourceModal.find('DismissButton[data-testid="move-resource-close-button"]').simulate('click');
+
     done();
   });
 
@@ -132,6 +168,8 @@ describe('Load confirm move modal', () => {
     expect(resourceModal.find('input[data-testid="move-resource-gemini2-energy-input"]')).toHaveLength(1);
     resourceModal.find('input[data-testid="move-resource-gemini2-energy-input"]').simulate('change', {target: { value: '10'}});
     resourceModal.find('div[data-testid="move-resource-gemini2-energy-button"]').simulate('click');
+    // close the modal
+    resourceModal.find('DismissButton[data-testid="move-resource-close-button"]').simulate('click');
     await act(async () => {
       await waitFor(() => {
         room.update();
@@ -141,6 +179,21 @@ describe('Load confirm move modal', () => {
       });
     });
     checkResource('50', '80', 'O2 Replacement Cells', '30','100', '');
+
+    done();
+  });
+
+  it('should not open the dialog if two geminis are at different location', async (done) => {
+    // move gemini1 to b3
+    confirmMove('gemini1', 'b3', '50');
+
+    // move gemini2 to t1
+    confirmMove('gemini2', 't1', '30');
+
+    // should not open the move resource dialog
+    gameBoard = room.find(GameBoard);
+    gameBoard.find('div[data-testid="move-resource-dialog"]').simulate('click');
+    expect(gameBoard.find(RebalanceResourceModal)).toHaveLength(0);
 
     done();
   });

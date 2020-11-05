@@ -366,7 +366,10 @@ export default (props: {
       <Column style={{ width: '6%' }} />
       <Column style={{ width: '47%' }}>
         <StyledModal>
-          <StyledButton onClose={props.onClose} />
+          <StyledButton 
+            data-testid="move-resource-close-button"
+            onClose={props.onClose} 
+          />
           <Gemini2Panel />
         </StyledModal>
       </Column>
