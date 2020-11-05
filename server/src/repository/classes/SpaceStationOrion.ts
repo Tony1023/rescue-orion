@@ -31,7 +31,10 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     return this.dropOffTimes;
   }
 
-  canPickUp(_: RescueResource): boolean {
+  canPickUp(r: RescueResource): boolean {
+    if (r === RescueResource.AITechnology) {
+      return true;
+    }
     return false;
   }
 
