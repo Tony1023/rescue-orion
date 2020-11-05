@@ -169,7 +169,7 @@ export default () => {
         stats.dropOffTimes[RescueResource.FoodRepairTeam],
         stats.dropOffTimes[RescueResource.MedicalRepairTeam],
         stats.scientistsRemaining,
-        rooms[name].endTime ? formatTime(rooms[name].endTime! - rooms[name].startTime) : '',
+        rooms[name].endTime ? formatTime(rooms[name].endTime!) : '',
         rooms[name].status,
       ];
       accumulator.push(`${strings.join(',')}\n`);
