@@ -302,12 +302,14 @@ function Gemini2Panel() {
     <ResourceName>
       Energy Cells
       <RightPanelTriangle
+        data-testid="move-resource-gemini2-energy-button"
         onClick={energyCellSubmit}
       />
     </ResourceName>
     <ResourceCount>
       {gemini_2.energyCells}
       <RightPanelInput
+        data-testid="move-resource-gemini2-energy-input"
         incorrect={energyCellsIncorrect}
         placeholder={'0'}
         value={energyCellsInput}

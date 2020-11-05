@@ -10,12 +10,25 @@ import React from 'react';
 import Room from '../room/index';
 import GameBoard from '../room/GameBoard';
 import RebalanceResourceModal from '../room/modal/RebalanceResourceModal';
+import ResourcePanel from '../room/ResourcePanel';
 
 describe('Load confirm move modal', () => {
   let token: string;
   let lobbyCode: string;
   let room: ReactWrapper;
   let gameBoard: ReactWrapper;
+
+  const checkResource = (g1Energy: string, g1LifeSupport: string, g1Resource: string, g2Energy: string, g2LifeSupport: string, g2Resource: string) => {
+    const resourcePanel = gameBoard.find(ResourcePanel);
+    // gemini 1
+    expect(resourcePanel.find('div[data-testid="energy-gemini1"]').text()).toEqual(g1Energy);
+    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini1"]').text()).toEqual(g1LifeSupport);
+    expect(resourcePanel.find('div[data-testid="resource-gemini1"]').text().includes(g1Resource)).toBeTruthy();
+    // gemini 2
+    expect(resourcePanel.find('div[data-testid="energy-gemini2"]').text()).toEqual(g2Energy);
+    expect(resourcePanel.find('div[data-testid="lifeSupport-gemini2"]').text()).toEqual(g2LifeSupport);
+    expect(resourcePanel.find('div[data-testid="resource-gemini2"]').text().includes(g2Resource)).toBeTruthy();
+  }
 
   beforeAll(async (done) => {
     // admin log in
@@ -73,6 +86,62 @@ describe('Load confirm move modal', () => {
         expect(gameBoard.find(RebalanceResourceModal)).toHaveLength(1);
       });
     });
+    done();
+  });
+
+  it('should fail to transfer invalid resource', async (done) => {
+    // click Move Resource button
+    gameBoard.find('div[data-testid="move-resource-dialog"]').simulate('click');
+
+    // should see rebalance resource dialog
+    await act(async () => {
+      await waitFor(() => {
+        room.update();
+        gameBoard = room.find(GameBoard);
+        // should render game board
+        expect(gameBoard.find(RebalanceResourceModal)).toHaveLength(1);
+      });
+    });
+
+    // transfer all resources and fail to see changes
+    const resourceModal = gameBoard.find(RebalanceResourceModal);
+    expect(resourceModal.find('input[data-testid="move-resource-gemini2-energy-input"]')).toHaveLength(1);
+    resourceModal.find('input[data-testid="move-resource-gemini2-energy-input"]').simulate('change', {target: { value: '40'}});
+    resourceModal.find('div[data-testid="move-resource-gemini2-energy-button"]').simulate('click');
+    checkResource('40', '80', 'O2 Replacement Cells', '40','100', '');
+
+    done();
+  });
+
+  it('should success to transfer valid resource', async (done) => {
+    // click Move Resource button
+    gameBoard.find('div[data-testid="move-resource-dialog"]').simulate('click');
+
+    // should see rebalance resource dialog
+    await act(async () => {
+      await waitFor(() => {
+        room.update();
+        gameBoard = room.find(GameBoard);
+        // should render game board
+        expect(gameBoard.find(RebalanceResourceModal)).toHaveLength(1);
+      });
+    });
+
+    // input valid number and success to see changes
+    const resourceModal = gameBoard.find(RebalanceResourceModal);
+    expect(resourceModal.find('input[data-testid="move-resource-gemini2-energy-input"]')).toHaveLength(1);
+    resourceModal.find('input[data-testid="move-resource-gemini2-energy-input"]').simulate('change', {target: { value: '10'}});
+    resourceModal.find('div[data-testid="move-resource-gemini2-energy-button"]').simulate('click');
+    await act(async () => {
+      await waitFor(() => {
+        room.update();
+        gameBoard = room.find(GameBoard);
+        // should render game board
+        expect(gameBoard.find(ResourcePanel).find('div[data-testid="energy-gemini1"]').text().includes('40')).toBeFalsy();
+      });
+    });
+    checkResource('50', '80', 'O2 Replacement Cells', '30','100', '');
+
     done();
   });
 
