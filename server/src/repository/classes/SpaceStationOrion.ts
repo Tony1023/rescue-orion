@@ -174,6 +174,23 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
   }
 
   checkDropOffResource(r: RescueResource): void {
+    // check whether all resources are dropped
+    if(this.rescueResources.includes(RescueResource.OxygenRepairTeam)
+    && this.rescueResources.includes(RescueResource.WaterRepairTeam)
+    && this.rescueResources.includes(RescueResource.FoodRepairTeam)
+    && this.rescueResources.includes(RescueResource.MedicalRepairTeam)) {
+      this.messageQueue.pushMessage({
+        title: 'INCOMING RELAY FROM GROUND CONTROL',
+          paragraphs: [
+            { text: 'Congratulations, Gemini Crew!' },
+            { text: 'You have successfully restored all systems at Space Station Orion and prevented all further loss of life! The entire galaxy is eternally in your debt!' },
+            { text: 'Now don’t forget the second part of your mission! The entire Gemini Space Confederation at Sagittarius is eagerly awaiting your arrival!' },
+            { text: 'Travel Safe!' },
+            { text: '-Ground Control' },
+          ],
+      })
+    }
+
     // drop off O2 replacement cells
     if(r === RescueResource.O2ReplacementCells) {
       this.messageQueue.pushMessage({
@@ -233,22 +250,6 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
             { text: 'Just what the doctor ordered!' },
             { text: 'The Medical Repair Team has treated all of the injuries from the explosions, ensuring all the wounded scientists will survive.' },
             { text: 'Bravo, Gemini Crew!!' },
-            { text: '-Ground Control' },
-          ],
-      })
-    }
-    // check whether all resources are dropped
-    if(this.rescueResources.includes(RescueResource.OxygenRepairTeam)
-    && this.rescueResources.includes(RescueResource.WaterRepairTeam)
-    && this.rescueResources.includes(RescueResource.FoodRepairTeam)
-    && this.rescueResources.includes(RescueResource.MedicalRepairTeam)) {
-      this.messageQueue.pushMessage({
-        title: 'INCOMING RELAY FROM GROUND CONTROL',
-          paragraphs: [
-            { text: 'Congratulations, Gemini Crew!' },
-            { text: 'You have successfully restored all systems at Space Station Orion and prevented all further loss of life! The entire galaxy is eternally in your debt!' },
-            { text: 'Now don’t forget the second part of your mission! The entire Gemini Space Confederation at Sagittarius is eagerly awaiting your arrival!' },
-            { text: 'Travel Safe!' },
             { text: '-Ground Control' },
           ],
       })
