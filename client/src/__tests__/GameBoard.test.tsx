@@ -75,12 +75,11 @@ describe('Load game board', () => {
         room.update();
         expect(room.text().includes('Waiting for your commander to start mission...')).toBeFalsy();
         // should render game board
-        expect(room.find(GameBoard)).toHaveLength(1);
+        const gameboard = room.find(GameBoard);
+        expect(gameboard).toHaveLength(1);
+        expect(gameboard.find(MessageModal)).toHaveLength(1);
       });
     });
-    // should show information card at Sagittarius
-    const gameBoard = room.find(GameBoard);
-    expect(gameBoard.find(MessageModal)).toHaveLength(1);
   });
 
   afterAll(async (done) => {
