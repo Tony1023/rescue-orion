@@ -1,4 +1,5 @@
-import { act, waitFor } from '@testing-library/react';
+import { act } from '@testing-library/react';
+import waitFor from 'wait-for-expect';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect'
 import axios from 'axios';
