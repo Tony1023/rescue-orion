@@ -41,14 +41,14 @@ export default () => {
   const stats = state.gameStats;
 
   return <Wrapper>
-    <Title>End Game Stats</Title>
+    <Title>Your Game Stats</Title>
     <ColumnHalf>
       <DataPoint>
-        <StatName>Return to Sagittarius</StatName>
+        <StatName>Returned to Sagittarius</StatName>
         <StatValue>
           {
             state.status === GameStatus.MissionSucceeded ?
-            state.time : 'Did not finish'
+            `Day ${state.time}` : 'Did Not Finish'
           }
         </StatValue>
       </DataPoint>
@@ -70,49 +70,49 @@ export default () => {
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>O2 temp (required by day 6)</StatName>
+        <StatName>O2 Temp (Required by Day 6)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.O2ReplacementCells] > -1 ?
-            `Delivered on day ${stats.dropOffTimes[RescueResource.O2ReplacementCells]}` : 'Did not fix'
+            `Delivered on Day ${stats.dropOffTimes[RescueResource.O2ReplacementCells]}` : 'Did Not Fix'
           }
         </StatValue>
       </DataPoint>
     </ColumnHalf>
     <ColumnHalf>
       <DataPoint>
-        <StatName>Oxygen (required by day 21)</StatName>
+        <StatName>Oxygen (Required by Day 21)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.OxygenRepairTeam] > -1 ?
-            `Delivered on day ${stats.dropOffTimes[RescueResource.OxygenRepairTeam]}` : 'Did not fix'
+            `Delivered on Day ${stats.dropOffTimes[RescueResource.OxygenRepairTeam]}` : 'Did Not Fix'
           }
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>Water (required by day 23)</StatName>
+        <StatName>Water (Required by Day 23)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.WaterRepairTeam] > -1 ?
-            `Delivered on day ${stats.dropOffTimes[RescueResource.WaterRepairTeam]}` : 'Did not fix'
+            `Delivered on Day ${stats.dropOffTimes[RescueResource.WaterRepairTeam]}` : 'Did Not Fix'
           }
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>Food (required by day 24)</StatName>
+        <StatName>Food (Required by Day 24)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.FoodRepairTeam] > -1 ?
-            `Delivered on day ${stats.dropOffTimes[RescueResource.FoodRepairTeam]}` : 'Did not fix'
+            `Delivered on Day ${stats.dropOffTimes[RescueResource.FoodRepairTeam]}` : 'Did Not Fix'
           }
         </StatValue>
       </DataPoint>
       <DataPoint>
-        <StatName>Medical (required by day 25)</StatName>
+        <StatName>Medical (Required by Day 25)</StatName>
         <StatValue>
           {
             stats.dropOffTimes[RescueResource.FoodRepairTeam] > -1 ?
-            `Delivered on day ${stats.dropOffTimes[RescueResource.FoodRepairTeam]}` : 'Did not fix'
+            `Delivered on Day ${stats.dropOffTimes[RescueResource.FoodRepairTeam]}` : 'Did Not Fix'
           }
         </StatValue>
       </DataPoint>
