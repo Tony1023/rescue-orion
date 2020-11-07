@@ -36,8 +36,4 @@ export default class SpaceStationBorealis extends SpaceStation {
     }
   }
 
-  getMessageQueue(){
-    return this.messageQueue;
-  }
-
 }
