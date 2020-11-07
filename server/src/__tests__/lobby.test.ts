@@ -1,5 +1,6 @@
 import { LobbyStatus } from "../metadata/types";
 import repository, { Lobby } from "../repository";
+import {jest, describe, expect, it } from '@jest/globals'
 
 describe('lobby', () => {
   it('shuts down correctly after game ends', () => {
