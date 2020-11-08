@@ -1,6 +1,6 @@
 import Game from '../repository/classes/Game';
 import CountdownClock from '../repository/countdown-clock';
-import { jest, describe, expect, it } from '@jest/globals'
+import { jest, describe, expect, it, beforeEach } from '@jest/globals'
 import { GameStatus } from '../metadata/types';
 
 describe('game to gameState', () => {
