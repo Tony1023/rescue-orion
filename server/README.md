@@ -28,6 +28,7 @@ yarn start
 Create a file in server/ called `.env` and put
 ```
 JWT_SECRET=JefferyMiller401
+CLIENT_DOMAIN=http://localhost:3000
 ```
 as the file content. You can choose any JWT_SECRET you want.
 

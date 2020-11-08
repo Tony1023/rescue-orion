@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import routes from './routes';
 import cors from 'cors';
+import { CLIENT_DOMAIN } from './config';
 
 const PORT = process.env.PORT || 9000;
 
@@ -11,10 +12,9 @@ server.listen(PORT, () => console.log(`server started at http://localhost:${PORT
 app.use(express.json());
 
 const whitelist = [
-  undefined,
-  'http://localhost:3000',
-  'https://rescue-orion-beta.netlify.app',
-  'http://localhost'
+  undefined,  // HTTP clients like postman or insomnia do not have Origin in their header
+  'http://localhost',  // requests from the react testing frameworks do not have port numbers
+  CLIENT_DOMAIN,
 ]
 
 app.use(cors({
