@@ -55,6 +55,15 @@ describe('spaceships in Rescue Orion', () => {
           .toBeGreaterThan(-1);
       });
     }
+    spaceship.addToPath('t3');
+    {
+      const neighbors = spaceship.generateReachableNeighbors();
+      expect(neighbors).toHaveLength(9);
+      neighbors.forEach((neighbor) => {
+        expect(['b20', 'b19', 'b13', 'h1', 't1', 't2', 't4', 't5', 't3'].indexOf(neighbor.location))
+          .toBeGreaterThan(-1);
+      });
+    }
     spaceship.addToPath('t5');
     spaceship.addToPath('t2');
     spaceship.addToPath('t3');
