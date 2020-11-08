@@ -26,7 +26,7 @@ $ npm start
 to start application on localhost:3000
 
 # ENV setup!!!
-Create a file in server/ called `.env` and put
+Create a file in client/ called `.env` and put
 ```
 REACT_APP_API_BASE_URL=http://localhost:9000
 ```
