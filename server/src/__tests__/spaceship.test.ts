@@ -2,7 +2,6 @@ import { RescueResource } from "../metadata/types";
 import Gemini_1 from "../repository/classes/Gemini_1";
 import Gemini_2 from "../repository/classes/Gemini_2";
 import { describe, expect, it } from '@jest/globals';
-import { locationData } from '../metadata';
 
 describe('spaceships in Rescue Orion', () => {
   it('picks up and drops off resources correctly', () => {
