@@ -61,7 +61,6 @@ describe('spaceships in Rescue Orion', () => {
     spaceship.addToPath('t3');
     {
       const neighbors = spaceship.generateReachableNeighbors();
-      console.log(neighbors);
       expect(neighbors).toHaveLength(4);
       neighbors.forEach((neighbor) => {
         expect(['t1', 't2', 't4', 't5'].indexOf(neighbor.location))
