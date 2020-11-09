@@ -24,7 +24,7 @@ export const BaseModalBackground = styled.div`
 export const BaseModalImageBackground = styled(BaseModalBackground)`
   height: 500px;
   background-size: cover;
-  background-image: ${(props: {backgroundImage: string|undefined }) => props.backgroundImage !== undefined ? `url(${`${process.env.PUBLIC_URL}/${props.backgroundImage}`})`: 'none'};
+  background-image: ${(props: {backgroundImage: string|undefined }) => props.backgroundImage !== undefined ? `url("${process.env.PUBLIC_URL}/${props.backgroundImage}")`: 'none'};
 `;
 
 export const BaseModalTextBackground = styled(BaseModalBackground)`

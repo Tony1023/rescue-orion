@@ -293,8 +293,9 @@ export default class Game implements MessageQueue {
 
   private onTick(countdown: number, timeNow: number) {
     const timeElapsed = timeNow - this.startTime;
-    if (timeElapsed === 10 * 60 && !this.movedSinceStart) {
+    if (timeElapsed === 10 && !this.movedSinceStart) {
       this.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_1.png',
         title: 'Incoming relay from Ground Control',
         paragraphs: [
           { text: 'Analysis paralysis: s situation where a group is unable to move forward with a decision as a result of overanalyzing data or overthinking a problem' },
