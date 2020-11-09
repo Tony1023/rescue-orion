@@ -13,6 +13,7 @@ class Lobby {
     this.countdownClock.subscribeTimeUp(() => {
       this.status = LobbyStatus.Finished;
       this.destroyTimeout = global.setTimeout(() => this.destroy(), 2 * 60 * 60 * 1000);
+      this.sendUpdate();
     });
     this.countdownClock.subscribeTick(() => {
       this.sendUpdate();

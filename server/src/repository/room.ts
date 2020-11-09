@@ -1,6 +1,6 @@
 import Game from './classes/Game';
 import io from 'socket.io';
-import { SocketMessages } from '../metadata/types';
+import { GameStatus, SocketMessages } from '../metadata/types';
 import * as Types from '../metadata/types';
 import CountdownClock from './countdown-clock';
 
@@ -20,6 +20,12 @@ class Room {
         }
       }
     });
+    countdownClock.subscribeTimeUp(() => {
+      if (this.game.status === GameStatus.Started) {
+        this.game.endMission(GameStatus.MissionTimeOut);
+        this.sendGameUpdate();
+      }
+    })
     this.countdownClock = countdownClock;
   }
 
