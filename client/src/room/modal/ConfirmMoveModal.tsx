@@ -83,7 +83,7 @@ export default (props: {
     <BaseModalTextBackground>
       <StyledModal>
         <Header>
-          Do you wish to confirm your move?
+          Do You Wish to Confirm Your Move?
         </Header>
         <Column>
           <GeminiImage backgroundImage='Gemini1.png' />

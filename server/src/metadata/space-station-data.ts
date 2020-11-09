@@ -6,8 +6,8 @@ const metadata: SpaceStationMetadata = {
     message: {
       asset: 'modals/Andromeda_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
-      technology: "FOOD REPAIR TEAM",
-      title: 'FOOD REPAIR TEAM',
+      technology: "Food Repair Team",
+      title: 'Food Repair Team',
       paragraphs:[
         {text: 'The Food Repair Team is currently out on another mission and will not return to Andromeda until Day 14.'}
       ],
@@ -19,8 +19,8 @@ const metadata: SpaceStationMetadata = {
     message: {
       asset: 'modals/Aquarius_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
-      technology: "WATER REPAIR TEAM",
-      title: 'FOOD AT ORION',
+      technology: "Water Repair Team",
+      title: 'Food at Orion',
       paragraphs: [
         {text: 'The food processing systems were destroyed at the time of the damage.'},
         {text: 'The emergency food reserves are running out and loss of life will begin on Day 24 unless they are fixed.'},
@@ -33,8 +33,8 @@ const metadata: SpaceStationMetadata = {
     message: {
       asset: 'modals/Borealis_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
-      technology: "OXYGEN REPAIR TEAM",
-      title: 'O2 REPAIR AT ORION',
+      technology: "Oxygen Repair Team",
+      title: 'O2 Repair at Orion',
       paragraphs: [
         {text: 'The 02 Repair Team can immediately and permanently restore 02 to ORION upon their arrival there.'},
         {text: 'However, they are unable to leave Borealis until AI technology from Capricorn comes to replace them.'},
@@ -48,7 +48,7 @@ const metadata: SpaceStationMetadata = {
       asset: 'modals/Capricorn_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
       technology: "AI Technology",
-      title: 'INJURIES AT ORION',
+      title: 'Injuries at Orion',
       paragraphs: [
         {text: 'Three injuries were sustained at the time of the damage.'},
         {text: 'The injuries are getting progressively worse, and all three will die on Day 25 without advanced medical treatment.'},
@@ -61,8 +61,8 @@ const metadata: SpaceStationMetadata = {
     message: {
       asset: 'modals/Cassiopeia_Information_Card.jpg',
       note: "RESCUE RESOURCES AVAILABLE AT THIS STATION FOR PICKUP VIA STARWAY",
-      technology: "MEDICAL REPAIR TEAM",
-      title: 'WATER PROVISION AT ORION',
+      technology: "Medical Repair Team",
+      title: 'Water Provision at Orion',
       paragraphs: [
         {text: 'The water purification system shut down during the time of the damage.'},
         {text: 'There is enough reserved water to keep the scientists alive, but only until Day 23. Loss of life will begin unless the station’s water systems are permanently fixed.'},
@@ -74,7 +74,7 @@ const metadata: SpaceStationMetadata = {
     location: 't2',
     message: {
       asset: 'modals/Orion_Information_Card.jpg',
-      title: 'O2 AT ORION',
+      title: 'O2 at Orion',
       paragraphs: [
         {text: 'The scientists of Space Station Orion are quickly running out of oxygen.'},
         {text: 'The O2 replacement cells aboard your ship will temporarily solve the oxygen generation problem until Day 21.'},
@@ -86,7 +86,7 @@ const metadata: SpaceStationMetadata = {
     location: 'sagittarius',
     message: {
       asset: 'modals/Sagittarius_Information_Card.jpg',
-      title: 'DAMAGE TO SPACE STATION ORION',
+      title: 'Damage to Space Station Orion',
       paragraphs: [
         {text: 'Orion’s primary source of oxygen generation has been badly hit.'},
         {text: 'They only have 6 days of oxygen supply left before the loss of life begins.'},

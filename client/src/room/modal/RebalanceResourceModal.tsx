@@ -54,7 +54,7 @@ const Column = styled.div`
 `;
 
 const SpaceshipName = styled.h1`
-  font-family: 'Grandstander', cursive;
+  font-family: Orbitron;
   text-align: center;
   margin-bottom: 30px;
 `;

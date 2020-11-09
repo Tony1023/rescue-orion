@@ -19,7 +19,7 @@ const Body = styled.div`
 `;
 
 const Note = styled.div`
-  font-family: 'Grandstander', cursive;
+  font-family: Orbitron;
   font-size: 20px;
   text-align: center;
   color: #b62021;

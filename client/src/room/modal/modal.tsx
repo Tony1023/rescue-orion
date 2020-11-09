@@ -58,14 +58,13 @@ export const Header = styled.div`
   font-size: 28px;
   text-align: center;
   color: #b62021;
-  font-family: 'Grandstander', cursive;
-  text-transform: uppercase;
+  font-family: Orbitron;
 `;
 
 export const Body = styled.div`
   font-family: 'Roboto' sans-serif;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 500;
 `;
 
 export const StyledButton = styled.div`

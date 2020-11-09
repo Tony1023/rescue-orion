@@ -18,7 +18,7 @@ import { Message } from '../../metadata/types';
 import Triangle from './TriangleButton';
 
 const StationName = styled.div`
-  font-family: 'Grandstander', cursive;
+  font-family: Orbitron;
   text-align: center;
   font-size: 40px;
   margin-bottom: 20px;
@@ -48,7 +48,7 @@ const Column = styled.div`
 `;
 const StyledModal = styled(Modal)`
   position: relative;
-  height: 520px;
+  height: 560px;
 `;
 const StyledButton = styled(DismissButton)`
   position: absolute;
@@ -61,8 +61,7 @@ const Header = styled.div`
   font-size: 22px;
   text-align: center;
   color: #b62021;
-  font-family: 'Grandstander', cursive;
-  text-transform: uppercase;
+  font-family: Orbitron;
 `;
 
 const Body = styled.div`
@@ -198,7 +197,7 @@ function StationPanel(props: {
 }
 
 const SpaceshipName = styled.h1`
-  font-family: 'Grandstander', cursive;
+  font-family: Orbitron;
   text-align: center;
   margin-bottom: 30px;
 `;

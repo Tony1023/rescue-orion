@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from '../redux-hook-adapters';
 import styled from 'styled-components';
 import { GameState, GameStatus, RescueResource } from '../../metadata/types';
-import * as IDs from '../../metadata/agent-ids';
 import { formatTime } from '../../time-format-utils';
 
 const Wrapper = styled.div`
@@ -10,7 +9,7 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'Grandstander', cursive;
+  font-family: Orbitron;
   text-align: center;
 `;
 
