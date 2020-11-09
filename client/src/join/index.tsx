@@ -11,8 +11,9 @@ const Wrapper = styled(Jumbotron)`
 `;
 
 const Global = createGlobalStyle`
-  html, body {
-    background-color: rgb(248, 248, 248) !important;
+  body {
+    background-image: url(${`${process.env.PUBLIC_URL}/join_background.jpg`});
+    background-size: cover;
   }
 `;
 
