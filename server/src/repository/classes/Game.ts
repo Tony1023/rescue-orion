@@ -115,6 +115,7 @@ export default class Game implements MessageQueue {
     for (const id in this.spaceships) {
       if(this.spaceships[id].energyCells <= 10 || this.spaceships[id].lifeSupportPacks <= 10) {
         this.pushMessage({
+          asset: 'modals/Rescue Orion POP UP SCREEN_For USC_24.png',
           title: 'Warning!',
           paragraphs: [
             { text: 'One of your ships is running low on Energy Cells or Life Support Packs.' },
