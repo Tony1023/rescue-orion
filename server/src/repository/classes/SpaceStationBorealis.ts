@@ -25,6 +25,7 @@ export default class SpaceStationBorealis extends SpaceStation {
   checkDropOffResource(r: RescueResource): void {
     if(r === RescueResource.AITechnology) {
       this.messageQueue.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_19.png',
         title: 'AI TECHNOLOGY DELIVERED',
           paragraphs: [
             { text: 'Well done!' },

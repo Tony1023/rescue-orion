@@ -45,9 +45,10 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     }
 
     switch (this.day) {
-      case 6:
+      case 1:
         if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
           this.messageQueue.pushMessage({
+            asset: 'modals/Rescue Orion POP UP SCREEN_For USC_7.png',
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'Oh no! It appears you were too late.' },
@@ -57,10 +58,21 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           });
         }
         break;
-      case 21:
+      case 2:
         if (this.rescueResources.indexOf(RescueResource.OxygenRepairTeam) === -1) {
           if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
             this.messageQueue.pushMessage({
+              title: 'Incident at Orion',
+              asset: 'modals/Rescue Orion POP UP SCREEN_For USC_9.png',
+              paragraphs: [
+                { text: 'Oh no! It appears you were too late.' },
+                { text: 'The oxygen systems were not permanently fixed in time and the worst has happened. All of the scientists on Space Station Orion have passed away and have taken their place amongst the stars!' },
+                { text: 'While we may not have successfully complete our mission, let’s have a discussion, where did we go wrong? What could we have done differently.' },
+              ]
+            });
+          } else {
+            this.messageQueue.pushMessage({
+              asset: 'modals/Rescue Orion POP UP SCREEN_For USC_8.png',
               title: 'Incident at Orion',
               paragraphs: [
                 { text: 'Oh no! It appears you were too late.' },
@@ -68,21 +80,13 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
                 { text: 'Hurry to fix this before total loss of life happens!' },
               ]
             });
-          } else {
-            this.messageQueue.pushMessage({
-              title: 'Incident at Orion',
-              paragraphs: [
-                { text: 'Oh no! It appears you were too late.' },
-                { text: 'The oxygen systems were not permanently fixed in time and the worst has happened. All of the scientists on Space Station Orion have passed away and have taken their place amongst the stars!' },
-                { text: 'While we may not have successfully complete our mission, let’s have a discussion, where did we go wrong? What could we have done differently.' },
-              ]
-            });
           }
         }
         break;
-      case 23:
+      case 3:
         if (this.rescueResources.indexOf(RescueResource.WaterRepairTeam) === -1) {
           this.messageQueue.pushMessage({
+            asset: 'modals/Rescue Orion POP UP SCREEN_For USC_10.png',
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'Oh no! It appears you were too late.' },
@@ -92,9 +96,10 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           });
         }
         break;
-      case 24:
+      case 4:
         if (this.rescueResources.indexOf(RescueResource.FoodRepairTeam) === -1) {
           this.messageQueue.pushMessage({
+            asset: 'modals/Rescue Orion POP UP SCREEN_For USC_11.png',
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'I just got an update from Orion.' },
@@ -104,9 +109,10 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           });
         }
         break;
-      case 25:
+      case 5:
         if (this.rescueResources.indexOf(RescueResource.MedicalRepairTeam) === -1) {
           this.messageQueue.pushMessage({
+            asset: 'modals/Rescue Orion POP UP SCREEN_For USC_12.png',
             title: 'Incident at Orion',
             paragraphs: [
               { text: 'I just got an update from Orion.' },
@@ -180,6 +186,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     && this.rescueResources.includes(RescueResource.FoodRepairTeam)
     && this.rescueResources.includes(RescueResource.MedicalRepairTeam)) {
       this.messageQueue.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_18.png',
         title: 'INCOMING RELAY FROM GROUND CONTROL',
           paragraphs: [
             { text: 'Congratulations, Gemini Crew!' },
@@ -194,6 +201,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     // drop off O2 replacement cells
     if(r === RescueResource.O2ReplacementCells) {
       this.messageQueue.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_13.png',
         title: 'O2 REPLACEMENT CELLS DELIVERED',
           paragraphs: [
             { text: 'You’ve saved the day (for now)! The O2 replacement cells you have dropped off will only temporarily delay loss of life.' },
@@ -206,6 +214,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     // drop off oxygen repair team
     else if(r === RescueResource.OxygenRepairTeam) {
       this.messageQueue.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_14.png',
         title: 'OXYGEN REPAIR TEAM DELIVERED',
           paragraphs: [
             { text: 'Take a deep breath!' },
@@ -219,6 +228,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     // drop off water repair team
     else if(r === RescueResource.WaterRepairTeam) {
       this.messageQueue.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_15.png',
         title: 'WATER REPAIR TEAM DELIVERED',
           paragraphs: [
             { text: 'Splashdown!' },
@@ -232,6 +242,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     // drop off food repair team
     else if(r === RescueResource.FoodRepairTeam) {
       this.messageQueue.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_16.png',
         title: 'FOOD REPAIR TEAM DELIVERED',
           paragraphs: [
             { text: 'That hit the spot!' },
@@ -245,6 +256,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     // drop off medical repair team
     else if(r === RescueResource.MedicalRepairTeam) {
       this.messageQueue.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_17.png',
         title: 'MEDICAL REPAIR TEAM DELIVERED',
           paragraphs: [
             { text: 'Just what the doctor ordered!' },
