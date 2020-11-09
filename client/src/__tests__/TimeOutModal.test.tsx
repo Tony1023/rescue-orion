@@ -12,6 +12,7 @@ import ResourcePanel from '../room/ResourcePanel';
 import GameBoard from '../room/GameBoard';
 import ConfirmMoveModal from '../room/modal/ConfirmMoveModal';
 import TimeOutModal from '../room/modal/TimeOutModal';
+import { RightPanelTriangle } from '../room/modal/SpaceStationModal';
 
 describe('Load time out modal', () => {
   let token: string;
@@ -97,35 +98,48 @@ describe('Load time out modal', () => {
     // make more than 30 moves
     await confirmMove('b3', '40');
     await confirmMove('b4', '39');
-    await confirmMove('b3', '38');
-    await confirmMove('b4', '37');
-    await confirmMove('b3', '36');
-    await confirmMove('b4', '35');
-    await confirmMove('b3', '34');
-    await confirmMove('b4', '33');
-    await confirmMove('b3', '32');
-    await confirmMove('b4', '31');
-    await confirmMove('b3', '30');
-    await confirmMove('b4', '29');
-    await confirmMove('b3', '28');
-    await confirmMove('b4', '27');
-    await confirmMove('b3', '26');
-    await confirmMove('b4', '25');
-    await confirmMove('b3', '24');
-    await confirmMove('b4', '23');
-    await confirmMove('b3', '22');
-    await confirmMove('b4', '21');
-    await confirmMove('b3', '20');
-    await confirmMove('b4', '19');
-    await confirmMove('b3', '18');
-    await confirmMove('b4', '17');
-    await confirmMove('b3', '16');
-    await confirmMove('b4', '15');
-    await confirmMove('b3', '14');
-    await confirmMove('b4', '13');
-    await confirmMove('b3', '12');
-    await confirmMove('b4', '11');
-    await confirmMove('b3', '10');
+    await confirmMove('b16', '38');
+    await confirmMove('b17', '37');
+    await confirmMove('b14', '36');
+    await confirmMove('b32', '35');
+    await confirmMove('b33', '34');
+    await confirmMove('b11', '33');
+    await confirmMove('t2', '32');
+
+    await act(async () => {
+      let infoButton = gameBoard.find('button[data-testid="orion-info-button"]');
+      await waitFor(() => {
+        infoButton = gameBoard.find('button[data-testid="orion-info-button"]');
+        expect(infoButton).toHaveLength(1);
+      });
+      infoButton.simulate('click');
+      const button = room.find(RightPanelTriangle);
+      button.simulate('click');
+    });
+
+    await confirmMove('t2', '32');
+    await confirmMove('t2', '31');
+    await confirmMove('t2', '30');
+    await confirmMove('t2', '29');
+    await confirmMove('t2', '28');
+    await confirmMove('t2', '27');
+    await confirmMove('t2', '26');
+    await confirmMove('t2', '25');
+    await confirmMove('t2', '24');
+    await confirmMove('t2', '23');
+    await confirmMove('t2', '22');
+    await confirmMove('t2', '21');
+    await confirmMove('t2', '20');
+    await confirmMove('t2', '19');
+    await confirmMove('t2', '18');
+    await confirmMove('t2', '17');
+    await confirmMove('t2', '16');
+    await confirmMove('t2', '15');
+    await confirmMove('t2', '14');
+    await confirmMove('t2', '13');
+    await confirmMove('t2', '12');
+    await confirmMove('t2', '11');
+    await confirmMove('t2', '10');
     // render time out modal
     expect(gameBoard.find(TimeOutModal)).toHaveLength(1);
     expect(gameBoard.find('div[data-testid="travel-day"]').text()).toEqual('31');

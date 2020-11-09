@@ -202,7 +202,7 @@ const SpaceshipName = styled.h1`
   margin-bottom: 30px;
 `;
 
-const RightPanelTriangle = styled(Triangle)`
+export const RightPanelTriangle = styled(Triangle)`
   position: absolute;
   left: 5px;
   top: 0;

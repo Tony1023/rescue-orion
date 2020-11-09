@@ -38,6 +38,7 @@ export default (props: {
       <>
         <div>
           <StationInformationButton
+            data-testid={`${props.id}-info-button`}
             position={StationPosition}
             onClick={() => setShowModal(true)}
           >
