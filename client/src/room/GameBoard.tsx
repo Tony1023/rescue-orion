@@ -18,6 +18,7 @@ import AbortMissionModal from './modal/ConfirmAbortMissionModal';
 import WaitModal from './modal/WaitModal';
 import OutOfResourceModal from './modal/OutOfResourceModal';
 import TimeOutModal from './modal/TimeOutModal';
+import OutOfO2Modal from './modal/OutOfO2Modal';
 
 const GEMINI_LEFT_OFFSET = 45;
 const GEMINI_TOP_OFFSET = 50;
@@ -300,6 +301,11 @@ export default function() {
       {
         gameState.status === GameStatus.MissionTimeOut ? 
         <TimeOutModal /> : <></>
+      }
+
+      {
+        gameState.status === GameStatus.OxygenProblem ? 
+        <OutOfO2Modal /> : <></>
       }
 
       <Clock />

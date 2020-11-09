@@ -2,6 +2,7 @@ import SpaceStation from "./SpaceStation"
 import { RescueResource } from "./RescueResource";
 import TimeVaryingAgent from "./TimeVaryingAgent";
 import MessageQueue from "./MessageQueue";
+import { GameStatus } from "../../metadata/types";
 
 export default class SpaceStationOrion extends SpaceStation implements TimeVaryingAgent {
 
@@ -61,15 +62,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
       case 21:
         if (this.rescueResources.indexOf(RescueResource.OxygenRepairTeam) === -1) {
           if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
-            this.messageQueue.pushMessage({
-              title: 'Incident at Orion',
-              asset: 'modals/Rescue Orion POP UP SCREEN_For USC_9.png',
-              paragraphs: [
-                { text: 'Oh no! It appears you were too late.' },
-                { text: 'The oxygen systems were not permanently fixed in time and the worst has happened. All of the scientists on Space Station Orion have passed away and have taken their place amongst the stars!' },
-                { text: 'While we may not have successfully complete our mission, let’s have a discussion, where did we go wrong? What could we have done differently.' },
-              ]
-            });
+            this.messageQueue.endMission(GameStatus.OxygenProblem);
           } else {
             this.messageQueue.pushMessage({
               asset: 'modals/Rescue Orion POP UP SCREEN_For USC_8.png',
