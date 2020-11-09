@@ -293,9 +293,9 @@ export default class Game implements MessageQueue {
 
   private onTick(countdown: number, timeNow: number) {
     const timeElapsed = timeNow - this.startTime;
-    if (timeElapsed === 1 && !this.movedSinceStart) {
+    if (timeElapsed === 10 * 60 && !this.movedSinceStart) {
       this.pushMessage({
-        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_1.png',
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_5.png',
         title: 'Incoming relay from Ground Control',
         paragraphs: [
           { text: 'Analysis paralysis: s situation where a group is unable to move forward with a decision as a result of overanalyzing data or overthinking a problem' },
@@ -307,6 +307,7 @@ export default class Game implements MessageQueue {
     }
     if (timeElapsed - this.lastMove === 5 * 60) { // every 5 minutes?
       this.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_6.png',
         title: 'Incoming relay from Ground Control',
         paragraphs: [
           { text: 'Greetings crew, we’re getting readings that your ships have stayed in one spot for quite some time.' },
@@ -319,6 +320,7 @@ export default class Game implements MessageQueue {
 
     if (timeElapsed === 2 * 60) {
       this.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_1.png',
         title: 'Incoming relay from Ground Control',
         paragraphs: [
           { text: 'We hope this message finds you out in space already. We wanted to remind you of a few key reminders for your mission:' },
@@ -330,6 +332,7 @@ export default class Game implements MessageQueue {
       });
     } else if (timeElapsed === 8 * 60) {
       this.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_2.png',
         title: 'Incoming relay from the Space Commander',
         paragraphs: [
           { text: 'Greetings, crews!' },
@@ -341,6 +344,7 @@ export default class Game implements MessageQueue {
       });
     } else if (timeElapsed === countdown || timeElapsed + 1 === countdown) {
       this.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_3.png',
         title: 'Incoming relay from Ground Control',
         paragraphs: [
           { text: 'You are halfway through your mission time. Be sure to keep an eye on the clock to make sure you have enough time to Rescue Orion!' },
@@ -350,6 +354,7 @@ export default class Game implements MessageQueue {
       });
     } else if (countdown === 10 * 60) {
       this.pushMessage({
+        asset: 'modals/Rescue Orion POP UP SCREEN_For USC_4.png',
         title: 'Urgent relay from Ground Control',
         paragraphs: [
           { text: 'Only 10 minutes remain for you to Rescue Orion and return to Sagittarius by Day 30!' },
