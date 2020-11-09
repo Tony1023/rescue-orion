@@ -293,7 +293,7 @@ export default class Game implements MessageQueue {
 
   private onTick(countdown: number, timeNow: number) {
     const timeElapsed = timeNow - this.startTime;
-    if (timeElapsed === 10 && !this.movedSinceStart) {
+    if (timeElapsed === 1 && !this.movedSinceStart) {
       this.pushMessage({
         asset: 'modals/Rescue Orion POP UP SCREEN_For USC_1.png',
         title: 'Incoming relay from Ground Control',

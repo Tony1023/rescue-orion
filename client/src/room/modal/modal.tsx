@@ -70,15 +70,11 @@ export const Body = styled.div`
 
 export const StyledButton = styled.div`
   font-family: 'Roboto' sans-serif;
-  background-color: rgb(0, 198, 170);
   cursor: pointer;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-  letter-spacing: 1px;
-  font-weight: 500;
-  width: 70px;
-  text-align: center;
+  background-size: cover;
+  width: 130px;
+  height: 65px;
+  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Dismiss.png"`});
 `;
 
 export function DismissButton(props: {
@@ -88,5 +84,5 @@ export function DismissButton(props: {
   return <StyledButton
     onClick={props.onClose}
     className={props.className}
-  >DISMISS</StyledButton>;
+  />;
 }

@@ -52,8 +52,8 @@ const StyledModal = styled(Modal)`
 `;
 const StyledButton = styled(DismissButton)`
   position: absolute;
-  left: 25px;
-  bottom: 20px;
+  left: 0px;
+  bottom: 10px;
 `;
 
 const Header = styled.div`

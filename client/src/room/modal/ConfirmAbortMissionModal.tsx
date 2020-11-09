@@ -4,25 +4,28 @@ import {
   Modal,
   ModalBackground,
   Body,
-  StyledButton,
   Header,
 } from './modal';
 import { useDispatch } from '../redux-hook-adapters';
 import { abortMission } from '../actions';
 import styled from 'styled-components';
 
-const AbortButton = styled(StyledButton)`
+const AbortButton = styled.div`
   background-color: red;
   color: white;
   position: absolute;
   top: 20px;
   left: 150px;
+  cursor: pointer;
+  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Dismiss.png"`});
 `;
 
-const CancelButton = styled(StyledButton)`
+const CancelButton = styled.div`
   position: absolute;
   right: 150px;
   top: 20px;
+  cursor: pointer;
+  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Dismiss.png"`});
 `;
 
 export default (props: {

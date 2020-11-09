@@ -42,8 +42,8 @@ const StyledModal = styled(Modal)`
 
 const StyledButton = styled(DismissButton)`
   position: absolute;
-  right: 30px;
-  top: 20px;
+  right: 10px;
+  top: 10px;
 `;
 
 const Column = styled.div`

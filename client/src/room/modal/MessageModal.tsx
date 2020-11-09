@@ -38,6 +38,14 @@ export const StyledDismissButton = styled(DismissButton)`
   margin-left: auto;
 `;
 
+export const StyledDismissButtonForImageModal = styled(DismissButton)`
+  position: absolute;
+  right: 40px;
+  bottom: 65px;
+  width: 180px;
+  height: 90px;
+`;
+
 export default (props: {
   message?: Message,
   onClose?: () => void,
@@ -76,7 +84,7 @@ export default (props: {
         }
       </BaseModalTextBackground> :
       <BaseModalImageBackground backgroundImage={props.message?.asset}>
-        <StyledDismissButton onClose={props.onClose} />
+        <StyledDismissButtonForImageModal onClose={props.onClose} />
       </BaseModalImageBackground>
     }
   </ModalBackground>;
