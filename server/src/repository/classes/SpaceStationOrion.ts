@@ -45,7 +45,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
     }
 
     switch (this.day) {
-      case 1:
+      case 6:
         if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
           this.messageQueue.pushMessage({
             asset: 'modals/Rescue Orion POP UP SCREEN_For USC_7.png',
@@ -58,7 +58,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           });
         }
         break;
-      case 2:
+      case 21:
         if (this.rescueResources.indexOf(RescueResource.OxygenRepairTeam) === -1) {
           if (this.rescueResources.indexOf(RescueResource.O2ReplacementCells) === -1) {
             this.messageQueue.pushMessage({
@@ -83,7 +83,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           }
         }
         break;
-      case 3:
+      case 23:
         if (this.rescueResources.indexOf(RescueResource.WaterRepairTeam) === -1) {
           this.messageQueue.pushMessage({
             asset: 'modals/Rescue Orion POP UP SCREEN_For USC_10.png',
@@ -96,7 +96,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           });
         }
         break;
-      case 4:
+      case 24:
         if (this.rescueResources.indexOf(RescueResource.FoodRepairTeam) === -1) {
           this.messageQueue.pushMessage({
             asset: 'modals/Rescue Orion POP UP SCREEN_For USC_11.png',
@@ -109,7 +109,7 @@ export default class SpaceStationOrion extends SpaceStation implements TimeVaryi
           });
         }
         break;
-      case 5:
+      case 25:
         if (this.rescueResources.indexOf(RescueResource.MedicalRepairTeam) === -1) {
           this.messageQueue.pushMessage({
             asset: 'modals/Rescue Orion POP UP SCREEN_For USC_12.png',

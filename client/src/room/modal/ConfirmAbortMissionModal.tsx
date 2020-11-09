@@ -11,21 +11,25 @@ import { abortMission } from '../actions';
 import styled from 'styled-components';
 
 const AbortButton = styled.div`
-  background-color: red;
-  color: white;
   position: absolute;
   top: 20px;
-  left: 150px;
+  left: 120px;
   cursor: pointer;
-  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Dismiss.png"`});
+  height: 70px;
+  width: 140px;
+  background-size: cover;
+  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Yes.png"`});
 `;
 
 const CancelButton = styled.div`
   position: absolute;
-  right: 150px;
+  right: 120px;
   top: 20px;
   cursor: pointer;
-  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Dismiss.png"`});
+  height: 70px;
+  width: 140px;
+  background-size: cover;
+  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_No.png"`});
 `;
 
 export default (props: {
@@ -54,11 +58,11 @@ export default (props: {
               dispatch(abortMission());
               props.onClose();
             }}
-            >YES</AbortButton>
+          />
           <CancelButton
             data-testid="abort-mission-cancel"
             onClick={props.onClose}
-          >NO</CancelButton>
+          />
         </div>
       </Modal>
     </BaseModalTextBackground>

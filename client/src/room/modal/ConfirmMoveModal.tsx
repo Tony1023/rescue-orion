@@ -6,7 +6,6 @@ import {
   BaseModalTextBackground,
   Modal,
   ModalBackground,
-  StyledButton,
   Header,
 } from './modal';
 import * as IDs from '../../metadata/agent-ids';
@@ -45,10 +44,20 @@ const Number = styled.div`
   margin-top: 10px;
 `;
 
-const ActionButton = styled(StyledButton)`
+const ActionButton = styled.div`
   margin: auto;
-  width: 150px;
-  text-transform: uppercase;
+  width: 180px;
+  height: 90px;
+  cursor: pointer;
+  background-size: cover;
+`;
+
+const ConfirmButton = styled(ActionButton)`
+  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Confirm.png"`});
+`;
+
+const CancelButton = styled(ActionButton)`
+  background-image: url(${`"${process.env.PUBLIC_URL}/buttons/Map Buttons_outlines_Cancel.png"`});
 `;
 
 export default (props: {
@@ -138,7 +147,7 @@ export default (props: {
         </Column>
           <Title><span>Day {day}</span> <i className="fas fa-long-arrow-alt-right"></i> <span>Day {day + 1}</span></Title>
         <Column>
-          <ActionButton
+          <ConfirmButton
             data-testid="confirm-move-button"
             onClick={() => {
               dispatch(moveSpaceship({
@@ -146,14 +155,14 @@ export default (props: {
                 gemini_2: `${props.gemini2NextMove}`
               }))
               props.onClose();
-            }}>Confirm Move</ActionButton>
+            }}
+          />
         </Column>
         <Column>
-          <ActionButton 
+          <CancelButton 
             data-testid="cancel-move-button"
-            onClick={props.onClose}>
-              Cancel Move
-          </ActionButton>
+            onClick={props.onClose}
+          />
         </Column>
       </StyledModal>
     </BaseModalTextBackground>
