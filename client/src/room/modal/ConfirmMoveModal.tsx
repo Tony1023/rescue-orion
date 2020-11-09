@@ -87,7 +87,7 @@ export default (props: {
         </Header>
         <Column>
           <GeminiImage backgroundImage='Gemini1.png' />
-          <Title>Gemini 1</Title>
+          <Title style={{ fontFamily: 'Orbitron '}}>Gemini 1</Title>
           <Column>
             <h4>Energy Cells</h4>
             <Number>{gemini1.energyCells}</Number>
@@ -117,7 +117,7 @@ export default (props: {
         </Column>
         <Column>
           <GeminiImage backgroundImage='Gemini2.png'/>
-          <Title>Gemini 2</Title>
+          <Title style={{ fontFamily: 'Orbitron '}}>Gemini 2</Title>
           <Column>
             <h4>Energy Cells</h4>
             <Number>{gemini2.energyCells}</Number>
