@@ -66,7 +66,6 @@ class Lobby {
   setCountdown(from: number) {
     if (this.status === LobbyStatus.Waiting) {
       this.countdownClock.setCountdownTime(from);
-      this.sendUpdate();
     }
   }
 

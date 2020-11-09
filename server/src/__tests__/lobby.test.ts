@@ -96,6 +96,20 @@ describe('lobby', () => {
     }
   });
 
+  it('streams end event', () => {
+    const mockSocket = new MockSocket();
+    lobby.addSocket(mockSocket);
+    expect(mockSocket.emitInvoked).toBe(1);
+    lobby.setCountdown(1);
+    expect(mockSocket.emitInvoked).toBe(2);
+    lobby.startGames();
+    expect(mockSocket.emitInvoked).toBe(2);
+    jest.advanceTimersByTime(1000);
+    expect(mockSocket.emitInvoked).toBe(4);
+    const obj = JSON.parse(mockSocket.latestEmittedMessage) as LobbyState;
+    expect(obj.status).toBe(LobbyStatus.Finished);
+  });
+
   afterEach(() => {
     lobby?.destroy();
   });
