@@ -331,7 +331,10 @@ export default () => {
                     <td>{game.status}</td>
                     <td style={{ textAlign: 'center', padding: '0.1em' }}>
                       <Button
-                        disabled={game.status === GameStatus.NotStarted}
+                        disabled={game.status === GameStatus.Started
+                          || status === LobbyStatus.Waiting
+                          || status === LobbyStatus.Finished
+                        }
                         size='sm'
                         variant='outline-danger'
                         onClick={() => setRestartModal(name)}
