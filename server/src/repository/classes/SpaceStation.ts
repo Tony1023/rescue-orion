@@ -28,6 +28,9 @@ export default class SpaceStation implements ResourceCarrier {
     if (index === -1) {
       throw new Error(`${r} not found at the space station.`);
     }
+    if (!this.canPickUp(r)) {
+      throw new Error(`${r} not allowed to be picked up.`);
+    }
     this.rescueResources.splice(index, 1);
   }
 
