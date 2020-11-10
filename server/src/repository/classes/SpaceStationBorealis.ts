@@ -15,9 +15,12 @@ export default class SpaceStationBorealis extends SpaceStation {
     if (r === RescueResource.AITechnology) {
       return false;
     }
-    if (r === RescueResource.OxygenRepairTeam &&
-      this.rescueResources.includes(RescueResource.AITechnology)){
-      return true;
+    if (r === RescueResource.OxygenRepairTeam) {
+      if (this.rescueResources.includes(RescueResource.AITechnology)) {
+        return true;
+      } else {
+        return false;
+      }
     }
     return true;
   }
