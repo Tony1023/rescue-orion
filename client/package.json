@@ -2,7 +2,7 @@
   "name": "rescue-orion",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://rescue-orion-beta.netlify.app/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^11.1.0",
