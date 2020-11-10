@@ -19,7 +19,7 @@ export default class SpaceStationBorealis extends SpaceStation {
       this.rescueResources.includes(RescueResource.AITechnology)){
       return true;
     }
-    return false;
+    return true;
   }
 
   checkDropOffResource(r: RescueResource): void {

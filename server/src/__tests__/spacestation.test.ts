@@ -30,9 +30,13 @@ describe('spacestation in Rescue Orion', () => {
         const game = new Game(countdownlock,0,(time) => {
             accumulatedTime += time;
         });
-        const spacestation = new SpaceStationBorealis('t5', 50, 30, [RescueResource.AITechnology], game);
+        const spacestation = new SpaceStationBorealis('t5', 50, 30, [
+            RescueResource.AITechnology,
+            RescueResource.FoodRepairTeam,
+        ], game);
         expect(spacestation.canPickUp(RescueResource.AITechnology)).toEqual(false);
         expect(spacestation.canPickUp(RescueResource.OxygenRepairTeam)).toEqual(true);
+        expect(spacestation.canPickUp(RescueResource.FoodRepairTeam)).toBeTruthy();
         spacestation.checkDropOffResource(RescueResource.AITechnology);
     });
 
