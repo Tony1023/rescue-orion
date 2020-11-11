@@ -26,7 +26,7 @@ export default () => {
 
   function joinRoom() {
     if (!lobbyCode || !roomName) {
-      setError('Lobby code and room name must not be empty.');
+      setError('Lobby code and crew name must not be empty.');
       return;
     }
     client.post(`${API_BASE_URL}/rooms`, {
@@ -89,7 +89,7 @@ export default () => {
               backgroundColor: 'rgb(73, 81, 87)',
               color: 'white',
             }}
-          >Room Name</InputGroup.Text>
+          >Crew Name</InputGroup.Text>
         </InputGroup.Prepend>
         <FormControl 
           value={roomName}
@@ -110,7 +110,7 @@ export default () => {
       onHide={() => setShowReconnectModal(false)}
     >
       <Modal.Header closeButton>
-        <h4>Room name {roomName} is taken</h4>
+        <h4>Crew name {roomName} is taken</h4>
       </Modal.Header>
       <Modal.Body>
         <p>Are you trying to reconnect?</p>

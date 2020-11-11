@@ -283,7 +283,7 @@ export default () => {
           <Table striped bordered hover size='sm'>
             <tbody>
               <tr>
-                <th>Room Name</th>
+                <th>Crew Name</th>
                 <th>O2-temp<br/>(day 6)</th>
                 <th>Oxygen<br/>(day 21)</th>
                 <th>Water<br/>(day 23)</th>
