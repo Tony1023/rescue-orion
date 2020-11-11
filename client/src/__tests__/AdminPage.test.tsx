@@ -7,6 +7,8 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import AdminLogin from '../admin/Login'
 import createBrowserHistory from "history/createBrowserHistory"
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const history = createBrowserHistory();
 const user = {
@@ -20,11 +22,9 @@ describe('Admin page', () => {
       const wrapper = shallow(<AdminLogin history={history}/>);
       //console.log(wrapper.debug());
       const title = wrapper.find("h3").text();
-      console.log(title);
       expect(title).toEqual("Sign In to Manage Rescue Orion");
 
       const Button = wrapper.find("Button").text();
-      console.log(Button);
       expect(Button).toEqual("Sign In");
 });
 
@@ -33,11 +33,24 @@ describe('Admin page', () => {
     expect(getByText('Sign In to Manage Rescue Orion')).toBeInTheDocument();
     expect(getByText('Username')).toBeInTheDocument();
     expect(getByText('Password')).toBeInTheDocument();
+    expect(getByText('Sign In')).toBeInTheDocument();
   });
 
   it('should display error message when username and password are empty', () => {
     const { getByText } = render(<AdminLogin history={history}/>);
     fireEvent.click(screen.getByText('Sign In'));
     expect(getByText('Username and password must not be empty.')).toBeInTheDocument();
+  });
+
+  it('allows sign in correctly', (done) => {
+    axios.post(`${API_BASE_URL}/admin/login`, {
+      username: 'Brady',
+      password: 'RescueOrion!',
+    })
+      .then((res) => {
+        expect(res.data?.token).toBeDefined();
+        done();
+      })
+      .catch((err) => done(err));
   });
 });
