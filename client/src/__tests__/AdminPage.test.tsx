@@ -6,7 +6,7 @@ import { shallow, mount } from 'enzyme';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import AdminLogin from '../admin/Login'
-import createBrowserHistory from "history/createBrowserHistory"
+import { createBrowserHistory } from "history"
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
