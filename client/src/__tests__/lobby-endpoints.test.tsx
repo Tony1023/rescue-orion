@@ -13,14 +13,14 @@ describe('lobby endpoints', () => {
     {
       const res = await axios.post(`${API_BASE_URL}/admin/login`, {
         username: 'LobbyTest',
-        password: 'pwd',
+        password: 'randompasswordfortesting1023',
       });
       token1 = res.data.token;
     }
     {
       const res = await axios.post(`${API_BASE_URL}/admin/login`, {
         username: 'LobbyTest2',
-        password: 'pwd',
+        password: 'randompasswordfortesting1023',
       });
       token2 = res.data.token;
     }
@@ -129,7 +129,7 @@ describe('lobby socket and endpoints', () => {
   beforeAll(async (done) => {
     const res = await axios.post(`${API_BASE_URL}/admin/login`, {
       username: 'LobbyTest',
-      password: 'pwd',
+      password: 'randompasswordfortesting1023',
     });
     token = res.data.token;
     jest.setTimeout(10000);

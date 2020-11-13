@@ -44,8 +44,8 @@ describe('Admin page', () => {
 
   it('allows sign in correctly', (done) => {
     axios.post(`${API_BASE_URL}/admin/login`, {
-      username: 'Brady',
-      password: 'RescueOrion!',
+      username: 'RoomTest',
+      password: 'randompasswordfortesting1023',
     })
       .then((res) => {
         expect(res.data?.token).toBeDefined();

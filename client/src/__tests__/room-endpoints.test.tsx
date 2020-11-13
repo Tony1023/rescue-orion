@@ -65,7 +65,7 @@ describe('socket.io client in rooms with bad inputs', () => {
   beforeAll(async (done) => {
     // admin log in
     const res = await axios.post(`${API_BASE_URL}/admin/login`,
-      { username: 'RoomTest', password: 'pwd' }
+      { username: 'RoomTest', password: 'randompasswordfortesting1023' }
     );
     token = res.data.token;
     // create a lobby

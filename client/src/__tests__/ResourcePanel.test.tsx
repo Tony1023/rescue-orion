@@ -63,7 +63,7 @@ describe('Load resource panel and updates with move', () => {
   beforeAll(async (done) => {
     // admin log in
     const res = await axios.post(`${API_BASE_URL}/admin/login`,
-      { username: 'GameboardTest', password: 'pwd' }
+      { username: 'GameboardTest', password: 'randompasswordfortesting1023' }
     );
     token = res.data.token;
     // create a lobby
