@@ -18,7 +18,7 @@ const whitelist = [
 ]
 
 app.use(cors({
-  origin: function(origin, callback) {
+  origin(origin, callback) {
     const index = whitelist.indexOf(origin);
     if (index >= 0) {
       callback(null, true);
