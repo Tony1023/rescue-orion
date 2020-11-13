@@ -5,7 +5,7 @@ This folder contains the source code for automated online Rescue Orion. There ar
 
 ## Environment Setup
 
-There are some packages that need to be installed in common for compile and run the app (common for both client and server):
+There are some packages that need to be installed in for compiling, running, and testing the app (common for both client and server):
 - [node](https://nodejs.org/en/download/) v8 or later
 - [yarn](https://classic.yarnpkg.com/en/docs/install/#debian-stable)
 

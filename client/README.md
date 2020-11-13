@@ -1,40 +1,24 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Client of Rescue Orion
 
-# Getting started
-Run
-```
-$ yarn install
-```
-or
-```
-$ npm install
-```
+Client app of the online Rescue Orion project, built with React.
 
-Go to src/metadata and run
-```
-$ python gen.py
-```
 
-Then go back to root directory and run
+## Environment Variables
+Create a file in this directory named `.env` and put
 ```
-$ yarn start
-```
-or
-```
-$ npm start
-```
-to start application on localhost:3000
-
-# ENV setup!!!
-Create a file in client/ called `.env` and put
-```
-REACT_APP_API_BASE_URL=http://localhost:9000
+REACT_APP_API_BASE_URL=<API base address>
 ```
 as the file content.
 
+## yarn commands
+- yarn install
+  - Installs all dependencies, needs to be run the first time you run this project.
+- yarn start
+  - Starts the app in development mode.
+- yarn build
+  - Compiles the project in production mode in `build/`.
+- yarn test
+  - Starts an interactive console for running tests.
+
 # Testing
 All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started).
-
-If you haven't already, run `yarn install`.
-
-Run `yarn test` and you'll see an interactive console.
