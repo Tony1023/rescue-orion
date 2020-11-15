@@ -1,6 +1,6 @@
 # Rescue Orion
 
-This folder contains the source code for automated online Rescue Orion. There are two parts: `client/` and `server/`. They two directories are not linked together. They are to be configured deployed separately.
+This folder contains the source code for automated online Rescue Orion. There are two parts: `client/` and `server/`. They two directories are not linked together. They are to be configured and deployed separately.
 
 
 ## Environment Setup
