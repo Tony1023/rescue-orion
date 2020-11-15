@@ -8,6 +8,7 @@ Create a file in this directory named `.env` and put
 ```
 JWT_SECRET=<your choice of secret string>
 CLIENT_DOMAIN=<the domain of client app, used for CORS check>
+NODE_ENV=<production/development>
 ```
 as the file content.
 
