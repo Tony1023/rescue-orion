@@ -12,6 +12,11 @@ NODE_ENV=<production/development>
 ```
 as the file content.
 
+### Persistent Storage
+There is no database for this project. The only persistent data are the account credentials for admins of the game, which are stored in `credentials.csv`.
+
+In order to add/remove admins or to change passwords, modify the file directly. The program does not cache the file in-memory and reads the file every time for authentication.
+
 ## yarn commands
 - yarn install
   - Installs all dependencies, needs to be run the first time you run this project.
