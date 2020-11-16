@@ -12,8 +12,8 @@ import { API_BASE_URL } from '../config';
 
 const history = createBrowserHistory();
 const user = {
-    username: "Brady",
-    password: "RescueOrion",
+    username: "LobbyTest",
+    password: "randompasswordfortesting1023",
     error: "",
   };
 

@@ -26,5 +26,14 @@ In package.json, you will find an entry called "homepage." That is the field for
 ## Testing
 All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started).
 
+In order to run the tests, you need a couple of test accounts on the backend. We need to add them manually to `/server/credentials.csv` because there is no registration process. Please append the following entries to that file:
+```
+RoomTest,randompasswordfortesting1023
+GameboardTest,randompasswordfortesting1023
+LobbyTest,randompasswordfortesting1023
+LobbyTest2,randompasswordfortesting1023
+```
+These accounts are not needed in production.
+
 ## Deployment
 After setting up the environment variables and homepage for production, run `yarn build` to generate the static site output and host the files in `build/` like any other static site project. You may choose to only upload the `build/` directory to your server.

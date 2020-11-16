@@ -5,8 +5,8 @@ import { API_BASE_URL } from '../config';
 describe('/admin/login endpoint', () => {
   it('allows sign in correctly', (done) => {
     axios.post(`${API_BASE_URL}/admin/login`, {
-      username: 'Brady',
-      password: 'RescueOrion!',
+      username: 'LobbyTest',
+      password: 'randompasswordfortesting1023',
     })
       .then((res) => {
         expect(res.data?.token).toBeDefined();
@@ -17,8 +17,8 @@ describe('/admin/login endpoint', () => {
 
   it('rejects incorrect password', (done) => {
     axios.post(`${API_BASE_URL}/admin/login`, {
-      username: 'Brady',
-      password: 'RescueOrion',
+      username: 'LobbyTest',
+      password: 'randompasswordfortesting123',
     })
       .then((res) => {
         expect(res.data?.token).toBeDefined();
@@ -26,7 +26,7 @@ describe('/admin/login endpoint', () => {
       })
       .catch((err) => {
         if (err.response) {
-          expect(err.response.data).toMatch('Wrong password for user: Brady');
+          expect(err.response.data).toMatch('Wrong password for user: LobbyTest');
           done();
         } else {
           done(err);
@@ -36,8 +36,8 @@ describe('/admin/login endpoint', () => {
 
   it('rejects incorrect username', (done) => {
     axios.post(`${API_BASE_URL}/admin/login`, {
-      username: 'Bradyy',
-      password: 'RescueOrion',
+      username: 'LobbyTesttt',
+      password: 'randompasswordfortesting123',
     })
       .then((res) => {
         expect(res.data?.token).toBeDefined();
@@ -45,7 +45,7 @@ describe('/admin/login endpoint', () => {
       })
       .catch((err) => {
         if (err.response) {
-          expect(err.response.data).toMatch('Unauthorized user: Bradyy');
+          expect(err.response.data).toMatch('Unauthorized user: LobbyTesttt');
           done();
         } else {
           done(err);
