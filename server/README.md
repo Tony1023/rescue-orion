@@ -33,11 +33,11 @@ Currently, there are two sample accounts in it. In order to add/remove admins or
   - Starts an interactive console for running tests.
 
 ## Testing
-All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started).
+All the tests files are in [src/__tests__](src/__tests__). They use [jest](https://jestjs.io/docs/en/getting-started). They should be run with `NODE_ENV=development`.
 
 If you run `yarn run watch-test`, there will be an interactive console. You might need to `npm install --global npx` to install the `npx` package in order to use the interactive console.
 
 ## Deployment
 After setting up the environment variables for production, you could use `yarn start` to boot up the server directly or use a Node process manager like `pm2`. With a process manager, though, it is likely that you will need to `yarn build` first to generate `dist/` files and then to use `dist/index.js` as the entry point.
 
-Just a side note, `yarn build` is the first in `yarn start`.
+Just a side note, `yarn build` is the first step in `yarn start`.
